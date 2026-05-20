@@ -160,14 +160,26 @@
         .btn-delete-vehicle:hover { opacity: 1; }
 
         .date-slider-container {
-            display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 12px 0;
-            scrollbar-width: none; -webkit-overflow-scrolling: touch;
+            display: flex;
+            gap: 10px; 
+            overflow-x: auto; 
+            padding: 4px 10px 14px 10px;
+            white-space: nowrap; /* Garante que os dias fiquem alinhados lado a lado para deslizar */
+            scrollbar-width: none; 
+            -webkit-overflow-scrolling: touch; /* Deixa o deslize no celular muito suave */
         }
         .date-slider-container::-webkit-scrollbar { display: none; }
+        
         .date-slider-item {
-            flex: 0 0 calc(14.28% - 7px); min-width: 55px; background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 12px;
-            padding: 12px 4px; text-align: center; cursor: pointer; transition: all 0.2s ease;
+            flex: 0 0 auto; /* Permite que o card mantenha o tamanho original para deslizar */
+            min-width: 58mm; /* Configurado em milímetros conforme solicitado */
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06); 
+            border-radius: 12px;
+            padding: 12px 4px; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
         }
         .date-slider-item:hover { background: rgba(255, 255, 255, 0.05); }
         .date-slider-item.selected {
