@@ -1,755 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Painel Administrativo — GarciaFlex</title>
-    
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/cards.css">
-    <link rel="stylesheet" href="css/buttons.css">
-    <link rel="stylesheet" href="css/forms.css">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Mecânica Web — Painel de Controle</title>
 
-    <style>
-        :root {
-            --orange: #E8500A;
-            --blue-tech: #2563EB;
-            --green-tech: #00C853;
-            --bg-main: #060A12;
-            --bg-surface: #0E1524;
-            --bg-input: #151F32;
-            --border-color: rgba(255, 255, 255, 0.08);
-            --text-primary: #FFFFFF;
-            --text-secondary: #94A3B8;
-            --text-muted: #64748B;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --transition-fast: 0.2s ease;
-            --transition-normal: 0.3s ease;
-        }
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='29' cy='22' r='8' stroke='%23FF5A00' stroke-width='1.5' stroke-dasharray='2 1'/%3E%3Cpath d='M29 11V13M29 31V33M18 22H20M38 22H40' stroke='%23FF5A00' stroke-width='1.5' stroke-linecap='round'/%3E%3Crect x='4' y='4' width='18' height='36' rx='4' stroke='%23FF5A00' stroke-width='2' fill='%231A1F26'/%3E%3Ccircle cx='13' cy='35' r='1.5' fill='%23FF5A00'/%3E%3C/svg%3E">
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700;900&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
 
-        body {
-            display: flex;
-            min-height: 100vh;
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* Sidebar Executiva e Discreta */
-        .saas-sidebar {
-            width: 240px;
-            background-color: var(--bg-surface);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100;
-            padding: 32px 16px;
-        }
-
-        /* Branding da Oficina */
-        .oficina-brand-block {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 40px;
-            padding: 0 8px;
-        }
-
-        .oficina-logo-frame {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .oficina-logo-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .oficina-logo-frame i {
-            font-size: 16px;
-            color: var(--text-muted);
-        }
-
-        .oficina-text-name {
-            font-size: 15px;
-            font-weight: 700;
-            color: #FFF;
-            line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .oficina-text-slogan {
-            font-size: 11px;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .saas-menu-list {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            list-style: none;
-            flex: 1;
-        }
-
-        .saas-menu-item a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 12px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 13px;
-            border-radius: var(--radius-md);
-            transition: all var(--transition-fast);
-        }
-
-        .saas-menu-item a:hover, .saas-menu-item.active a {
-            background-color: var(--bg-input);
-            color: var(--orange);
-        }
-
-        /* Botão de Logout Estilizado */
-        .saas-menu-item.logout-item a {
-            color: #EF4444;
-            border: 1px solid rgba(239, 68, 68, 0.15);
-            background: rgba(239, 68, 68, 0.03);
-        }
-        .saas-menu-item.logout-item a:hover {
-            background: rgba(239, 68, 68, 0.12);
-            color: #FF6B6B;
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-
-        /* Área de Conteúdo Sóbria */
-        .saas-main-content {
-            flex: 1;
-            margin-left: 240px;
-            padding: 40px;
-            width: calc(100% - 240px);
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Topbar */
-        .saas-user-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            padding: 12px 20px;
-            border-radius: var(--radius-lg);
-            margin-bottom: 32px;
-        }
-
-        .saas-mobile-header {
-            display: none;
-            width: 100%;
-            background-color: var(--bg-surface);
-            border-bottom: 1px solid var(--border-color);
-            padding: 14px 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 110;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Grid de Métricas */
-        .metrics-saas-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-
-        .card-metric-saas {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .card-metric-saas b {
-            font-size: 22px;
-            font-family: 'Barlow Condensed', sans-serif;
-            display: block;
-            line-height: 1.1;
-        }
-
-        .card-metric-saas span {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* Barra de Filtros */
-        .filter-bar-saas {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            padding: 14px;
-            border-radius: var(--radius-md);
-            margin-bottom: 20px;
-        }
-
-        .input-wrap { position: relative; width: 100%; }
-        .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
-        
-        .input-saas {
-            width: 100%;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            color: #fff;
-            border-radius: var(--radius-sm);
-            padding: 0 12px;
-            outline: none;
-            transition: border-color var(--transition-fast);
-        }
-        .input-saas:focus { border-color: var(--orange); }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            padding: 0 16px;
-            background: var(--bg-input);
-            color: #fff;
-        }
-        .btn-primary { background: var(--orange); color: #fff; }
-        .btn-primary:hover { background: #ff621f; }
-        .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid var(--border-color); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
-
-        /* Régua de Semanas */
-        .cal-strip {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-        .cal-strip::-webkit-scrollbar { display: none; }
-
-        .cal-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 10px;
-            min-width: 65px;
-            text-align: center;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-        }
-        .cal-card span { display: block; font-size: 10px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2px;}
-        .cal-card b { display: block; font-size: 16px; font-family: 'Barlow Condensed', sans-serif; }
-        .cal-card:hover { background: var(--bg-input); }
-        .cal-card.selected { background: var(--orange); border-color: var(--orange); color: #fff; }
-        .cal-card.selected span { color: rgba(255,255,255,0.7); }
-
-        .week-strip-container { margin-bottom: 28px; }
-
-        /* Container de Atendimentos & Cards */
-        .board-saas-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-            gap: 16px;
-        }
-
-        .card-ticket-saas {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            position: relative;
-            overflow: hidden;
-        }
-        .card-ticket-saas::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-        }
-        .card-ticket-saas.status-aguardando::before { background: var(--orange); }
-        .card-ticket-saas.status-confirmado::before { background: var(--blue-tech); }
-        .card-ticket-saas.status-concluido::before { background: var(--green-tech); }
-        .card-ticket-saas.status-cancelado::before { background: #EF4444; }
-
-        .badge-saas {
-            display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;
-        }
-        .badge-waiting { background: rgba(232,80,10,0.15); color: var(--orange); }
-        .badge-progress { background: rgba(37,99,235,0.15); color: var(--blue-tech); }
-        .badge-done { background: rgba(0,200,83,0.15); color: var(--green-tech); }
-        .badge-cancel { background: rgba(239,68,68,0.15); color: #EF4444; }
-
-        .placa-badge-premium {
-            background: #060a12; border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; font-family: monospace; font-weight: bold; color: #fff;
-        }
-
-        .obs-box-saas {
-            background: var(--bg-input); border-radius: var(--radius-sm); border-left: 2px solid var(--text-muted); color: var(--text-secondary); line-height: 1.4;
-        }
-
-        .ticket-actions-saas {
-            display: flex; gap: 8px; flex-wrap: wrap; margin-top: auto; border-top: 1px solid var(--border-color); padding-top: 12px;
-        }
-
-        .sem-dados-saas {
-            grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); font-size: 14px; background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: var(--radius-md);
-        }
-
-        .saas-status-footer {
-            margin-top: auto;
-            padding-top: 24px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 11px;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        @media(max-width: 992px) {
-            body { flex-direction: column; }
-            .saas-sidebar {
-                transform: translateX(-100%);
-                transition: transform var(--transition-normal);
-                top: 56px;
-            }
-            .saas-sidebar.open { transform: translateX(0); }
-            .saas-mobile-header { display: flex; }
-            .saas-main-content {
-                margin-left: 0;
-                width: 100%;
-                padding: 88px 16px 24px 16px;
-            }
-            .saas-user-bar { flex-direction: column; gap: 8px; align-items: flex-start; }
-        }
-    </style>
+  <link rel="stylesheet" href="css/global.css">
 </head>
 <body>
 
-    <div class="saas-mobile-header">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="font-size: 14px; font-weight: 700; color: #FFF;" id="mobile-oficina-name">Painel</div>
-            <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px; border-color: rgba(239,68,68,0.3); color: #EF4444;" onclick="executarLogout()">
-                <i class="fas fa-sign-out-alt"></i> Sair
-            </button>
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-titles">
+        <h2>Painel de Controle</h2>
+        <p>Visão geral e monitoramento do pátio em tempo real</p>
+      </div>
+    </header>
+
+    <div class="dashboard-container">
+      
+      <!-- GRID DE MÉTRICAS RÁPIDAS -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-title">Agendados Hoje</span>
+          <span class="metric-value orange" id="lbl-m-hoje">--</span>
         </div>
-        <button class="btn btn-secondary" style="padding: 6px 10px; font-size: 12px;" onclick="toggleMobileMenu()">
-            <i class="fas fa-bars"></i>
-        </button>
-    </div>
-
-    <nav class="saas-sidebar" id="sidebarMenu">
-        <div class="oficina-brand-block">
-            <div class="oficina-logo-frame" id="sidebar-logo-frame">
-                <i class="fas fa-warehouse"></i>
-            </div>
-            <div style="overflow: hidden;">
-                <div class="oficina-text-name" id="sidebar-oficina-nome">Oficina</div>
-                <div class="oficina-text-slogan" id="sidebar-oficina-slogan">Painel Operacional</div>
-            </div>
+        <div class="metric-card">
+          <span class="metric-title">Em Atendimento</span>
+          <span class="metric-value blue" id="lbl-m-patio">--</span>
         </div>
+        <div class="metric-card">
+          <span class="metric-title">Concluídos este Mês</span>
+          <span class="metric-value green" id="lbl-m-mes">--</span>
+        </div>
+      </div>
 
-        <ul class="saas-menu-list">
-            <li class="saas-menu-item active">
-                <a href="index.html"><i class="fas fa-th-large"></i> Agendamentos</a>
-            </li>
-            <li class="saas-menu-item">
-                <a href="config.html"><i class="fas fa-sliders-h"></i> Configurações</a>
-            </li>
-            <li class="saas-menu-item" style="margin-top: 24px;">
-                <a href="agendar_fix.html" target="_blank" style="border: 1px dashed var(--border-color); background: transparent;">
-                    <i class="fas fa-external-link-alt"></i> Link Público
-                </a>
-            </li>
-            
-            <li class="saas-menu-item logout-item" style="margin-top: auto; padding-top: 16px;">
-                <a href="#" onclick="executarLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Sair do Painel</a>
-            </li>
-        </ul>
-    </nav>
-
-    <div class="saas-main-content">
+      <div class="dashboard-layout-row">
         
-        <div class="saas-user-bar">
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <div style="font-size: 13px; font-weight: 600; color: var(--text-primary);" id="txt-user-email">A verificar credenciais...</div>
-                <span style="background: rgba(37,99,235,0.1); color: var(--blue-tech); font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">Enterprise</span>
-            </div>
-            <div style="font-size: 12px; font-weight: 500; color: var(--text-muted);">
-                <i class="far fa-calendar"></i> <span id="txt-data-atual">--/--/----</span>
-            </div>
+        <!-- COLUNA MAIOR: MONITOR DO PÁTIO -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3><i style="width:16px; height:16px; color:var(--brand-orange);" data-lucide="activity"></i> Veículos no Pátio / Atendimento</h3>
+          </div>
+          <div class="panel-card-body" id="box-patio-realtime">
+            <p style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">Carregando dados operacionais...</p>
+          </div>
         </div>
 
-        <div style="margin-bottom: 28px;">
-            <h2 style="font-size: 26px; font-family: 'Barlow Condensed', sans-serif; letter-spacing: 0.5px;">PAINEL DE <span style="color: var(--orange);">AGENDAMENTOS</span></h2>
+        <!-- COLUNA MENOR: ALERTAS RÁPIDOS -->
+        <div class="panel-card">
+          <div class="panel-card-header">
+            <h3><i style="width:16px; height:16px; color:var(--brand-yellow);" data-lucide="bell"></i> Alertas de Hoje</h3>
+          </div>
+          <div class="panel-card-body">
+            <div class="row-item">
+              <div class="row-item-info">
+                <span class="title">Revisão de frotas</span>
+                <span class="subtitle">3 agendamentos pendentes</span>
+              </div>
+            </div>
+            <div class="row-item">
+              <div class="row-item-info">
+                <span class="title">Sincronização</span>
+                <span class="subtitle">Banco de dados ativo</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="metrics-saas-grid">
-            <div class="card-metric-saas">
-                <div style="width: 36px; height: 36px; background: rgba(255,255,255,0.03); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--text-muted);"><i class="fas fa-folder"></i></div>
-                <div>
-                    <b id="count-total">0</b>
-                    <div><span>Total</span></div>
-                </div>
-            </div>
-            <div class="card-metric-saas" style="border-bottom: 2px solid var(--orange);">
-                <div style="width: 36px; height: 36px; background: rgba(232,80,10,0.08); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--orange);"><i class="fas fa-clock"></i></div>
-                <div>
-                    <b id="count-aguardando">0</b>
-                    <div><span>Aguardando</span></div>
-                </div>
-            </div>
-            <div class="card-metric-saas" style="border-bottom: 2px solid var(--blue-tech);">
-                <div style="width: 36px; height: 36px; background: rgba(37,99,235,0.08); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--blue-tech);"><i class="fas fa-check"></i></div>
-                <div>
-                    <b id="count-confirmado">0</b>
-                    <div><span>Confirmados</span></div>
-                </div>
-            </div>
-            <div class="card-metric-saas" style="border-bottom: 2px solid var(--green-tech);">
-                <div style="width: 36px; height: 36px; background: rgba(0,200,83,0.08); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: var(--green-tech);"><i class="fas fa-check-double"></i></div>
-                <div>
-                    <b id="count-concluido">0</b>
-                    <div><span>Concluídos</span></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="filter-bar-saas">
-            <div style="margin-bottom:0; flex: 1; min-width: 240px;">
-                <div class="input-wrap">
-                    <i class="fas fa-search input-icon"></i>
-                    <input type="text" id="filtro-busca" class="input-saas" placeholder="Filtrar por cliente, placa, veículo..." oninput="filtrarAgendamentosLocal()" style="padding-left: 36px; height: 38px; font-size: 13px;">
-                </div>
-            </div>
-            
-            <div style="margin-bottom:0; width: 160px;">
-                <select id="filtro-status" class="input-saas" onchange="filtrarAgendamentosLocal()" style="height: 38px; font-size: 13px;">
-                    <option value="TODOS">Todos os Status</option>
-                    <option value="Aguardando">Aguardando</option>
-                    <option value="Confirmado">Confirmado</option>
-                    <option value="Concluído">Concluído</option>
-                    <option value="Cancelado">Cancelado</option>
-                </select>
-            </div>
-
-            <button class="btn btn-secondary" onclick="buscarAgendamentos()" style="height: 38px; padding: 0 16px; font-size: 13px;">
-                <i class="fas fa-sync-alt"></i> Sincronizar
-            </button>
-        </div>
-
-        <div class="week-strip-container">
-            <div class="cal-strip" id="week-strip-container-inner"></div>
-        </div>
-
-        <div class="board-saas-container" id="agendamentos-container">
-            <div class="sem-dados-saas">
-                <i class="fas fa-circle-notch fa-spin" style="font-size: 20px; color: var(--orange); margin-bottom: 8px; display: block;"></i>
-                A verificar credenciais de acesso...
-            </div>
-        </div>
-
-        <footer class="saas-status-footer">
-            <div>
-                <span>Ambiente: <b style="color: var(--green-tech);">Produção</b></span>
-                <span style="margin-left: 16px;">Conexão API: <b style="color: #FFF;">Estável</b></span>
-            </div>
-            <div>
-                <span>v2.5.1-auth</span>
-            </div>
-        </footer>
+      </div>
 
     </div>
+
+    <footer class="footer-bar">
+      <div style="display:flex; align-items:center; gap:6px; color:var(--brand-green); font-size:12px;"><span style="width:7px; height:7px; background:var(--brand-green); border-radius:50%;"></span> Sistema Online</div>
+      <div>Mecânica Web v2.5</div>
+    </footer>
+  </main>
 
 <script>
 'use strict';
 
-const SUPABASE_URL = 'https://krxcmfsonqzfdywqedeg.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyeGNtZnNvbnF6ZmR5d3FlZGVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3MjI5NzgsImV4cCI6MjA5NDI5ODk3OH0.X1LujCzqD3YcckIJf6XEu8Rzk0W3x6cx_-HxAczxtko';
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let cacheAgendamentos = [];
-let dataFiltroSemana = 'TODOS';
-
-// 1. GUARDA DE ROTA ESTREITA (Executado no início)
-async function verificarSessao() {
-    const { data: { session }, error } = await db.auth.getSession();
-    
-    if (error || !session) {
-        console.warn('Utilizador não autenticado. A redirecionar...');
-        window.location.href = 'login.html'; 
-        return null;
-    }
-    
-    // Mostra o e-mail do utilizador no painel
-    document.getElementById('txt-user-email').innerText = session.user.email;
-    return session.user;
-}
-
-// 2. LOGOUT SEGURO
-async function executarLogout() {
+async function carregarDadosPainel() {
     try {
-        const { error } = await db.auth.signOut();
-        if (error) throw error;
-        window.location.href = 'login.html';
-    } catch (err) {
-        console.error('Erro ao efetuar logout:', err);
-        alert('Erro ao encerrar sessão: ' + err.message);
-    }
-}
+        const hojeStr = obterDataString();
 
-function toggleMobileMenu() {
-    document.getElementById('sidebarMenu').classList.toggle('open');
-}
+        // Busca todos os agendamentos da oficina para compor os contadores
+        const { data: agendamentos, error } = await db.from('agendamentos').select('*, veiculos(marca, modelo, placa)').eq('oficina_id', OFICINA_ATIVA_ID);
+        if(error) throw error;
 
-async function carregarDadosSaaS() {
-    try {
-        const { data } = await db.from('configuracoes_saas').select('*').eq('id', 1).single();
-        if (data) {
-            document.getElementById('sidebar-oficina-nome').innerText = data.nome_oficina;
-            document.getElementById('sidebar-oficina-slogan').innerText = data.slogan || 'Painel Operacional';
-            document.getElementById('mobile-oficina-name').innerText = data.nome_oficina;
-            document.title = `Painel Administrativo — ${data.nome_oficina}`;
-            
-            if (data.logo_url) {
-                document.getElementById('sidebar-logo-frame').innerHTML = `<img src="${data.logo_url}" alt="Logo">`;
+        if(agendamentos) {
+            const hojeLista = agendamentos.filter(a => a.servico_data === hojeStr);
+            const patioLista = agendamentos.filter(a => String(a.status).toLowerCase().includes('atend') || String(a.status).toLowerCase().includes('aguard'));
+            const concluidosLista = agendamentos.filter(a => String(a.status).toLowerCase().includes('concl') || String(a.status).toLowerCase().includes('finaliz'));
+
+            // Atualiza indicadores numéricos
+            document.getElementById('lbl-m-hoje').innerText = hojeLista.length;
+            document.getElementById('lbl-m-patio').innerText = patioLista.length;
+            document.getElementById('lbl-m-mes').innerText = concluidosLista.length;
+
+            // Renderiza pátio em tempo real
+            const boxPatio = document.getElementById('box-patio-realtime');
+            boxPatio.innerHTML = '';
+
+            if(patioLista.length === 0) {
+                boxPatio.innerHTML = '<p style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">Nenhum veículo no pátio neste momento.</p>';
+            } else {
+                patioLista.slice(0, 5).forEach(item => {
+                    let carro = 'Veículo não informado';
+                    if(item.veiculos) {
+                        carro = `${item.veiculos.marca} ${item.veiculos.modelo} [${item.veiculos.placa.toUpperCase()}]`;
+                    }
+                    
+                    const isAguardando = String(item.status).toLowerCase().includes('aguard');
+
+                    boxPatio.innerHTML += `
+                        <div class="row-item">
+                            <div class="row-item-info">
+                                <span class="title">${item.cliente_nome || 'Cliente não identificado'}</span>
+                                <span class="subtitle">${carro} — <b>${item.servico_tipo || 'Geral'}</b></span>
+                            </div>
+                            <span class="badge ${isAguardando ? 'orange' : 'blue'}">${item.status || 'Pátio'}</span>
+                        </div>
+                    `;
+                });
             }
         }
-    } catch (err) {
-        console.error('Erro ao carregar branding SaaS:', err);
+    } catch(e) {
+        console.error("Erro ao alimentar painel:", e);
+        showToast("Erro ao carregar dados do painel", "error");
     }
 }
 
-function inicializarReguaSemana() {
-    const container = document.getElementById('week-strip-container-inner');
-    container.innerHTML = '';
-    const hoje = new Date();
-
-    const btnTodos = document.createElement('div');
-    btnTodos.className = 'cal-card selected';
-    btnTodos.innerHTML = `<span>Limpar</span><b>ALL</b>`;
-    btnTodos.onclick = () => {
-        document.querySelectorAll('.cal-card').forEach(c => c.classList.remove('selected'));
-        btnTodos.classList.add('selected');
-        dataFiltroSemana = 'TODOS';
-        filtrarAgendamentosLocal();
-    };
-    container.appendChild(btnTodos);
-
-    for (let i = 0; i < 7; i++) {
-        const d = new Date();
-        d.setDate(hoje.getDate() + i);
-        if (d.getDay() === 0) continue; 
-
-        const ano = d.getFullYear();
-        const mes = String(d.getMonth() + 1).padStart(2, '0');
-        const dia = String(d.getDate()).padStart(2, '0');
-        const isoDate = `${ano}-${mes}-${dia}`;
-
-        const card = document.createElement('div');
-        card.className = 'cal-card';
-        card.innerHTML = `<span>${d.toLocaleDateString('pt-BR', {weekday: 'short'}).substring(0, 3)}</span><b>${d.getDate()}</b>`;
-        
-        card.onclick = () => {
-            document.querySelectorAll('.cal-card').forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-            dataFiltroSemana = isoDate;
-            filtrarAgendamentosLocal();
-        };
-        container.appendChild(card);
-    }
-}
-
-function atualizarWidgetData() {
-    const hoje = new Date();
-    document.getElementById('txt-data-atual').innerText = hoje.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-}
-
-async function buscarAgendamentos() {
-    const container = document.getElementById('agendamentos-container');
-    try {
-        const { data, error } = await db
-            .from('agendamentos')
-            .select(`
-                id, servico_tipo, servico_data, horario, observacoes, status, criado_em,
-                clientes ( id, nome, telefone_norm, cpf_cnpj ),
-                veiculos ( id, marca, modelo, placa, cor )
-            `)
-            .order('servico_data', { ascending: true })
-            .order('horario', { ascending: true });
-
-        if (error) throw error;
-
-        cacheAgendamentos = data || [];
-        atualizarMetricas(cacheAgendamentos);
-        filtrarAgendamentosLocal();
-
-    } catch (err) {
-        console.error(err);
-        container.innerHTML = `<div class="sem-dados-saas">Erro crítico ao ler dados do banco.</div>`;
-    }
-}
-
-async function alterarStatus(id, novoStatus) {
-    try {
-        const { error } = await db.from('agendamentos').update({ status: novoStatus }).eq('id', id);
-        if (error) throw error;
-        buscarAgendamentos();
-    } catch (err) {
-        alert('Erro ao atualizar registro.');
-    }
-}
-
-function atualizarMetricas(lista) {
-    document.getElementById('count-total').innerText = lista.length;
-    document.getElementById('count-aguardando').innerText = lista.filter(a => a.status === 'Aguardando').length;
-    document.getElementById('count-confirmado').innerText = lista.filter(a => a.status === 'Confirmado').length;
-    document.getElementById('count-concluido').innerText = lista.filter(a => a.status === 'Concluído').length;
-}
-
-function filtrarAgendamentosLocal() {
-    const term = document.getElementById('filtro-busca').value.toLowerCase().trim();
-    const statusFiltro = document.getElementById('filtro-status').value;
-    const container = document.getElementById('agendamentos-container');
-    
-    container.innerHTML = '';
-
-    const filtrados = cacheAgendamentos.filter(ag => {
-        if (statusFiltro !== 'TODOS' && ag.status !== statusFiltro) return false;
-        if (dataFiltroSemana !== 'TODOS' && ag.servico_data !== dataFiltroSemana) return false;
-
-        if (term) {
-            const nomeCli = ag.clientes?.nome?.toLowerCase() || '';
-            const placaVe = ag.veiculos?.placa?.toLowerCase() || '';
-            const modVe   = ag.veiculos?.modelo?.toLowerCase() || '';
-            const serv    = ag.servico_tipo?.toLowerCase() || '';
-            if (!nomeCli.includes(term) && !placaVe.includes(term) && !modVe.includes(term) && !serv.includes(term)) return false;
-        }
-        return true;
-    });
-
-    if (filtrados.length === 0) {
-        container.innerHTML = `<div class="sem-dados-saas">Nenhum agendamento encontrado para os filtros selecionados.</div>`;
-        return;
-    }
-
-    filtrados.forEach(ag => {
-        const card = document.createElement('div');
-        let classeStatus = 'status-aguardando';
-        let badgeClasse = 'badge-waiting';
-
-        if (ag.status === 'Confirmado') { classeStatus = 'status-confirmado'; badgeClasse = 'badge-progress'; }
-        if (ag.status === 'Concluído')  { classeStatus = 'status-concluido'; badgeClasse = 'badge-done'; }
-        if (ag.status === 'Cancelado')  { classeStatus = 'status-cancelado'; badgeClasse = 'badge-cancel'; }
-
-        card.className = `card-ticket-saas ${classeStatus}`;
-
-        let dataStr = ag.servico_data;
-        if (dataStr) {
-            const partes = dataStr.split('-');
-            if (partes.length === 3) dataStr = `${partes[2]}/${partes[1]}/${partes[0]}`;
-        }
-
-        let botesAcao = '';
-        if (ag.status === 'Aguardando') {
-            botesAcao += `<button class="btn btn-primary" style="font-size:11px; padding:5px 10px;" onclick="alterarStatus('${ag.id}', 'Confirmado')"><i class="fas fa-check"></i> Confirmar</button>`;
-            botesAcao += `<button class="btn" style="background:rgba(239,68,68,0.08); color:#EF4444; font-size:11px; padding:5px 10px;" onclick="alterarStatus('${ag.id}', 'Cancelado')">Cancelar</button>`;
-        } else if (ag.status === 'Confirmado') {
-            botesAcao += `<button class="btn" style="background:var(--green-tech); color:#000; font-size:11px; padding:5px 10px;" onclick="alterarStatus('${ag.id}', 'Concluído')"><i class="fas fa-check-double"></i> Concluir</button>`;
-            botesAcao += `<button class="btn btn-secondary" style="font-size:11px; padding:5px 10px;" onclick="alterarStatus('${ag.id}', 'Aguardando')">Voltar</button>`;
-        } else {
-            botesAcao += `<button class="btn btn-secondary" style="font-size:11px; padding:5px 10px;" onclick="alterarStatus('${ag.id}', 'Aguardando')">Reabrir</button>`;
-        }
-
-        let linkWhats = '';
-        if (ag.clientes?.telefone_norm) {
-            const nomeCurto = ag.clientes.nome ? ag.clientes.nome.split(' ')[0] : 'Cliente';
-            const veiculoTxt = ag.veiculos ? `${ag.veiculos.marca} ${ag.veiculos.modelo}` : 'seu veículo';
-            
-            const msgNotificacao = `Olá, ${nomeCurto}! Passando para informar que o agendamento do seu carro (${veiculoTxt}) para a realização do serviço de *${ag.servico_tipo || 'Manutenção'}* está marcado para o dia *${dataStr}* às *${ag.horario}*.\n\nQualquer dúvida, estamos à disposição!`;
-            
-            const textoWhats = encodeURIComponent(msgNotificacao);
-            linkWhats = `<a href="https://wa.me/${ag.clientes.telefone_norm}?text=${textoWhats}" target="_blank" class="btn btn-secondary" style="font-size:11px; padding:5px 10px; color: #25D366;"><i class="fab fa-whatsapp"></i> Notificar</a>`;
-        }
-
-        card.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
-                <div>
-                    <span class="badge-saas ${badgeClasse}">${ag.status}</span>
-                    <h3 style="font-size:16px; font-weight:700; color:#FFF; margin-top:6px;">${ag.clientes?.nome || 'Cliente'}</h3>
-                </div>
-                <div style="text-align:right; font-family:'Barlow Condensed'; font-size:13px;">
-                    <div style="color:var(--orange); font-weight:800;">${dataStr}</div>
-                    <div style="color:var(--text-primary); margin-top:1px;">${ag.horario ? ag.horario.substring(0,5) : ''}</div>
-                </div>
-            </div>
-            <div style="font-size:12px; color:var(--text-secondary); border-top:1px solid var(--border-color); padding-top:8px; margin-top:4px;">
-                <div>🛠️ <b>Serviço:</b> ${ag.servico_tipo || 'Geral'}</div>
-                <div style="margin-top:2px;">🚗 <b>Veículo:</b> ${ag.veiculos?.marca || ''} ${ag.veiculos?.modelo || ''} <span class="placa-badge-premium" style="padding:1px 5px; font-size:10px;">${ag.veiculos?.placa || 'S/P'}</span></div>
-            </div>
-            ${ag.observacoes ? `<div class="obs-box-saas" style="font-size:11px; padding:6px 8px; margin-top: 4px;">${ag.observacoes}</div>` : ''}
-            <div class="ticket-actions-saas">
-                ${botesAcao}
-                ${linkWhats}
-            </div>
-        `;
-        container.appendChild(card);
-    });
-}
-
-// Inicialização segura atrelada ao Auth
-window.onload = async () => { 
-    atualizarWidgetData();
-    inicializarReguaSemana();
-    
-    // Bloqueia e impede leitura do banco se a sessão falhar
-    const sessaoValida = await verificarSessao();
-    if (sessaoValida) {
-        carregarDadosSaaS();
-        buscarAgendamentos(); 
-    }
+window.onload = function() {
+    lucide.createIcons();
+    carregarDadosPainel();
 };
 </script>
 </body>

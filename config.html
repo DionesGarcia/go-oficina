@@ -1,141 +1,172 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configurações do Sistema — GarciaFlex</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Mecânica Web — Configurações</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='29' cy='22' r='8' stroke='%23FF5A00' stroke-width='1.5' stroke-dasharray='2 1'/%3E%3Cpath d='M29 11V13M29 31V33M18 22H20M38 22H40' stroke='%23FF5A00' stroke-width='1.5' stroke-linecap='round'/%3E%3Crect x='4' y='4' width='18' height='36' rx='4' stroke='%23FF5A00' stroke-width='2' fill='%231A1F26'/%3E%3Ccircle cx='13' cy='35' r='1.5' fill='%23FF5A00'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+
+  <link rel="stylesheet" href="css/global.css">
+
+  <style>
+    .config-container { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
     
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/cards.css">
-    <link rel="stylesheet" href="css/buttons.css">
-    <link rel="stylesheet" href="css/forms.css">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    .config-layout { display: grid; grid-template-columns: 240px 1fr; gap: 32px; }
+    @media(max-width: 768px) { .config-layout { grid-template-columns: 1fr; gap: 20px; } }
+
+    .config-sidebar { display: flex; flex-direction: column; gap: 6px; }
+    .config-nav-link { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+    .config-nav-link:hover { background-color: rgba(255,255,255,0.02); color: var(--text-bright); }
+    .config-nav-link.active { background-color: rgba(255, 90, 0, 0.1); color: var(--brand-orange); border-left: 3px solid var(--brand-orange); border-radius: 0 8px 8px 0; }
+
+    .config-section { display: flex; flex-direction: column; gap: 24px; }
+    .config-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+
+    .form-instruction { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-icon { position: absolute; left: 14px; color: var(--text-muted); font-size: 14px; }
+    .input-saas { background: #121722; border: 1px solid var(--border-color); border-radius: 6px; height: 42px; padding: 0 14px; color: #ffffff; font-size: 14px; width: 100%; outline: none; transition: border-color 0.2s; }
+    .input-saas:focus { border-color: var(--brand-orange); }
+
+    hr { border: 0; border-top: 1px solid var(--border-color); }
+  </style>
 </head>
 <body>
 
-<main class="app-container-public" style="max-width: 1100px; padding-top: 40px;">
-    
-    <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 20px; margin-bottom: 24px;">
-        <h1 class="section-title" style="font-size: 32px;"><i class="fas fa-sliders-h"></i> CONFIGURAÇÕES DO <span>SISTEMA</span></h1>
-        <p style="font-size: 13px; color: var(--text-muted); font-weight: 500; margin-top: 4px;">Controle a identidade, regras de agendamento e preferências da sua plataforma SaaS.</p>
-    </div>
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-titles">
+        <h2>Configurações do Sistema</h2>
+        <p>Controle a identidade e regras da sua plataforma</p>
+      </div>
+    </header>
 
-    <div class="config-layout">
+    <div class="config-container">
+      
+      <div class="config-layout">
         
         <div class="config-sidebar">
-            <a href="#geral" class="config-nav-link active"><i class="fas fa-store"></i> Perfil da Oficina</a>
-            <a href="#visual" class="config-nav-link"><i class="fas fa-palette"></i> Identidade Visual</a>
-            <a href="#regras" class="config-nav-link"><i class="fas fa-calendar-alt"></i> Regras de Agenda</a>
-            <a href="index.html" class="config-nav-link" style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 20px; color: var(--text-muted);"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
+            <a href="#geral" class="config-nav-link active"><i style="width:16px; height:16px;" data-lucide="store"></i> Perfil da Oficina</a>
+            <a href="#visual" class="config-nav-link"><i style="width:16px; height:16px;" data-lucide="palette"></i> Identidade Visual</a>
+            <a href="#regras" class="config-nav-link"><i style="width:16px; height:16px;" data-lucide="calendar-days"></i> Regras de Agenda</a>
         </div>
 
-        <div class="card-saas config-section">
-            
-            <div>
-                <h3 class="section-title" style="font-size: 18px; margin-bottom: 4px;">Perfil da Oficina</h3>
-                <p class="form-instruction">Informações básicas exibidas para o cliente na tela de agendamento público.</p>
-                
-                <div class="config-row" style="margin-top: 16px;">
-                    <div class="form-group">
-                        <label class="form-label">Nome Fantasia da Oficina *</label>
-                        <input type="text" id="cfg-nome-oficina" class="input-saas" placeholder="Ex: Mecânica Diones">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Slogan / Subtítulo</label>
-                        <input type="text" id="cfg-slogan" class="input-saas" placeholder="Ex: Agendamento Rápido e Descomplicado">
-                    </div>
-                </div>
-
-                <div class="config-row">
-                    <div class="form-group">
-                        <label class="form-label">Telefone de Contato (WhatsApp) *</label>
-                        <div class="input-wrap">
-                            <i class="fab fa-whatsapp input-icon"></i>
-                            <input type="tel" id="cfg-whatsapp" class="input-saas" placeholder="(42) 99999-9999" style="padding-left: 38px;">
+        <div class="panel-card config-section">
+            <div class="panel-card-body">
+                <div>
+                    <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Perfil da Oficina</h3>
+                    <p class="form-instruction">Informações básicas exibidas para o cliente na tela de agendamento público.</p>
+                    
+                    <div class="config-row" style="margin-top: 16px;">
+                        <div class="form-group">
+                            <label>Nome Fantasia da Oficina *</label>
+                            <input type="text" id="cfg-nome-oficina" class="input-saas" placeholder="Ex: Mecânica Diones">
+                        </div>
+                        <div class="form-group">
+                            <label>Slogan / Subtítulo</label>
+                            <input type="text" id="cfg-slogan" class="input-saas" placeholder="Ex: Agendamento Rápido e Descomplicado">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">CNPJ (Opcional)</label>
-                        <input type="text" id="cfg-cnpj" class="input-saas" placeholder="00.000.000/0001-00">
+
+                    <div class="config-row" style="margin-top: 12px;">
+                        <div class="form-group">
+                            <label>Telefone de Contato (WhatsApp) *</label>
+                            <div class="input-wrap">
+                                <i style="width:14px; height:14px;" data-lucide="phone" class="input-icon"></i>
+                                <input type="tel" id="cfg-whatsapp" class="input-saas" placeholder="(42) 99999-9999" style="padding-left: 38px;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>CNPJ (Opcional)</label>
+                            <input type="text" id="cfg-cnpj" class="input-saas" placeholder="00.000.000/0001-00">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <hr style="border: 0; border-top: 1px solid var(--border-color);">
+                <hr style="margin: 20px 0;">
 
-            <div>
-                <h3 class="section-title" style="font-size: 18px; margin-bottom: 4px;">Identidade Visual</h3>
-                <p class="form-instruction">Personalize as imagens e logotipos que dão a cara do seu negócio ao SaaS.</p>
-                
-                <div class="form-group" style="margin-top: 16px;">
-                    <label class="form-label">Link/URL do Logotipo da Oficina</label>
-                    <div class="input-wrap">
-                        <i class="fas fa-link input-icon"></i>
-                        <input type="url" id="cfg-logo-url" class="input-saas" placeholder="https://exemplo.com/sua-logo.png" style="padding-left: 38px;">
-                    </div>
-                    <p class="form-instruction" style="margin-top: 4px;">Cole o link direto da imagem hospedada ou logo padrão.</p>
-                </div>
-            </div>
-
-            <hr style="border: 0; border-top: 1px solid var(--border-color);">
-
-            <div>
-                <h3 class="section-title" style="font-size: 18px; margin-bottom: 4px;">Regras de Agendamento</h3>
-                <p class="form-instruction">Padrões operacionais de mercado usados para controlar o fluxo de entrada de veículos.</p>
-                
-                <div class="config-row" style="margin-top: 16px;">
-                    <div class="form-group">
-                        <label class="form-label">Intervalo entre Horários</label>
-                        <select id="cfg-intervalo" class="input-saas">
-                            <option value="30">30 Minutos</option>
-                            <option value="60" selected>1 Hora (Recomendado)</option>
-                            <option value="120">2 Horas</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Vagas Simultâneas por Horário</label>
-                        <input type="number" id="cfg-vagas-simultaneas" class="input-saas" min="1" value="1">
-                        <p class="form-instruction" style="margin-top: 4px;">Quantos carros a oficina atende ao mesmo tempo no mesmo horário.</p>
+                <div>
+                    <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Identidade Visual</h3>
+                    <p class="form-instruction">Personalize as imagens e logotipos que dão a cara do seu negócio.</p>
+                    
+                    <div class="form-group" style="margin-top: 16px;">
+                        <label>Link/URL do Logotipo da Oficina</label>
+                        <div class="input-wrap">
+                            <i style="width:14px; height:14px;" data-lucide="link" class="input-icon"></i>
+                            <input type="url" id="cfg-logo-url" class="input-saas" placeholder="https://exemplo.com/sua-logo.png" style="padding-left: 38px;">
+                        </div>
+                        <p class="form-instruction" style="margin-top: 4px;">Cole o link direto da imagem hospedada.</p>
                     </div>
                 </div>
-            </div>
 
-            <div style="border-top: 1px solid var(--border-color); padding-top: 20px; display: flex; justify-content: flex-end; gap: 12px;">
-                <span id="cfg-status-msg" style="align-self: center; font-size: 13px; font-weight: 600; color: var(--green-tech); display: none;"><i class="fas fa-check-circle"></i> Configurações salvas!</span>
-                <button class="btn btn-primary" id="btn-salvar-config" onclick="salvarConfiguracoes()" style="padding: 12px 24px;">
-                    <i class="fas fa-save"></i> Salvar Configurações
-                </button>
-            </div>
+                <hr style="margin: 20px 0;">
 
+                <div>
+                    <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Regras de Agendamento</h3>
+                    <p class="form-instruction">Padrões operacionais de mercado usados para controlar o fluxo.</p>
+                    
+                    <div class="config-row" style="margin-top: 16px;">
+                        <div class="form-group">
+                            <label>Intervalo entre Horários</label>
+                            <select id="cfg-intervalo" class="input-saas">
+                                <option value="30">30 Minutos</option>
+                                <option value="60" selected>1 Hora (Recomendado)</option>
+                                <option value="120">2 Horas</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Vagas Simultâneas por Horário</label>
+                            <input type="number" id="cfg-vagas-simultaneas" class="input-saas" min="1" value="1">
+                            <p class="form-instruction" style="margin-top: 4px;">Quantos carros a oficina atende ao mesmo tempo.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 20px; display: flex; justify-content: flex-end; gap: 12px;">
+                    <span id="cfg-status-msg" style="align-self: center; font-size: 13px; font-weight: 600; color: var(--brand-green); display: none;"><i style="width:16px; height:16px; display:inline-block; vertical-align:middle;" data-lucide="check-circle"></i> Configurações salvas!</span>
+                    <button class="btn-top-action primary" id="btn-salvar-config" onclick="salvarConfiguracoes()" style="padding: 0 24px; height: 42px;">
+                        <i style="width:16px; height:16px;" data-lucide="save"></i> Salvar Configurações
+                    </button>
+                </div>
+            </div>
         </div>
+      </div>
+
     </div>
 
-</main>
+    <footer class="footer-bar">
+      <div style="display:flex; align-items:center; gap:6px; color:var(--brand-green); font-size:12px;"><span style="width:7px; height:7px; background:var(--brand-green); border-radius:50%;"></span> Sistema Online</div>
+      <div>Mecânica Web v2.5</div>
+    </footer>
+  </main>
 
 <script>
 'use strict';
 
-const SUPABASE_URL = 'https://krxcmfsonqzfdywqedeg.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyeGNtZnNvbnF6ZmR5d3FlZGVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3MjI5NzgsImV4cCI6MjA5NDI5ODk3OH0.X1LujCzqD3YcckIJf6XEu8Rzk0W3x6cx_-HxAczxtko';
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// ID fixo para simular o tenant/empresa única neste estágio do SaaS
 const CONFIG_ID = 1; 
 
-// Carregar dados assim que a página abre (Equivalente ao Page Load Query do FF)
 async function carregarConfiguracoes() {
     try {
-        // Buscando da tabela fictícia ou criando mock inicial editável pelo usuário
         const { data, error } = await db
             .from('configuracoes_saas')
             .select('*')
             .eq('id', CONFIG_ID)
             .single();
 
-        if (error && error.code !== 'PGRST116') throw error; // Ignora apenas erro de "registro não encontrado"
+        if (error && error.code !== 'PGRST116') throw error;
 
         if (data) {
             document.getElementById('cfg-nome-oficina').value = data.nome_oficina || '';
@@ -146,7 +177,6 @@ async function carregarConfiguracoes() {
             document.getElementById('cfg-intervalo').value = data.intervalo_minutos || '60';
             document.getElementById('cfg-vagas-simultaneas').value = data.vagas_simultaneas || '1';
         } else {
-            // Valores padrão caso a tabela esteja limpa no início
             document.getElementById('cfg-nome-oficina').value = 'Mecânica Diones';
             document.getElementById('cfg-slogan').value = 'Agendamento Rápido e Descomplicado';
             document.getElementById('cfg-whatsapp').value = '(42) 99999-9999';
@@ -156,13 +186,10 @@ async function carregarConfiguracoes() {
     }
 }
 
-// Salvar dados (Equivalente ao Upsert Action do FF)
 async function salvarConfiguracoes() {
     const btn = document.getElementById('btn-salvar-config');
-    const msg = document.getElementById('cfg-status-msg');
     
     btn.disabled = true;
-    msg.style.display = 'none';
 
     const payload = {
         id: CONFIG_ID,
@@ -183,24 +210,25 @@ async function salvarConfiguracoes() {
 
         if (error) throw error;
 
-        msg.style.display = 'inline-block';
-        setTimeout(() => { msg.style.display = 'none'; }, 4000);
+        showToast("Configurações salvas com sucesso!");
     } catch (err) {
         console.error('Erro ao salvar:', err);
-        alert('Erro ao conectar com o banco de dados. Certifique-se de que a tabela configuracoes_saas existe no Supabase.');
+        showToast("Erro ao salvar configurações", "error");
     } finally {
         btn.disabled = false;
     }
 }
 
-// Máscara básica para WhatsApp de forma simples
 document.getElementById('cfg-whatsapp').addEventListener('input', function() {
     let v = this.value.replace(/\D/g, '').slice(0, 11);
     v = v.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2');
     this.value = v;
 });
 
-window.onload = () => { carregarConfiguracoes(); };
+window.onload = () => { 
+    lucide.createIcons();
+    carregarConfiguracoes(); 
+};
 </script>
 </body>
 </html>

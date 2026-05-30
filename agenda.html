@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Mecânica Web — Agenda de Serviços</title>
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='29' cy='22' r='8' stroke='%23FF5A00' stroke-width='1.5' stroke-dasharray='2 1'/%3E%3Cpath d='M29 11V13M29 31V33M18 22H20M38 22H40' stroke='%23FF5A00' stroke-width='1.5' stroke-linecap='round'/%3E%3Crect x='4' y='4' width='18' height='36' rx='4' stroke='%23FF5A00' stroke-width='2' fill='%231A1F26'/%3E%3Ccircle cx='13' cy='35' r='1.5' fill='%23FF5A00'/%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+
+  <link rel="stylesheet" href="css/global.css">
+
+  <style>
+    /* ================= CONTEÚDO PRINCIPAL ================= */
+    .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
+
+    /* TOPBAR COMPACTA COM RÉGUA ACOPLADA */
+    .topbar { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; border-bottom: 1px solid var(--border-color); background: #070a0f; }
+    .topbar-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .topbar-titles h2 { font-size: 21px; font-weight: 700; color: var(--text-bright); letter-spacing: -0.02em; }
+    
+    /* RÉGUA DE DIAS CORRIGIDA */
+    .day-selector-ribbon { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
+    .ribbon-btn { background: #121824; border: 1px solid var(--border-color); color: var(--text-main); font-size: 13px; font-weight: 600; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+    .ribbon-btn:hover { background: #1a2334; color: #fff; border-color: #475569; }
+    .ribbon-btn.active { background: rgba(255, 90, 0, 0.12); border-color: var(--brand-orange); color: var(--brand-orange); font-weight: 700; box-shadow: 0 0 10px rgba(255, 90, 0, 0.05); }
+
+    /* BOTÕES DE AÇÃO RÁPIDA */
+    .topbar-actions { display: flex; gap: 10px; align-items: center; }
+
+    /* CONTAINER EXTRATO */
+    .agenda-view-container { flex: 1; overflow-y: auto; padding: 24px 24px 40px 24px; display: flex; flex-direction: column; gap: 20px; }
+    .agenda-view-container::-webkit-scrollbar { width: 6px; }
+    .agenda-view-container::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+    /* DIVISÓRIA DE DATA */
+    .extrato-group-header { display: flex; align-items: center; gap: 12px; margin-top: 6px; margin-bottom: 2px; }
+    .extrato-group-header span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--brand-green); background: rgba(0, 230, 118, 0.1); padding: 4px 12px; border-radius: 4px; border: 1px solid rgba(0, 230, 118, 0.15); }
+    .extrato-group-header .divisoria-linha { flex: 1; height: 1px; background: var(--border-color); }
+
+    /* CARD DA TABELA */
+    .agenda-table-card { background: #0b0e14; border: 1px solid var(--border-color); border-radius: 8px; overflow: visible; margin-bottom: 12px; }
+    
+    .table-row { display: grid; grid-template-columns: 120px 1.2fr 1.6fr 130px 1.8fr 240px; align-items: center; padding: 16px 16px; border-bottom: 1px solid var(--border-color); transition: background 0.15s; min-height: 64px; }
+    .table-row:last-child { border-bottom: none; }
+    .table-row:hover { background: rgba(255,255,255,0.01); }
+
+    .table-header-row { display: grid; grid-template-columns: 120px 1.2fr 1.6fr 130px 1.8fr 240px; align-items: center; padding: 14px 16px; background: #0e121b; border-bottom: 1px solid var(--border-color); font-size: 12px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.03em; border-top-left-radius: 7px; border-top-right-radius: 7px; }
+
+    /* COLUNAS INTERNAS */
+    .col-time { display: flex; flex-direction: column; gap: 2px; }
+    .col-time .clock { font-size: 15px; font-weight: 700; color: var(--text-bright); font-family: monospace; }
+    .col-time .date { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+    
+    .col-type { font-size: 14px; font-weight: 600; color: var(--text-bright); padding-right: 6px; }
+    
+    .col-vinc { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding-right: 8px; }
+    .col-vinc .client { font-size: 14px; font-weight: 700; color: var(--text-bright); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    .car-info-row { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; min-width: 0; }
+    .car-text { font-size: 13px; font-weight: 500; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    
+    .col-status { display: flex; justify-content: flex-start; min-width: 0; padding-right: 10px; }
+    .status-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 9px; border-radius: 4px; border: 1px solid rgba(255, 214, 0, 0.25); color: var(--brand-yellow); background: rgba(255, 214, 0, 0.08); white-space: nowrap; }
+    .status-badge.aguardando { color: #ff6a14; background: rgba(255, 90, 0, 0.08); border-color: rgba(255, 90, 0, 0.25); }
+
+    .col-obs { font-size: 13px; color: #cbd5e1; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 5px; padding-right: 10px; }
+
+    /* BOTÕES OPERACIONAIS */
+    .col-actions { display: flex; gap: 6px; justify-content: flex-end; width: 100%; }
+    .btn-row-action { width: 112px; height: 32px; justify-content: center; background: #1a2233; border: 1px solid var(--border-color); color: var(--text-bright); font-size: 11px; font-weight: 700; text-transform: uppercase; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; white-space: nowrap; }
+    .btn-row-action i { width: 13px; height: 13px; flex-shrink: 0; }
+    .btn-row-action:hover { background: #24304a; border-color: #475569; }
+    
+    .btn-row-action.budget { border-color: rgba(255, 214, 0, 0.35); color: var(--brand-yellow); background: rgba(255, 214, 0, 0.04); }
+    .btn-row-action.budget:hover { background: rgba(255, 214, 0, 0.12); }
+    
+    .btn-row-action.os { border-color: rgba(0, 176, 255, 0.35); color: var(--brand-blue); background: rgba(0, 176, 255, 0.04); }
+    .btn-row-action.os:hover { background: rgba(0, 176, 255, 0.12); }
+
+    .input-group-row { display: flex; gap: 8px; width: 100%; }
+    .btn-inline-add { background: #1a2233; border: 1px solid var(--border-color); color: var(--brand-green); font-size: 12px; font-weight: 700; padding: 0 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; transition: all 0.2s; }
+    .btn-inline-add:hover { background: rgba(0, 230, 118, 0.08); border-color: var(--brand-green); }
+
+    select.form-control { padding: 0 8px; color-scheme: dark; }
+    
+    .whatsapp-svg-icon { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-header">
+        <div class="topbar-titles">
+          <h2>Agenda de Serviços</h2>
+          
+          <div class="day-selector-ribbon">
+            <button class="ribbon-btn active" id="btn-filtra-hoje" onclick="mudarFiltroData('hoje')">Hoje</button>
+            <button class="ribbon-btn" id="btn-filtra-amanha" onclick="mudarFiltroData('amanha')">Amanhã</button>
+            <button class="ribbon-btn" id="btn-filtra-7dias" onclick="mudarFiltroData('7dias')">Próximos 7 dias</button>
+            <button class="ribbon-btn" id="btn-filtra-tudo" onclick="mudarFiltroData('tudo')">Ver Tudo</button>
+          </div>
+        </div>
+        
+        <div class="topbar-actions">
+          <button class="btn-top-action secondary" onclick="showToast('Link copiado!')">
+            <i style="width:14px; height:14px;" data-lucide="copy"></i> Copiar Link
+          </button>
+          <button class="btn-top-action secondary" style="color: var(--brand-whatsapp);" onclick="abrirModalLink()">
+            <svg class="whatsapp-svg-icon" viewBox="0 0 24 24" style="width:15px; height:15px; fill:currentColor;">
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.003 5.324 5.328 0 11.822 0c3.148.001 6.107 1.227 8.332 3.457 2.225 2.229 3.446 5.19 3.445 8.34-.003 6.497-5.328 11.822-11.822 11.822-2.004-.001-3.971-.51-5.713-1.477L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403 0 9.794-4.392 9.797-9.799.002-2.618-1.013-5.08-2.859-6.93C16.315 2.03 13.856.994 11.237 1a9.783 9.783 0 0 0-9.78 9.784c-.001 1.547.422 3.053 1.223 4.387l-.999 3.648 3.734-.979zm12.115-6.858c-.3-.15-1.774-.875-2.046-.975-.273-.1-.472-.15-.672.15-.2.3-.775.975-.95 1.174-.175.2-.35.225-.65.075-1.205-.6-2.031-1.095-2.83-2.463-.21-.36-.042-.556.108-.707.135-.134.3-.35.45-.525.15-.175.2-.3.3-.5s.05-.375-.025-.525C11.66 8.5 11 6.85 10.725 6.175c-.267-.652-.536-.549-.725-.549-.187-.001-.4-.001-.613-.001s-.562.08-.856.408c-.294.328-1.125 1.101-1.125 2.685 0 1.585 1.15 3.118 1.306 3.328.156.21 2.26 3.452 5.474 4.841.765.329 1.362.527 1.827.674.769.244 1.47.21 2.022.128.614-.092 1.774-.725 2.024-1.425.25-.7.25-1.3 1.175-1.425-.075-.125-.275-.275-.575-.425z"/>
+            </svg> Enviar Link
+          </button>
+          <button class="btn-top-action primary" onclick="abrirModalManual()">
+            <i style="width:16px; height:16px;" data-lucide="plus-circle"></i> Novo Agendamento
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="agenda-view-container" id="container-extrato-agenda"></div>
+
+    <footer class="footer-bar">
+      <div style="display:flex; align-items:center; gap:6px; color:var(--brand-green); font-size:12px;"><span style="width:7px; height:7px; background:var(--brand-green); border-radius:50%;"></span> Sincronizado</div>
+      <div id="lbl-total-registros">Carregando...</div>
+    </footer>
+  </main>
+
+  <div class="modal-overlay" id="modal-novo-manual">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Novo Agendamento</h3>
+        <button class="btn-close-modal" onclick="fecharModalManual()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Cliente</label>
+          <div class="input-group-row">
+            <select id="sel-manual-cliente" class="form-control" onchange="carregarVeiculosDoCliente(this.value)">
+              <option value="">Carregando clientes...</option>
+            </select>
+            <button class="btn-inline-add" onclick="abrirModalRapidoCliente()">
+              <i style="width:14px; height:14px;" data-lucide="plus"></i> Novo
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Veículo do Cliente</label>
+          <select id="sel-manual-veiculo" class="form-control">
+            <option value="">Selecione um cliente primeiro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Data do Serviço</label>
+          <input type="date" id="txt-manual-data" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Horário</label>
+          <input type="time" id="txt-manual-hora" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Tipo de Serviço</label>
+          <input type="text" id="txt-manual-tipo" class="form-control" placeholder="Ex: Troca de Óleo, Revisão Geral">
+        </div>
+        <div class="form-group">
+          <label>Observações Adicionais</label>
+          <input type="text" id="txt-manual-obs" class="form-control" placeholder="Ex: Troque filtro de ar">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" onclick="fecharModalManual()">Cancelar</button>
+        <button class="btn-top-action primary" style="height:34px;" onclick="salvarAgendamentoManual()">Confirmar Agendamento</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-rapido-cliente" style="z-index: 1001;">
+    <div class="modal-card" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3>Cadastrar Novo Cliente</h3>
+        <button class="btn-close-modal" onclick="fecharModalRapidoCliente()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Nome Completo *</label>
+          <input type="text" id="txt-novo-cli-nome" class="form-control" placeholder="Ex: João Silva">
+        </div>
+        <div class="form-group">
+          <label>Telefone / WhatsApp</label>
+          <input type="text" id="txt-novo-cli-telefone" class="form-control" placeholder="Ex: 42999999999">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" onclick="fecharModalRapidoCliente()">Voltar</button>
+        <button class="btn-top-action primary" style="height:34px; background: var(--brand-green);" onclick="salvarClienteRapido()">Salvar Cliente</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-enviar-link">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Enviar Link de Agendamento</h3>
+        <button class="btn-close-modal" onclick="fecharModalLink()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>WhatsApp do Cliente</label>
+          <input type="text" id="txt-link-whatsapp" class="form-control" placeholder="Ex: 42999999999">
+        </div>
+        <div class="form-group">
+          <label>Nome do Cliente (Opcional)</label>
+          <input type="text" id="txt-link-nome" class="form-control" placeholder="Ex: Carlos">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" onclick="fecharModalLink()">Cancelar</button>
+        <button class="btn-top-action" style="height:34px; color:#fff; background:var(--brand-whatsapp);" onclick="showToast('Link disparado!', 'info')">Disparar WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+'use strict';
+
+let filtroDataAtual = 'hoje';
+
+function abrirModalManual() { 
+    document.getElementById('modal-novo-manual').classList.add('active'); 
+    carregarClientesForm();
+}
+function fecharModalManual() { document.getElementById('modal-novo-manual').classList.remove('active'); }
+function abrirModalLink() { document.getElementById('modal-enviar-link').classList.add('active'); }
+function fecharModalLink() { document.getElementById('modal-enviar-link').classList.remove('active'); }
+
+function abrirModalRapidoCliente() { document.getElementById('modal-rapido-cliente').classList.add('active'); }
+function fecharModalRapidoCliente() { document.getElementById('modal-rapido-cliente').classList.remove('active'); }
+
+function mudarFiltroData(tipo) {
+    filtroDataAtual = tipo;
+    document.querySelectorAll('.ribbon-btn').forEach(btn => btn.classList.remove('active'));
+    if(tipo === 'hoje') document.getElementById('btn-filtra-hoje').classList.add('active');
+    if(tipo === 'amanha') document.getElementById('btn-filtra-amanha').classList.add('active');
+    if(tipo === '7dias') document.getElementById('btn-filtra-7dias').classList.add('active');
+    if(tipo === 'tudo') document.getElementById('btn-filtra-tudo').classList.add('active');
+    renderizarAgendaExtrato();
+}
+
+// CARREGA LISTA DE CLIENTES
+async function carregarClientesForm(selecionarId = null) {
+    try {
+        const selectCliente = document.getElementById('sel-manual-cliente');
+        selectCliente.innerHTML = '<option value="">Carregando...</option>';
+
+        const { data: clientes } = await db.from('clientes').select('id, nome').order('nome');
+        selectCliente.innerHTML = '<option value="">-- Selecione o Cliente --</option>';
+        
+        if(clientes) {
+            clientes.forEach(c => {
+                const selected = (selecionarId && c.id == selecionarId) ? 'selected' : '';
+                selectCliente.innerHTML += `<option value="${c.id}" ${selected}>${c.nome}</option>`;
+            });
+        }
+        if(selecionarId) {
+            carregarVeiculosDoCliente(selecionarId);
+        }
+    } catch (e) { console.error(e); }
+}
+
+// FILTRA VEÍCULOS ADICIONADOS DINAMICAMENTE
+async function carregarVeiculosDoCliente(clienteId) {
+    const selectVeiculo = document.getElementById('sel-manual-veiculo');
+    if(!clienteId) {
+        selectVeiculo.innerHTML = '<option value="">Selecione um cliente primeiro</option>';
+        return;
+    }
+    selectVeiculo.innerHTML = '<option value="">Buscando veículos...</option>';
+    try {
+        const { data: veiculos } = await db.from('veiculos').select('id, marca, modelo, placa').eq('cliente_id', clienteId);
+        if(!veiculos || veiculos.length === 0) {
+            selectVeiculo.innerHTML = '<option value="">Nenhum veículo cadastrado para este cliente</option>';
+            return;
+        }
+        selectVeiculo.innerHTML = '<option value="">-- Selecione o Veículo --</option>';
+        veiculos.forEach(v => {
+            selectVeiculo.innerHTML += `<option value="${v.id}">${v.marca} ${v.modelo} [${v.placa.toUpperCase()}]</option>`;
+        });
+    } catch(e) { console.error(e); }
+}
+
+// PERSISTE NOVO CLIENTE DE FORMA RÁPIDA
+async function salvarClienteRapido() {
+    const nome = document.getElementById('txt-novo-cli-nome').value.trim();
+    const telefone = document.getElementById('txt-novo-cli-telefone').value.trim();
+
+    if(!nome) { showToast("O nome do cliente é obrigatório.", "error"); return; }
+
+    try {
+        const { data, error } = await db.from('clientes').insert([{ nome, telefone }]).select();
+        if(error) throw error;
+
+        showToast("Cliente cadastrado com sucesso!");
+        fecharModalRapidoCliente();
+        
+        if(data && data[0]) {
+            carregarClientesForm(data[0].id);
+        }
+    } catch(e) {
+        console.error(e);
+        showToast("Erro ao cadastrar cliente.", "error");
+    }
+}
+
+async function salvarAgendamentoManual() {
+    const clienteId = document.getElementById('sel-manual-cliente').value;
+    const veiculoId = document.getElementById('sel-manual-veiculo').value;
+    const data = document.getElementById('txt-manual-data').value;
+    const hora = document.getElementById('txt-manual-hora').value;
+    const tipo = document.getElementById('txt-manual-tipo').value.trim();
+    const obs = document.getElementById('txt-manual-obs').value.trim();
+
+    if(!clienteId || !data || !hora) {
+        showToast("Preencha cliente, data e horário.", "error");
+        return;
+    }
+
+    try {
+        const comboCli = document.getElementById('sel-manual-cliente');
+        const nomeTextoCliente = comboCli.options[comboCli.selectedIndex].text;
+
+        const payload = {
+            oficina_id: OFICINA_ATIVA_ID,
+            cliente_id: parseInt(clienteId),
+            veiculo_id: veiculoId ? parseInt(veiculoId) : null,
+            cliente_nome: nomeTextoCliente,
+            servico_data: data,
+            horario: hora + ':00',
+            servico_tipo: tipo || 'Geral',
+            observacoes: obs || null,
+            status: 'Aguardando'
+        };
+
+        const { error } = await db.from('agendamentos').insert([payload]);
+        if(error) throw error;
+        
+        showToast("Agendamento criado com sucesso!");
+        fecharModalManual();
+        renderizarAgendaExtrato();
+    } catch(e) {
+        console.error(e);
+        showToast("Erro ao salvar agendamento.", "error");
+    }
+}
+
+async function renderizarAgendaExtrato() {
+    try {
+        const hojeStr = obterDataString(0);
+        const amanhaStr = obterDataString(1);
+        const seteDiasStr = obterDataString(7);
+
+        let query = db.from('agendamentos').select('*, clientes(nome), veiculos(marca, modelo, placa, ano)').eq('oficina_id', OFICINA_ATIVA_ID);
+
+        if (filtroDataAtual === 'hoje') query = query.eq('servico_data', hojeStr);
+        else if (filtroDataAtual === 'amanha') query = query.eq('servico_data', amanhaStr);
+        else if (filtroDataAtual === '7dias') query = query.gte('servico_data', hojeStr).lte('servico_data', seteDiasStr);
+
+        const { data: agendamentos, error } = await query.order('servico_data', { ascending: true }).order('horario', { ascending: true });
+        if(error) throw error;
+
+        const container = document.getElementById('container-extrato-agenda');
+        container.innerHTML = '';
+        document.getElementById('lbl-total-registros').innerText = `${agendamentos ? agendamentos.length : 0} registro(s) listado(s)`;
+
+        if (!agendamentos || agendamentos.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding:40px; font-size:14px; color:var(--text-muted);">Nenhum agendamento encontrado para este período.</p>';
+            return;
+        }
+
+        const grupos = {};
+        agendamentos.forEach(item => {
+            const data = item.servico_data || 'Sem Data';
+            if (!grupos[data]) grupos[data] = [];
+            grupos[data].push(item);
+        });
+
+        for (const dataKey of Object.keys(grupos)) {
+            let labelData = formatarDataBR(dataKey);
+            if(dataKey === hojeStr) labelData = "Hoje";
+            else if(dataKey === amanhaStr) labelData = "Amanhã";
+
+            container.innerHTML += `<div class="extrato-group-header"><span>${labelData}</span><div class="divisoria-linha"></div></div>`;
+
+            let blocoHtml = `<div class="agenda-table-card">
+                <div class="table-header-row">
+                    <div>Horário / Data</div>
+                    <div>Serviço / Tipo</div>
+                    <div>Vínculo Cliente e Veículo</div>
+                    <div>Status</div>
+                    <div>Observações</div>
+                    <div style="text-align:right;">Ações do Pátio</div>
+                </div>`;
+
+            for (const item of grupos[dataKey]) {
+                const isAguardando = String(item.status || '').toLowerCase().includes('aguard');
+                
+                let clienteNome = item.clientes?.nome || item.cliente_nome || 'Não identificado';
+                let carroTexto = 'Veículo não informado';
+                let placaTexto = '';
+
+                if(item.veiculos) {
+                    carroTexto = `${item.veiculos.marca} ${item.veiculos.modelo}`;
+                    placaTexto = item.veiculos.placa || '';
+                }
+
+                let placaHtml = placaTexto ? `<span class="plate-badge-mini">${placaTexto.toUpperCase().replace(/[-]/g, '')}</span>` : '';
+
+                blocoHtml += `
+                    <div class="table-row">
+                        <div class="col-time">
+                            <span class="clock">${item.horario ? item.horario.substring(0,5) : '--:--'}</span>
+                            <span class="date">${formatarDataBR(item.servico_data)}</span>
+                        </div>
+                        <div class="col-type">${item.servico_tipo || 'Geral'}</div>
+                        <div class="col-vinc">
+                            <span class="client">${clienteNome}</span>
+                            <div class="car-info-row">
+                                <span class="car-text">${carroTexto}</span>
+                                ${placaHtml}
+                            </div>
+                        </div>
+                        <div class="col-status">
+                            <span class="status-badge ${isAguardando ? 'aguardando' : ''}">${item.status || 'Pátio'}</span>
+                        </div>
+                        <div class="col-obs" title="${item.observacoes || ''}">${item.observacoes || '<i>Sem observações</i>'}</div>
+                        <div class="col-actions">
+                            <button class="btn-row-action budget" onclick="showToast('Gerando orçamento...', 'info')"><i data-lucide="calculator"></i> Orçamento</button>
+                            <button class="btn-row-action os" onclick="showToast('Abrindo O.S...', 'info')"><i data-lucide="wrench"></i> Abrir O.S.</button>
+                        </div>
+                    </div>`;
+            }
+            blocoHtml += `</div>`;
+            container.innerHTML += blocoHtml;
+        }
+        lucide.createIcons();
+    } catch (e) { console.error(e); showToast("Erro ao carregar agenda", "error"); }
+}
+
+window.onload = function() { renderizarAgendaExtrato(); };
+</script>
+</body>
+</html>

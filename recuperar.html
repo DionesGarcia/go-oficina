@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecânica Web — Recuperar Senha</title>
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='29' cy='22' r='8' stroke='%23FF5A00' stroke-width='1.5' stroke-dasharray='2 1'/%3E%3Cpath d='M29 11V13M29 31V33M18 22H20M38 22H40' stroke='%23FF5A00' stroke-width='1.5' stroke-linecap='round'/%3E%3Crect x='4' y='4' width='18' height='36' rx='4' stroke='%23FF5A00' stroke-width='2' fill='%231A1F26'/%3E%3Ccircle cx='13' cy='35' r='1.5' fill='%23FF5A00'/%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+
+    <link rel="stylesheet" href="css/global.css">
+
+    <style>
+        body { display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at top right, #111827, #06090e); }
+        .login-card { background: #0b0e14; border: 1px solid var(--border-color); width: 100%; max-width: 400px; padding: 40px 32px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        
+        .login-header { text-align: center; margin-bottom: 24px; }
+        .login-header h1 { font-size: 20px; font-weight: 700; color: var(--text-bright); margin-top: 16px; }
+        .login-header p { color: var(--text-muted); font-size: 14px; margin-top: 8px; line-height: 1.5; }
+
+        .btn-recovery { width: 100%; height: 44px; background: var(--brand-orange); color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
+        .btn-recovery:hover { background: #e04f00; }
+
+        .input-icon-wrapper { position: relative; }
+        .input-icon-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 18px; height: 18px; }
+        .input-login { background: #121722; border: 1px solid var(--border-color); border-radius: 6px; height: 44px; padding: 0 14px 0 44px; color: #ffffff; font-size: 14px; width: 100%; outline: none; }
+        
+        .back-link { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 24px; color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 600; }
+        .back-link:hover { color: var(--text-bright); }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="login-header">
+            <i data-lucide="key-round" style="color: var(--brand-orange); width: 40px; height: 40px;"></i>
+            <h1>Recuperar Senha</h1>
+            <p>Insira seu e-mail e enviaremos as instruções para você criar uma nova senha.</p>
+        </div>
+
+        <form onsubmit="event.preventDefault(); recuperarSenha();" style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="form-group">
+                <label>E-mail Registrado</label>
+                <div class="input-icon-wrapper">
+                    <i data-lucide="mail"></i>
+                    <input type="email" id="email" class="input-login" placeholder="seu-email@exemplo.com" required>
+                </div>
+            </div>
+
+            <button type="submit" id="btn-enviar" class="btn-recovery">Enviar Link de Recuperação</button>
+        </form>
+
+        <a href="login.html" class="back-link">
+            <i data-lucide="arrow-left" style="width:16px; height:16px;"></i> Voltar para o Login
+        </a>
+    </div>
+
+<script>
+    async function recuperarSenha() {
+        const email = document.getElementById('email').value;
+        const btn = document.getElementById('btn-enviar');
+
+        btn.disabled = true;
+        btn.innerHTML = 'Enviando...';
+
+        try {
+            const { error } = await db.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + '/login.html',
+            });
+            if (error) throw error;
+            
+            showToast("E-mail enviado! Verifique sua caixa de entrada.");
+        } catch (e) {
+            showToast(e.message, "error");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Enviar Link de Recuperação';
+        }
+    }
+    
+    window.onload = () => lucide.createIcons();
+</script>
+</body>
+</html>

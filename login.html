@@ -2,848 +2,105 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Agendamento Online — GarciaFlex</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mecânica Web — Login Administrativo</title>
     
-    <link rel="stylesheet" href="css/theme.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/cards.css">
-    <link rel="stylesheet" href="css/buttons.css">
-    <link rel="stylesheet" href="css/forms.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='29' cy='22' r='8' stroke='%23FF5A00' stroke-width='1.5' stroke-dasharray='2 1'/%3E%3Cpath d='M29 11V13M29 31V33M18 22H20M38 22H40' stroke='%23FF5A00' stroke-width='1.5' stroke-linecap='round'/%3E%3Crect x='4' y='4' width='18' height='36' rx='4' stroke='%23FF5A00' stroke-width='2' fill='%231A1F26'/%3E%3Ccircle cx='13' cy='35' r='1.5' fill='%23FF5A00'/%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+
+    <link rel="stylesheet" href="css/global.css">
+
     <style>
-        :root {
-            --green-premium: #00C853;
-            --green-glow: rgba(0, 200, 83, 0.35);
-            --bg-dark-depth: radial-gradient(circle at center, #111A2C 0%, #060A12 100%);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --text-secondary-fine: #94A3B8;
-        }
-
-        body {
-            background: var(--bg-dark-depth);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 40px 16px 80px 16px; 
-            font-family: 'Inter', sans-serif;
-            color: #FFF;
-            overflow-x: hidden;
-        }
-
-        .public-flow-card {
-            width: 100%;
-            max-width: 480px;
-            background-color: rgba(14, 21, 36, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
-            position: relative;
-        }
-
-        .hero-office-banner {
-            width: 100%; height: 200px; position: relative;
-            background-size: cover; background-position: center;
-            background-image: url('https://images.unsplash.com/photo-1616788494707-ec28f08d05a1?auto=format&fit=crop&w=800&q=80');
-            display: flex; align-items: flex-end; padding: 24px;
-        }
-        .hero-office-banner::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to bottom, rgba(6,10,18,0.1) 0%, rgba(6,10,18,0.4) 50%, rgba(14,21,36,1) 100%);
-            z-index: 1;
-        }
-        .hero-office-content { position: relative; z-index: 2; display: flex; align-items: center; gap: 16px; width: 100%; }
-        .hero-logo-frame {
-            width: 56px; height: 56px; border-radius: 16px;
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center;
-            overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-        }
-        .hero-logo-frame img { width: 80%; height: 80%; object-fit: contain; }
-        .hero-office-title { font-family: 'Barlow'; font-size: 20px; font-weight: 700; color: #FFF; letter-spacing: -0.02em; margin: 0; line-height: 1.2; }
-        .hero-office-meta { font-size: 12px; font-weight: 400; color: var(--text-secondary-fine); margin-top: 4px; display: flex; flex-direction: column; gap: 2px; }
-        .hero-office-meta i { color: var(--green-premium); width: 14px; }
-
-        .flow-padding-body { padding: 32px 32px 40px 32px; }
-
-        .assistant-guide-text { font-size: 18px; font-weight: 300; line-height: 1.6; color: #F8FAFC; margin-bottom: 32px; letter-spacing: -0.01em; }
-        .highlight-green { color: var(--green-premium); font-weight: 500; position: relative; }
-
-        .huge-input-saas {
-            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
-            color: #FFF; font-size: 16px; font-weight: 400; padding: 16px 20px;
-            border-radius: 14px; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .huge-input-saas:focus {
-            outline: none; background: rgba(255,255,255,0.05); border-color: var(--green-premium);
-            box-shadow: 0 0 0 4px rgba(0,200,83,0.15), inset 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .huge-input-saas::placeholder { color: rgba(255,255,255,0.2); }
-
-        .btn-primary-premium {
-            background: var(--green-premium); color: #000; font-weight: 600; font-size: 15px;
-            height: 54px; border-radius: 14px; border: none; display: flex; align-items: center;
-            justify-content: center; gap: 10px; cursor: pointer; transition: all 0.3s ease;
-            box-shadow: 0 8px 20px -6px var(--green-glow); width: 100%; margin-top: 20px;
-        }
-        .btn-primary-premium:hover:not(:disabled) { transform: translateY(-2px); background: #00E676; box-shadow: 0 12px 24px -6px var(--green-glow); }
-        .btn-primary-premium:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-
-        .interactive-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
-        .interactive-box {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 18px 14px; border-radius: 14px; text-align: center; cursor: pointer;
-            font-size: 14px; font-weight: 500; color: var(--text-secondary-fine); transition: all 0.2s ease;
-        }
-        .interactive-box:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.2); color: #FFF; }
-        .interactive-box.selected { background: rgba(0, 200, 83, 0.1); border-color: var(--green-premium); color: #FFF; box-shadow: 0 0 20px rgba(0, 200, 83, 0.1); }
-
-        /* Ajuste específico para forçar a grade de horários a ficar em 3 colunas perfeitas sem esticar */
-        #grid-horarios-publico {
-            display: grid !important;
-            grid-template-columns: repeat(3, 1fr) !important;
-            gap: 10px !important;
-        }
-        #grid-horarios-publico .interactive-box {
-            padding: 14px 8px !important;
-            font-size: 13px !important;
-        }
-
-        .conversational-step { display: none; opacity: 0; transform: translateY(15px); transition: all 0.5s ease; }
-        .conversational-step.active { display: flex; flex-direction: column; opacity: 1; transform: translateY(0); }
-
-        .bottom-progress-bar { width: 100%; height: 3px; background: rgba(255,255,255,0.05); }
-        .bottom-progress-fill { height: 100%; width: 15%; background: var(--green-premium); box-shadow: 0 0 10px var(--green-premium); transition: width 0.6s cubic-bezier(0.65,0,0.35,1); }
-
-        .fine-instruction { font-size: 12px; color: #64748B; margin-top: 12px; font-weight: 400; }
-        .btn-back { background: none; border: none; color: var(--text-secondary-fine); font-size: 14px; cursor: pointer; padding: 10px; transition: color 0.2s; }
-        .btn-back:hover { color: #FFF; }
-
-        .lookup-found-banner {
-            display: none; align-items: center; gap: 10px;
-            background: rgba(0,200,83,0.08); border: 1px solid rgba(0,200,83,0.25);
-            border-radius: 12px; padding: 12px 16px; margin-bottom: 16px;
-            font-size: 13px; font-weight: 600; color: var(--green-premium);
-        }
-        .lookup-found-banner.show { display: flex; }
-
-        .erro-inline {
-            display: none; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25);
-            border-radius: 10px; padding: 10px 14px; margin-top: 12px;
-            font-size: 13px; color: #FCA5A5; font-weight: 600;
-        }
-        .erro-inline.show { display: block; }
-
-        .lookup-spin {
-            display: none; width: 16px; height: 16px;
-            border: 2px solid rgba(255,255,255,0.1); border-top-color: var(--green-premium);
-            border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0;
-        }
-        .lookup-spin.show { display: inline-block; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .vehicle-selectable-card {
-            background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px; padding: 14px 16px; margin-bottom: 10px;
-            display: flex; justify-content: space-between; align-items: center;
-            cursor: pointer; transition: all 0.2s ease;
-        }
-        .vehicle-selectable-card:hover { background: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.2); }
-        .vehicle-selectable-card.selected {
-            background: rgba(0, 200, 83, 0.06); border-color: var(--green-premium);
-            box-shadow: 0 0 15px rgba(0, 200, 83, 0.08);
-        }
-        .vehicle-card-plate {
-            background: #0d1526; color: #fff; font-family: monospace; font-weight: 800;
-            font-size: 13px; padding: 4px 10px; border-radius: 6px; border: 1px solid #1E3050; letter-spacing: 1px;
-        }
-        .btn-delete-vehicle {
-            background: none; border: none; color: #EF4444; padding: 8px; cursor: pointer; opacity: 0.7; transition: opacity 0.2s;
-        }
-        .btn-delete-vehicle:hover { opacity: 1; }
-
-        /* Régua de Dias Deslizante Perfeita Corrigida */
-        .date-slider-container {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 4px 4px 16px 4px;
-            white-space: nowrap;
-            scrollbar-width: none;
-            -webkit-overflow-scrolling: touch;
-        }
-        .date-slider-container::-webkit-scrollbar { display: none; }
+        body { display: flex; align-items: center; justify-content: center; background: radial-gradient(circle at top right, #111827, #06090e); }
+        .login-card { background: #0b0e14; border: 1px solid var(--border-color); width: 100%; max-width: 400px; padding: 40px 32px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
         
-        .date-slider-item {
-            flex: 0 0 65px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06); 
-            border-radius: 12px;
-            padding: 12px 0;
-            text-align: center; 
-            cursor: pointer; 
-            transition: all 0.2s ease;
-        }
-        .date-slider-item:hover { background: rgba(255, 255, 255, 0.05); }
-        .date-slider-item.selected {
-            background: var(--green-premium); border-color: var(--green-premium); color: #000;
-            box-shadow: 0 8px 16px -4px var(--green-glow);
-        }
-        .date-slider-item .day-name { font-size: 10px; font-weight: 600; text-transform: uppercase; opacity: 0.6; display: block; margin-bottom: 4px; }
-        .date-slider-item.selected .day-name { opacity: 0.8; }
-        .date-slider-item .day-num { font-family: 'Barlow'; font-size: 18px; font-weight: 700; display: block; }
+        .login-header { text-align: center; margin-bottom: 32px; }
+        .login-header h1 { font-size: 24px; font-weight: 900; color: var(--text-bright); margin-top: 16px; }
+        .login-header h1 span { color: var(--brand-orange); }
+        .login-header p { color: var(--text-muted); font-size: 14px; margin-top: 8px; }
 
-        .app-global-fixed-footer {
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            background: linear-gradient(to top, rgba(6, 10, 18, 0.95) 60%, rgba(6, 10, 18, 0.7) 100%);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-top: 1px solid rgba(255, 255, 255, 0.04);
-            padding: 14px 24px;
-            font-size: 11px;
-            color: #475569;
-            letter-spacing: 0.05em;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 9999;
-        }
-        .app-global-fixed-footer span b {
-            color: #64748B;
-            font-weight: 600;
-        }
+        .btn-login { width: 100%; height: 44px; background: var(--brand-orange); color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
+        .btn-login:hover { background: #e04f00; transform: translateY(-1px); }
+        .btn-login:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        @media(max-width: 520px) {
-            .flow-padding-body { padding: 24px 20px 32px; }
-            .assistant-guide-text { font-size: 16px; }
-            .app-global-fixed-footer { padding: 12px 20px; font-size: 10px; }
-        }
+        .extra-links { margin-top: 24px; text-align: center; display: flex; flex-direction: column; gap: 10px; }
+        .extra-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+        .extra-links a:hover { color: var(--brand-orange); }
+
+        .input-icon-wrapper { position: relative; }
+        .input-icon-wrapper i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 18px; height: 18px; }
+        .input-login { background: #121722; border: 1px solid var(--border-color); border-radius: 6px; height: 44px; padding: 0 14px 0 44px; color: #ffffff; font-size: 14px; width: 100%; outline: none; transition: border-color 0.2s; }
+        .input-login:focus { border-color: var(--brand-orange); }
     </style>
 </head>
 <body>
 
-<div class="public-flow-card">
-
-    <div class="hero-office-banner" id="banner-hero-bg">
-        <div class="hero-office-content">
-            <div class="hero-logo-frame" id="oficina-logo-slot">
-                <i class="fas fa-warehouse" style="color:rgba(255,255,255,0.2);font-size:20px;"></i>
-            </div>
-            <div>
-                <h1 class="hero-office-title" id="oficina-nome-slot">Carregando oficina...</h1>
-                <div class="hero-office-meta" id="oficina-meta-slot">
-                    <span><i class="fas fa-map-marker-alt"></i> Localizando...</span>
-                    <span><i class="far fa-clock"></i> Consultando horários...</span>
-                </div>
-            </div>
+    <div class="login-card">
+        <div class="login-header">
+            <div class="brand-icon-wrapper" style="margin: 0 auto;"><div class="brand-icon-inner"></div></div>
+            <h1>MECÂNICA<span>WEB</span></h1>
+            <p>Acesse seu painel administrativo</p>
         </div>
-    </div>
 
-    <div class="flow-padding-body">
-
-        <div class="conversational-step active" id="step-nome">
-            <p class="assistant-guide-text">
-                Olá! Seja bem-vindo à nossa plataforma.<br>
-                <span class="highlight-green">Para começar</span>, qual seu nome completo?
-            </p>
+        <form id="form-login" onsubmit="event.preventDefault(); realizarLogin();" style="display: flex; flex-direction: column; gap: 16px;">
             <div class="form-group">
-                <input type="text" id="val-nome" class="huge-input-saas" placeholder="Digite seu nome..." autocomplete="off">
-                <p class="fine-instruction">Seu nome será usado para identificar seu veículo no painel.</p>
-            </div>
-            <button class="btn-primary-premium" onclick="avancarDoNome()">
-                Continuar <i class="fas fa-arrow-right"></i>
-            </button>
-        </div>
-
-        <div class="conversational-step" id="step-whatsapp">
-            <p class="assistant-guide-text">
-                Olá, <span id="txt-nome-cliente" class="highlight-green">Cliente</span>!<br>
-                Qual o seu número de <span class="highlight-green">WhatsApp</span>?
-            </p>
-
-            <div class="lookup-found-banner" id="banner-lookup-tel">
-                <i class="fas fa-check-circle"></i>
-                <span id="msg-lookup-tel">Consultando cadastro...</span>
-                <div class="lookup-spin" id="spin-tel"></div>
+                <label>E-mail</label>
+                <div class="input-icon-wrapper">
+                    <i data-lucide="mail"></i>
+                    <input type="email" id="email" class="input-login" placeholder="admin@garciaflex.com" required>
+                </div>
             </div>
 
             <div class="form-group">
-                <input type="tel" id="val-telefone" class="huge-input-saas" placeholder="(00) 00000-0000" autocomplete="off" oninput="mascaraTel(this)" onblur="lookupPorTelefone()">
-                <p class="fine-instruction">Se você já tem cadastro, preencheremos seus dados automaticamente.</p>
-            </div>
-            <div style="display:flex;align-items:center;gap:20px;margin-top:10px;">
-                <button class="btn-back" onclick="voltarParaEtapa('nome')">Voltar</button>
-                <button class="btn-primary-premium" style="margin-top:0;" onclick="avancarDoWhats()">Próximo</button>
-            </div>
-        </div>
-
-        <div class="conversational-step" id="step-cpf">
-            <p class="assistant-guide-text">
-                Ótimo. Informe seu <span class="highlight-green">CPF ou CNPJ</span> para vincular a <span class="highlight-green">garantia</span> das peças e serviços:
-            </p>
-            <div class="form-group">
-                <input type="text" id="val-cpf" class="huge-input-saas" placeholder="000.000.000-00 ou 00.000.000/0000-00" autocomplete="off" maxlength="18" oninput="mascaraDocumento(this)">
-                <p class="fine-instruction">Seus dados são usados para garantir seu histórico de coberturas na oficina.</p>
-            </div>
-            <div class="erro-inline" id="erro-cpf"></div>
-            <div style="display:flex;align-items:center;gap:20px;margin-top:10px;">
-                <button class="btn-back" onclick="voltarParaEtapa('whatsapp')">Voltar</button>
-                <button class="btn-primary-premium" style="margin-top:0;" onclick="avancarDoCpf()">Continuar</button>
-            </div>
-        </div>
-
-        <div class="conversational-step" id="step-veiculo">
-            <p class="assistant-guide-text" id="txt-veiculo-passo-contexto">
-                Now, talk about your vehicle:
-            </p>
-
-            <div id="veiculos-cadastrados-container" style="display:none;margin-bottom:16px;"></div>
-
-            <button type="button" id="btn-adicionar-novo-ve-toggle" onclick="forcarFormularioNovoVeiculo()" style="display:none;background:none;border:1px dashed rgba(0,200,83,0.3);color:var(--green-premium);width:100%;padding:11px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:16px;">
-                <i class="fas fa-plus"></i> Cadastrar outro veículo
-            </button>
-
-            <div id="form-veiculo-novo">
-                <div class="interactive-grid">
-                    <div class="form-group">
-                        <label style="font-size:11px;margin-bottom:5px;display:block;color:#64748B;">Marca</label>
-                        <input type="text" id="val-marca" class="huge-input-saas" placeholder="Ex: Honda" style="padding:12px 16px;font-size:14px;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size:11px;margin-bottom:5px;display:block;color:#64748B;">Modelo</label>
-                        <input type="text" id="val-modelo" class="huge-input-saas" placeholder="Ex: Civic" style="padding:12px 16px;font-size:14px;">
-                    </div>
-                </div>
-                <div class="interactive-grid">
-                    <div class="form-group">
-                        <label style="font-size:11px;margin-bottom:5px;display:block;color:#64748B;">Placa (Ex: AAA-0A00)</label>
-                        <input type="text" id="val-placa" class="huge-input-saas" placeholder="AAA-0A00" maxlength="8" oninput="mascaraPlaca(this)" style="padding:12px 16px;font-size:14px;text-transform:uppercase;">
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size:11px;margin-bottom:5px;display:block;color:#64748B;">Cor</label>
-                        <input type="text" id="val-cor" class="huge-input-saas" placeholder="Prata" style="padding:12px 16px;font-size:14px;">
-                    </div>
+                <label>Senha</label>
+                <div class="input-icon-wrapper">
+                    <i data-lucide="lock"></i>
+                    <input type="password" id="senha" class="input-login" placeholder="••••••••" required>
                 </div>
             </div>
 
-            <div style="display:flex;align-items:center;gap:20px;margin-top:20px;">
-                <button class="btn-back" id="btn-voltar-veiculo" onclick="voltarParaEtapa('cpf')">Voltar</button>
-                <button class="btn-primary-premium" style="margin-top:0;" onclick="avancarDoVeiculo()">Avançar</button>
-            </div>
+            <button type="submit" id="btn-entrar" class="btn-login">Entrar no Sistema</button>
+        </form>
+
+        <div class="extra-links">
+            <a href="recuperar.html">Esqueceu sua senha?</a>
+            <a href="agendar.html" style="color: var(--brand-blue);">Ir para agendamento público →</a>
         </div>
-
-        <div class="conversational-step" id="step-servico">
-            <p class="assistant-guide-text">
-                Qual <span class="highlight-green">serviço</span> seu carro precisa?
-            </p>
-            <div class="interactive-grid" id="grid-servicos-publico">
-                <div class="interactive-box selected" onclick="definirServicoCard(this,'Revisão')">Revisão Geral</div>
-                <div class="interactive-box" onclick="definirServicoCard(this,'Troca de Óleo')">Troca de Óleo</div>
-                <div class="interactive-box" onclick="definirServicoCard(this,'Freios')">Freios</div>
-                <div class="interactive-box" onclick="definirServicoCard(this,'Suspensão')">Suspensão</div>
-            </div>
-            <div class="form-group" style="margin-top:15px;">
-                <textarea id="val-obs" class="huge-input-saas" rows="2" placeholder="Alguma observação?" style="font-size:13px;"></textarea>
-            </div>
-            <div style="display:flex;align-items:center;gap:20px;margin-top:10px;">
-                <button class="btn-back" onclick="voltarParaEtapa('veiculo')">Voltar</button>
-                <button class="btn-primary-premium" style="margin-top:0;" onclick="avancarDoServico()">Definir Data</button>
-            </div>
-        </div>
-
-        <div class="conversational-step" id="step-final">
-            <p class="assistant-guide-text">
-                Para finalizar, escolha o <span class="highlight-green">melhor horário</span>:
-            </p>
-            
-            <div class="date-slider-container" id="regua-dias-container"></div>
-
-            <div class="interactive-grid" id="grid-horarios-publico">
-                <div style="grid-column: span 3; text-align: center; padding: 20px; color: var(--text-secondary-fine); font-size: 13px;">Selecione um dia acima...</div>
-            </div>
-            
-            <div class="erro-inline" id="erro-final"></div>
-            <div style="display:flex;align-items:center;gap:20px;margin-top:20px;">
-                <button class="btn-back" onclick="voltarParaEtapa('servico')">Voltar</button>
-                <button class="btn-primary-premium" style="margin-top:0;" id="btn-finalizar-fluxo" onclick="enviarFormularioDefinitivo()">
-                    Confirmar Agendamento <i class="fas fa-check"></i>
-                </button>
-            </div>
-        </div>
-
-        <div class="conversational-step" id="step-sucesso">
-            <div style="text-align:center;padding:20px 0 10px;">
-                <div style="width:72px;height:72px;border-radius:50%;background:rgba(0,200,83,0.1);border:2px solid var(--green-premium);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;box-shadow:0 0 24px rgba(0,200,83,0.2);">
-                    <i class="fas fa-check" style="font-size:30px;color:var(--green-premium);"></i>
-                </div>
-                <h2 style="font-family:'Barlow Condensed';font-size:26px;font-weight:800;letter-spacing:1px;margin-bottom:8px;">
-                    AGENDAMENTO <span style="color:var(--green-premium)">CONFIRMADO!</span>
-                </h2>
-                <p style="color:#64748B;font-size:14px;line-height:1.6;" id="sucesso-detalhe">
-                    Seu horário foi reservado com sucesso.
-                </p>
-                <a href="#" id="lnk-whatsapp-confirm" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#16a34a;color:#fff;text-decoration:none;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:700;margin-top:20px;box-shadow:0 4px 14px rgba(22,163,74,0.3);">
-                    <i class="fab fa-whatsapp" style="font-size:18px;"></i> Enviar Confirmação no WhatsApp
-                </a>
-            </div>
-        </div>
-
     </div>
-
-    <div class="bottom-progress-bar">
-        <div class="bottom-progress-fill" id="progress-indicator"></div>
-    </div>
-
-</div>
-
-<div class="app-global-fixed-footer">
-    <span>Powered by <b>Studio Garcia</b></span>
-    <span>v2.1.4</span>
-</div>
 
 <script>
-'use strict';
+    async function realizarLogin() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('senha').value;
+        const btn = document.getElementById('btn-entrar');
 
-const SUPABASE_URL = 'https://krxcmfsonqzfdywqedeg.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyeGNtZnNvbnF6ZmR5d3FlZGVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3MjI5NzgsImV4cCI6MjA5NDI5ODk3OH0.X1LujCzqD3YcckIJf6XEu8Rzk0W3x6cx_-HxAczxtko';
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        btn.disabled = true;
+        btn.innerHTML = 'Autenticando...';
 
-let saasConfigGlobal   = null;
-let clienteNomeCached  = '';
-let clienteIdCached    = null;   
-let veiculoIdCached    = null;   
-let listaVeiculosCache = [];     
-let servicoSelecionado = 'Revisão';
-let dataSelecionadaRegua = '';
-let horarioSelecionado = '';
-let pulouCpfAutomatico = false; 
-
-async function carregarIdentidadeVisualSaaS() {
-    try {
-        const { data } = await db.from('configuracoes_saas').select('*').eq('id', 1).single();
-        if (!data) return;
-        saasConfigGlobal = data;
-        const nomeFormatado = data.nome_oficina ? data.nome_oficina.toLowerCase().split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : 'GarciaFlex';
-        document.getElementById('oficina-nome-slot').innerText = nomeFormatado;
-        document.title = `Agendamento Online — ${nomeFormatado}`;
-        document.getElementById('oficina-meta-slot').innerHTML = `<span><i class="fas fa-map-marker-alt"></i> ${data.endereco || 'Atendimento Local'}</span><span><i class="far fa-clock"></i> Segunda a Sexta: 08h às 18h</span>`;
-        if (data.logo_url) document.getElementById('oficina-logo-slot').innerHTML = `<img src="${data.logo_url}" alt="Logo">`;
-        if (data.banner_url) document.getElementById('banner-hero-bg').style.backgroundImage = `url('${data.banner_url}')`;
-    } catch (e) { console.warn('[identidade]', e); }
-}
-
-function mascaraTel(el) {
-    let v = el.value.replace(/\D/g,'').slice(0,11);
-    v = v.replace(/^(\d{2})(\d)/g,'($1) $2');
-    v = v.replace(/(\d{5})(\d)/,'$1-$2');
-    el.value = v;
-}
-
-function mascaraDocumento(el) {
-    let v = el.value.replace(/\D/g,'');
-    if (v.length <= 11) {
-        v = v.replace(/(\d{3})(\d)/,'$1.$2');
-        v = v.replace(/(\d{3})(\d)/,'$1.$2');
-        v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
-    } else {
-        v = v.slice(0,14);
-        v = v.replace(/^(\d{2})(\d)/,'$1.$2');
-        v = v.replace(/^(\d{2})\.(\d{3})(\d)/,'$1.$2.$3');
-        v = v.replace(/\.(\d{3})(\d)/,'.$1/$2');
-        v = v.replace(/(\d{4})(\d{1,2})$/,'$1-$2');
-    }
-    el.value = v;
-}
-
-function mascaraPlaca(el) {
-    let v = el.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 7);
-    if (v.length > 3) {
-        v = v.slice(0, 3) + '-' + v.slice(3);
-    }
-    el.value = v; 
-}
-
-function alternarPassoConversacional(idPasso, porcentagem) {
-    const current = document.querySelector('.conversational-step.active');
-    if (current) {
-        current.style.opacity = '0';
-        current.style.transform = 'translateY(-10px)';
-        setTimeout(() => {
-            current.classList.remove('active');
-            const next = document.getElementById(`step-${idPasso}`);
-            if (!next) return;
-            next.classList.add('active');
-            setTimeout(() => {
-                next.style.opacity = '1';
-                next.style.transform = 'translateY(0)';
-            }, 50);
-        }, 300);
-    }
-    document.getElementById('progress-indicator').style.width = porcentagem + '%';
-}
-
-function voltarParaEtapa(idPasso) {
-    if (idPasso === 'cpf' && pulouCpfAutomatico) {
-        idPasso = 'whatsapp';
-    }
-    const mapa = { nome:15, whatsapp:30, cpf:45, veiculo:60, servico:75, final:90 };
-    alternarPassoConversacional(idPasso, mapa[idPasso] || 15);
-}
-
-function avancarDoNome() {
-    const nome = document.getElementById('val-nome').value.trim();
-    if (nome.length < 3) { alert('Por favor, digite seu nome completo.'); return; }
-    clienteNomeCached = nome;
-    document.getElementById('txt-nome-cliente').innerText = nome.split(' ')[0];
-    alternarPassoConversacional('whatsapp', 30);
-}
-
-async function lookupPorTelefone() {
-    const foneNorm = document.getElementById('val-telefone').value.replace(/\D/g,'');
-    if (foneNorm.length < 10) return;
-    const norm11 = foneNorm.slice(-11);
-
-    document.getElementById('spin-tel').classList.add('show');
-    document.getElementById('banner-lookup-tel').classList.add('show');
-    document.getElementById('msg-lookup-tel').textContent = 'Consultando cadastro...';
-
-    try {
-        const { data } = await db.from('clientes').select('id, nome, cpf_cnpj').or(`telefone_norm.eq.${norm11},telefone_norm.eq.${foneNorm}`).maybeSingle();
-        document.getElementById('spin-tel').classList.remove('show');
-
-        if (!data) {
-            document.getElementById('banner-lookup-tel').classList.remove('show');
-            pulouCpfAutomatico = false;
-            return;
-        }
-
-        clienteIdCached   = data.id;
-        clienteNomeCached = data.nome || clienteNomeCached;
-
-        if (data.nome) {
-            document.getElementById('val-nome').value = data.nome;
-            document.getElementById('txt-nome-cliente').innerText = data.nome.split(' ')[0];
-        }
-
-        const { data: ves } = await db.from('veiculos').select('id, marca, modelo, placa, cor').eq('cliente_id', data.id).order('id', { ascending: false });
-        listaVeiculosCache = ves || [];
-
-        if (data.cpf_cnpj && data.cpf_cnpj.trim().length >= 11) {
-            document.getElementById('val-cpf').value = data.cpf_cnpj;
-            pulouCpfAutomatico = true;
-            document.getElementById('msg-lookup-tel').innerHTML = `<i class="fas fa-check-circle"></i> Cadastro Encontrado! Avançando...`;
+        try {
+            const { data, error } = await db.auth.signInWithPassword({ email, password });
+            if (error) throw error;
             
-            setTimeout(() => {
-                _renderizarEtapaVeiculo();
-                document.getElementById('txt-veiculo-passo-contexto').innerHTML = `Cadastro localizado! Escolha ou cadastre seu <span class="highlight-green">veículo</span>:`;
-                document.getElementById('btn-voltar-veiculo').onclick = () => voltarParaEtapa('whatsapp');
-                alternarPassoConversacional('veiculo', 60);
-            }, 800);
-
-        } else {
-            pulouCpfAutomatico = false;
-            document.getElementById('msg-lookup-tel').textContent = `Olá, ${data.nome.split(' ')[0]}! Cadastro localizado.`;
+            showToast("Acesso autorizado!");
+            setTimeout(() => window.location.href = 'index.html', 1000);
+        } catch (e) {
+            showToast(e.message, "error");
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'Entrar no Sistema';
         }
-
-    } catch (e) {
-        console.error('[lookupPorTelefone]', e);
-        document.getElementById('spin-tel').classList.remove('show');
     }
-}
-
-function avancarDoWhats() {
-    const fone = document.getElementById('val-telefone').value.replace(/\D/g,'');
-    if (fone.length < 10) { alert('Por favor, informe o WhatsApp com DDD.'); return; }
     
-    if (pulouCpfAutomatico) {
-        _renderizarEtapaVeiculo();
-        document.getElementById('txt-veiculo-passo-contexto').innerHTML = `Cadastro localizado! Escolha ou cadastre seu <span class="highlight-green">veículo</span>:`;
-        document.getElementById('btn-voltar-veiculo').onclick = () => voltarParaEtapa('whatsapp');
-        alternarPassoConversacional('veiculo', 60);
-    } else {
-        document.getElementById('btn-voltar-veiculo').onclick = () => voltarParaEtapa('cpf');
-        alternarPassoConversacional('cpf', 45);
-    }
-}
-
-function avancarDoCpf() {
-    const cpfRaw = document.getElementById('val-cpf').value.replace(/\D/g,'');
-    if (cpfRaw.length !== 11 && cpfRaw.length !== 14) {
-        document.getElementById('erro-cpf').textContent = 'Informe um CPF (11 dígitos) ou CNPJ (14 dígitos) válido para sua garantia.';
-        document.getElementById('erro-cpf').classList.add('show');
-        return;
-    }
-    document.getElementById('erro-cpf').classList.remove('show');
-    _renderizarEtapaVeiculo();
-    alternarPassoConversacional('veiculo', 60);
-}
-
-function _renderizarEtapaVeiculo() {
-    const container = document.getElementById('veiculos-cadastrados-container');
-    const formVe = document.getElementById('form-veiculo-novo');
-    const btnNovoToggle = document.getElementById('btn-adicionar-novo-ve-toggle');
-
-    container.innerHTML = '';
-    veiculoIdCached = null;
-
-    if (listaVeiculosCache.length > 0) {
-        container.style.display = 'block';
-        btnNovoToggle.style.display = 'block';
-        formVe.style.display = 'none';
-
-        listaVeiculosCache.forEach((ve, idx) => {
-            const card = document.createElement('div');
-            card.className = `vehicle-selectable-card ${idx === 0 ? 'selected' : ''}`;
-            if(idx === 0) veiculoIdCached = va.id;
-
-            card.innerHTML = `
-                <div style="display:flex; align-items:center; gap: 12px; flex-grow:1;" onclick="selecionarVeiculoCard(this, '${ve.id}')">
-                    <i class="fas fa-car" style="color:var(--green-premium); font-size:18px;"></i>
-                    <div>
-                        <b style="font-size:14px;color:#fff;display:block;">${ve.marca} ${ve.modelo}</b>
-                        <span style="font-size:12px;color:#64748B;">Cor: ${ve.cor || 'Preto'}</span>
-                    </div>
-                </div>
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <span class="vehicle-card-plate">${ve.placa}</span>
-                    <button class="btn-delete-vehicle" title="Excluir Veículo" onclick="excluirVeiculoDoFluxo(event, '${ve.id}', this)">
-                        <i class="far fa-trash-alt"></i>
-                    </button>
-                </div>
-            `;
-            container.appendChild(card);
-        });
-    } else {
-        container.style.display = 'none';
-        btnNovoToggle.style.display = 'none';
-        formVe.style.display = 'block';
-    }
-}
-
-function selecionarVeiculoCard(elemento, idVeiculo) {
-    document.querySelectorAll('.vehicle-selectable-card').forEach(c => c.classList.remove('selected'));
-    elemento.closest('.vehicle-selectable-card').classList.add('selected');
-    veiculoIdCached = idVeiculo;
-    document.getElementById('form-veiculo-novo').style.display = 'none';
-}
-
-function definirServicoCard(el, nomeServico) {
-    document.querySelectorAll('#grid-servicos-publico .interactive-box').forEach(b => b.classList.remove('selected'));
-    el.classList.add('selected');
-    servicoSelecionado = nomeServico;
-}
-
-function avancarDoVeiculo() {
-    const container = document.getElementById('veiculos-cadastrados-container');
-    const usandoCadastrado = (container.style.display === 'block' && veiculoIdCached !== null);
-    
-    if(!usandoCadastrado) {
-        const marca = document.getElementById('val-marca').value.trim();
-        const modelo = document.getElementById('val-modelo').value.trim();
-        const placa = document.getElementById('val-placa').value.trim();
-        if(!marca || !modelo || placa.length < 7) {
-            alert('Por favor, preencha Marca, Modelo e Placa válidos do veículo.');
-            return;
-        }
-    }
-    alternarPassoConversacional('servico', 75);
-}
-
-function avancarDoServico() {
-    gerarReguaSeteDias();
-    alternarPassoConversacional('final', 90);
-}
-
-function gerarReguaSeteDias() {
-    const container = document.getElementById('regua-dias-container');
-    container.innerHTML = '';
-    
-    const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-    let diaBase = new Date();
-    let renderizados = 0;
-
-    while (renderizados < 7) {
-        if (diaBase.getDay() === 0) {
-            diaBase.setDate(diaBase.getDate() + 1);
-            continue;
-        }
-
-        const ano = diaBase.getFullYear();
-        const mes = String(diaBase.getMonth() + 1).padStart(2, '0');
-        const diaNum = String(diaBase.getDate()).padStart(2, '0');
-        const isoDataStr = `${ano}-${mes}-${diaNum}`;
-
-        const itemStr = document.createElement('div');
-        itemStr.className = `date-slider-item ${renderizados === 0 ? 'selected' : ''}`;
-        if(renderizados === 0) {
-            dataSelecionadaRegua = isoDataStr;
-            buscarHorariosDisponiveisBanco(isoDataStr);
-        }
-
-        itemStr.innerHTML = `
-            <span class="day-name">${diasSemana[diaBase.getDay()]}</span>
-            <span class="day-num">${diaNum}</span>
-        `;
-
-        itemStr.onclick = () => {
-            document.querySelectorAll('.date-slider-item').forEach(i => i.classList.remove('selected'));
-            itemStr.classList.add('selected');
-            dataSelecionadaRegua = isoDataStr;
-            buscarHorariosDisponiveisBanco(isoDataStr);
-        };
-
-        container.appendChild(itemStr);
-        diaBase.setDate(diaBase.getDate() + 1);
-        renderizados++;
-    }
-}
-
-async function buscarHorariosDisponiveisBanco(dataIsoStr) {
-    const grid = document.getElementById('grid-horarios-publico');
-    grid.innerHTML = '<div style="grid-column:span 3;text-align:center;padding:20px;color:var(--green-premium);font-size:13px;"><i class="fas fa-spinner fa-spin"></i> Consultando horários...</div>';
-    horarioSelecionado = '';
-
-    try {
-        const { data: agendados } = await db.from('agendamentos').select('horario').eq('data_agenda', dataIsoStr).inset('status', ['Confirmado', 'Pendente']);
-        const listaOcupados = agendados ? agendados.map(a => a.horario.slice(0,5)) : [];
-
-        const horariosPadrao = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
-        grid.innerHTML = '';
-
-        let inseridos = 0;
-        horariosPadrao.forEach(hr => {
-            const ocupado = listaOcupados.includes(hr);
-            if (!ocupado) {
-                const box = document.createElement('div');
-                box.className = 'interactive-box';
-                box.textContent = hr;
-                box.onclick = () => {
-                    document.querySelectorAll('#grid-horarios-publico .interactive-box').forEach(b => b.classList.remove('selected'));
-                    box.classList.add('selected');
-                    horarioSelecionado = hr;
-                };
-                grid.appendChild(box);
-                inseridos++;
-            }
-        });
-
-        if (inseridos === 0) {
-            grid.innerHTML = '<div style="grid-column:span 3;text-align:center;padding:20px;color:#EF4444;font-size:13px;">Nenhum horário disponível para este dia.</div>';
-        }
-    } catch (e) {
-        console.error('[buscarHorarios]', e);
-        grid.innerHTML = '<div style="grid-column:span 3;text-align:center;padding:20px;color:#EF4444;font-size:13px;">Erro ao buscar horários.</div>';
-    }
-}
-
-async function excluirVeiculoDoFluxo(event, idVeiculo, elementoBotao) {
-    event.stopPropagation();
-    if(!confirm('Deseja realmente excluir este veículo do seu histórico?')) return;
-    try {
-        const { error } = await db.from('veiculos').delete().eq('id', idVeiculo);
-        if(error) throw error;
-        listaVeiculosCache = listaVeiculosCache.filter(v => v.id !== parseInt(idVeiculo));
-        _renderizarEtapaVeiculo();
-    } catch(e) { alert('Erro ao excluir veículo.'); console.error(e); }
-}
-
-function forcarFormularioNovoVeiculo() {
-    veiculoIdCached = null;
-    document.querySelectorAll('.vehicle-selectable-card').forEach(c => c.classList.remove('selected'));
-    document.getElementById('form-veiculo-novo').style.display = 'block';
-}
-
-async function enviarFormularioDefinitivo() {
-    const errEl = document.getElementById('erro-final');
-    errEl.classList.remove('show');
-
-    if (!dataSelecionadaRegua || !horarioSelecionado) {
-        errEl.textContent = 'Por favor, selecione um dia e um horário disponível para o atendimento.';
-        errEl.classList.add('show');
-        return;
-    }
-
-    const btn = document.getElementById('btn-finalizar-fluxo');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agendando...';
-
-    try {
-        let cId = clienteIdCached;
-        if (!cId) {
-            const foneRaw = document.getElementById('val-telefone').value.replace(/\D/g,'');
-            const norm11 = foneRaw.slice(-11);
-            const cpfFinal = document.getElementById('val-cpf').value.trim();
-
-            const { data: novoCli, error: errCli } = await db.from('clientes').insert({
-                nome: clienteNomeCached,
-                telefone: document.getElementById('val-telefone').value,
-                telefone_norm: norm11,
-                cpf_cnpj: cpfFinal
-            }).select('id').single();
-
-            if (errCli) throw errCli;
-            cId = novoCli.id;
-        }
-
-        let vId = veiculoIdCached;
-        if (!vId) {
-            const marca = document.getElementById('val-marca').value.trim();
-            const modelo = document.getElementById('val-modelo').value.trim();
-            const placa = document.getElementById('val-placa').value.trim().toUpperCase();
-            const cor = document.getElementById('val-cor').value.trim() || 'Não Informado';
-
-            const { data: novoVe, error: errVe } = await db.from('veiculos').insert({
-                cliente_id: cId, marca, modelo, placa, cor
-            }).select('id').single();
-
-            if (errVe) throw errVe;
-            vId = novoVe.id;
-        }
-
-        const obs = document.getElementById('val-obs').value.trim();
-        const { error: errAge } = await db.from('agendamentos').insert({
-            cliente_id: cId,
-            veiculo_id: vId,
-            data_agenda: dataSelecionadaRegua,
-            horario: horarioSelecionado + ':00',
-            servico: servicoSelecionado,
-            observacoes: obs,
-            status: 'Pendente'
-        });
-
-        if (errAge) throw errAge;
-
-        const dataBr = dataSelecionadaRegua.split('-').reverse().join('/');
-        document.getElementById('sucesso-detalhe').innerHTML = `Seu agendamento de <b>${servicoSelecionado}</b> foi reservado para o dia <b>${dataBr}</b> às <b>${horarioSelecionado}h</b>.`;
-        
-        let msgWhats = `Olá! Realizei um agendamento online na oficina.\n\n🛠️ *Serviço:* ${servicoSelecionado}\n📅 *Data:* ${dataBr}\n⏰ *Horário:* ${horarioSelecionado}h\n👤 *Cliente:* ${clienteNomeCached}`;
-        document.getElementById('lnk-whatsapp-confirm').href = `https://api.whatsapp.com/send?phone=5542999026410&text=${encodeURIComponent(msgWhats)}`;
-
-        alternarPassoConversacional('sucesso', 100);
-
-    } catch (e) {
-        console.error('[enviarFormularioDefinitivo]', e);
-        errEl.textContent = 'Ocorreu um erro ao salvar o agendamento no banco de dados. Tente novamente.';
-        errEl.classList.add('show');
-        btn.disabled = false;
-        btn.innerHTML = 'Confirmar Agendamento <i class="fas fa-check"></i>';
-    }
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    carregarIdentidadeVisualSaaS();
-});
+    window.onload = () => lucide.createIcons();
 </script>
 </body>
 </html>
