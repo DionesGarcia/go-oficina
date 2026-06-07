@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Agendamento Online — Studio Garcia</title>
+    <title>Agendamento Online — GO Oficina</title>
     
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='25' y='25' width='50' height='50' rx='10' transform='rotate(45 50 50)' fill='none' stroke='%23FF5722' stroke-width='8'/><rect x='41' y='41' width='18' height='18' rx='4' transform='rotate(45 50 50)' fill='%2300C853'/></svg>">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
     <script src="https://unpkg.com/imask"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
@@ -520,17 +522,13 @@
     </div>
 
     <div class="system-footer-branding">
-        POWERED BY <b>Studio Garcia</b> • v1.0
+        POWERED BY <b>GO Oficina</b> • v1.0
     </div>
 </div>
 
 <script>
-    const SUPABASE_URL = 'https://krxcmfsonqzfdywqedeg.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtyeGNtZnNvbnF6ZmR5d3FlZGVnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3MjI5NzgsImV4cCI6MjA5NDI5ODk3OH0.X1LujCzqD3YcckIJf6XEu8Rzk0W3x6cx_-HxAczxtko';
-    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
     const urlParams = new URLSearchParams(window.location.search);
-    const CONFIG_ID = parseInt(urlParams.get('id')) || 1;
+    const CONFIG_ID = parseInt(urlParams.get('oficina')) || parseInt(urlParams.get('id')) || 1;
 
     let clienteId = null;
     let veiculoId = null;
@@ -541,6 +539,8 @@
     let servicoTipoSelecionado = '';
     let listaVeiculosCliente = [];
     let usandoVeiculoExistente = false;
+    let intervaloMinutosAgenda = 60;
+    let vagasSimultaneasAgenda = 1;
 
     let maskTel, maskCpfCnpj;
 
@@ -555,10 +555,14 @@
         try {
             const { data: config } = await db.from('configuracoes_saas').select('*').eq('id', CONFIG_ID).maybeSingle();
             if(config) {
-                document.getElementById('lbl-nome-oficina').innerText = config.nome_oficina || "STUDIO GARCIA";
+                document.getElementById('lbl-nome-oficina').innerText = config.nome_oficina || "GARCIAFLEX";
                 document.getElementById('lbl-endereco-oficina').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${config['endereço'] || 'Endereço não informado'}`;
+                intervaloMinutosAgenda = Number(config.intervalo_minutos) > 0 ? Number(config.intervalo_minutos) : 60;
+                vagasSimultaneasAgenda = Number(config.vagas_simultaneas) > 0 ? Number(config.vagas_simultaneas) : 1;
             }
-        } catch(e) {}
+        } catch(e) {
+            console.error('Erro ao carregar dados da oficina:', e);
+        }
 
         maskTel = IMask(document.getElementById('val-telefone'), { mask: '(00) 00000-0000' });
         maskCpfCnpj = IMask(document.getElementById('val-cpf'), {
@@ -593,13 +597,18 @@
         };
         
         if(mapaProgresso[id]) {
-            document.getElementById('progress-bar-flow').style.width = mapaProgresso[id] + '%';
+            const progress = document.getElementById('progress-bar-flow');
+            if(progress) progress.style.width = mapaProgresso[id] + '%';
         }
     }
 
     function avancarDoNome() {
         const nome = document.getElementById('val-nome').value.trim();
-        if(nome.length < 3) return alert('Por favor, informe seu nome completo.');
+        if(nome.length < 3) {
+            if(typeof showToast === 'function') showToast('Por favor, informe seu nome completo.', 'error');
+            else alert('Por favor, informe seu nome completo.');
+            return;
+        }
         clienteNomeCompleto = nome;
         clientePrimeiroNome = nome.split(' ')[0];
         document.getElementById('txt-nome-cliente').innerText = clientePrimeiroNome;
@@ -607,7 +616,11 @@
     }
 
     async function avancarDoWhats() {
-        if(!maskTel.masked.isComplete) return alert('Por favor, insira um WhatsApp válido.');
+        if(!maskTel.masked.isComplete) {
+            if(typeof showToast === 'function') showToast('Por favor, insira um WhatsApp válido.', 'error');
+            else alert('Por favor, insira um WhatsApp válido.');
+            return;
+        }
         
         const btn = document.getElementById('btn-whats-next');
         btn.disabled = true;
@@ -619,6 +632,7 @@
             const { data: cliente } = await db.from('clientes')
                 .select('*')
                 .eq('telefone', telefoneFormatado)
+                .eq('oficina_id', CONFIG_ID)
                 .maybeSingle();
 
             if(cliente) {
@@ -656,7 +670,9 @@
     async function avancarDoCpf() {
         const docLimpo = maskCpfCnpj.value.replace(/\D/g, '');
         if(docLimpo.length !== 11 && docLimpo.length !== 14) {
-            return alert('Por favor, digite um CPF ou CNPJ válido.');
+            if(typeof showToast === 'function') showToast('Por favor, digite um CPF ou CNPJ válido.', 'error');
+            else alert('Por favor, digite um CPF ou CNPJ válido.');
+            return;
         }
 
         const btn = document.getElementById('btn-verificar-cpf');
@@ -669,6 +685,7 @@
             const { data: cliente } = await db.from('clientes')
                 .select('*')
                 .eq('cpf_cnpj', docLimpo)
+                .eq('oficina_id', CONFIG_ID)
                 .maybeSingle();
 
             btn.style.display = 'none';
@@ -682,7 +699,10 @@
                 document.getElementById('txt-nome-cliente').innerText = clientePrimeiroNome;
                 veiculosParaRenderizar = await buscarVeiculosDoCliente(cliente.id);
             } else if(clienteId) {
-                await db.from('clientes').update({ cpf_cnpj: docLimpo }).eq('id', clienteId);
+                await db.from('clientes')
+                    .update({ cpf_cnpj: docLimpo })
+                    .eq('id', clienteId)
+                    .eq('oficina_id', CONFIG_ID);
                 veiculosParaRenderizar = await buscarVeiculosDoCliente(clienteId);
             }
 
@@ -710,7 +730,8 @@
         try {
             const { data, error } = await db.from('veiculos')
                 .select('*')
-                .eq('cliente_id', cId);
+                .eq('cliente_id', cId)
+                .eq('oficina_id', CONFIG_ID);
             
             if (error) throw error;
             listaVeiculosCliente = data || [];
@@ -727,13 +748,14 @@
         const btnToggle = document.getElementById('btn-novo-carro-toggle');
         const guiaTexto = document.getElementById('txt-guia-veiculo');
 
+        if(!container) return;
         container.innerHTML = '';
 
         if(carros && carros.length > 0) {
             container.style.display = 'block';
-            btnToggle.style.display = 'block';
-            formBloco.style.display = 'none';
-            guiaTexto.innerHTML = `<span class="highlight-green">${clientePrimeiroNome}</span>, selecione o veículo para o agendamento:`;
+            if(btnToggle) btnToggle.style.display = 'block';
+            if(formBloco) formBloco.style.display = 'none';
+            if(guiaTexto) guiaTexto.innerHTML = `<span class="highlight-green">${clientePrimeiroNome}</span>, selecione o veículo para o agendamento:`;
 
             carros.forEach((carro, index) => {
                 const div = document.createElement('div');
@@ -756,9 +778,9 @@
             });
         } else {
             container.style.display = 'none';
-            btnToggle.style.display = 'none';
-            formBloco.style.display = 'block';
-            guiaTexto.innerHTML = `Cadastre os dados do seu <span class="highlight-green">veículo</span>:`;
+            if(btnToggle) btnToggle.style.display = 'none';
+            if(formBloco) formBloco.style.display = 'block';
+            if(guiaTexto) guiaTexto.innerHTML = `Cadastre os dados do seu <span class="highlight-green">veículo</span>:`;
             usandoVeiculoExistente = false;
             veiculoId = null;
         }
@@ -767,14 +789,16 @@
     function selecionarVeiculoExistente(id, elemento) {
         document.querySelectorAll('.vehicle-card-select').forEach(el => el.classList.remove('selected'));
         elemento.classList.add('selected');
-        document.getElementById('form-cadastro-veiculo-bloco').style.display = 'none';
+        const formBloco = document.getElementById('form-cadastro-veiculo-bloco');
+        if(formBloco) formBloco.style.display = 'none';
         veiculoId = id;
         usandoVeiculoExistente = true;
     }
 
     function habilitarFormularioNovoVeiculo() {
         document.querySelectorAll('.vehicle-card-select').forEach(el => el.classList.remove('selected'));
-        document.getElementById('form-cadastro-veiculo-bloco').style.display = 'block'; 
+        const formBloco = document.getElementById('form-cadastro-veiculo-bloco');
+        if(formBloco) formBloco.style.display = 'block'; 
         usandoVeiculoExistente = false;
         veiculoId = null;
     }
@@ -790,7 +814,9 @@
         const placa = document.getElementById('val-placa').value.trim();
 
         if(!marca || !modelo || placa.length < 7) {
-            return alert('Por favor, preencha todos os dados do veículo corretamente ou selecione um existente.');
+            if(typeof showToast === 'function') showToast('Por favor, preencha todos os dados do veículo corretamente.', 'error');
+            else alert('Por favor, preencha todos os dados do veículo corretamente.');
+            return;
         }
 
         alternarPasso('servico');
@@ -803,13 +829,18 @@
     }
 
     function avancarDoServico() {
-        if(!servicoTipoSelecionado) return alert('Por favor, selecione um tipo de serviço.');
+        if(!servicoTipoSelecionado) {
+            if(typeof showToast === 'function') showToast('Por favor, selecione um tipo de serviço.', 'error');
+            else alert('Por favor, selecione um tipo de serviço.');
+            return;
+        }
         montarReguaDiasEDisponibilidade();
         alternarPasso('agenda');
     }
 
     function montarReguaDiasEDisponibilidade() {
         const container = document.getElementById('regua-dias-fixa');
+        if(!container) return;
         container.innerHTML = '';
         const nomesDias = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
         
@@ -819,7 +850,8 @@
         let primeiraDataString = '';
 
         dataSelecionada = '';
-        document.getElementById('grid-horarios').innerHTML = '';
+        const gridHorarios = document.getElementById('grid-horarios');
+        if(gridHorarios) gridHorarios.innerHTML = '';
 
         while(adicionados < 5) {
             let dataAlvo = new Date();
@@ -861,7 +893,8 @@
 
     function selecionarDataRegua(dataStr, elemento) {
         document.querySelectorAll('.date-grid-item').forEach(el => el.classList.remove('selected'));
-        document.getElementById('box-data-manual').style.display = 'none';
+        const boxManual = document.getElementById('box-data-manual');
+        if(boxManual) boxManual.style.display = 'none';
         if(elemento) elemento.classList.add('selected');
         
         dataSelecionada = dataStr;
@@ -871,14 +904,16 @@
     function openDataManual() {
         document.querySelectorAll('.date-grid-item').forEach(el => el.classList.remove('selected'));
         const boxManual = document.getElementById('box-data-manual');
-        boxManual.style.display = 'block';
+        if(boxManual) boxManual.style.display = 'block';
         
         const inputDatePicker = document.getElementById('input-date-picker-nativo');
-        inputDatePicker.focus();
-        if (typeof inputDatePicker.showPicker === 'function') {
-            inputDatePicker.showPicker();
-        } else {
-            inputDatePicker.click();
+        if(inputDatePicker) {
+            inputDatePicker.focus();
+            if (typeof inputDatePicker.showPicker === 'function') {
+                inputDatePicker.showPicker();
+            } else {
+                inputDatePicker.click();
+            }
         }
     }
 
@@ -890,7 +925,8 @@
         hoje.setHours(0,0,0,0);
 
         if(escolhida < hoje) {
-            alert('Você não pode agendar um serviço em uma data passada!');
+            if(typeof showToast === 'function') showToast('Você não pode agendar em uma data passada!', 'error');
+            else alert('Você não pode agendar em uma data passada!');
             document.getElementById('input-date-picker-nativo').value = '';
             return;
         }
@@ -901,10 +937,31 @@
 
     async function buscarHorariosDisponiveis(dataAlvo) {
         const grid = document.getElementById('grid-horarios');
+        if(!grid) return;
         grid.innerHTML = '<p style="color:var(--text-secondary); font-size:13px; grid-column: span 3;">Buscando horários disponíveis...</p>';
         horarioSelecionado = '';
 
-        const listaHorasPadrao = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+        const gerarHorariosPorPeriodo = (inicio, fim, intervalo) => {
+            const [horaInicio, minutoInicio] = inicio.split(':').map(Number);
+            const [horaFim, minutoFim] = fim.split(':').map(Number);
+            const minutosInicio = (horaInicio * 60) + minutoInicio;
+            const minutosFim = (horaFim * 60) + minutoFim;
+            const horarios = [];
+
+            for(let minutoAtual = minutosInicio; minutoAtual <= minutosFim; minutoAtual += intervalo) {
+                const hora = String(Math.floor(minutoAtual / 60)).padStart(2, '0');
+                const minuto = String(minutoAtual % 60).padStart(2, '0');
+                horarios.push(`${hora}:${minuto}`);
+            }
+
+            return horarios;
+        };
+
+        const listaHorasPadrao = [
+            ...gerarHorariosPorPeriodo('08:00', '11:00', intervaloMinutosAgenda),
+            ...gerarHorariosPorPeriodo('13:00', '17:00', intervaloMinutosAgenda)
+        ];
+        const statusInativos = ['CANCELADO', 'REMARCADO', 'FALTOU'];
 
         try {
             const agora = new Date();
@@ -914,13 +971,20 @@
             const hojeDataFormatada = `${anoAtual}-${mesAtual}-${diaAtual}`;
 
             const { data: agendados, error } = await db.from('agendamentos')
-                .select('horario')
+                .select('horario, status')
                 .eq('servico_data', dataAlvo) 
                 .eq('oficina_id', CONFIG_ID);
 
             if(error) throw error;
 
-            const listaOcupados = agendados ? agendados.map(a => a.horario ? a.horario.substring(0, 5) : '') : [];
+            const agendamentosPorHorario = {};
+            (agendados || []).forEach(agendamento => {
+                const horario = agendamento.horario ? agendamento.horario.substring(0, 5) : '';
+                const status = (agendamento.status || '').trim().toUpperCase();
+                if(!horario || statusInativos.includes(status)) return;
+
+                agendamentosPorHorario[horario] = (agendamentosPorHorario[horario] || 0) + 1;
+            });
 
             grid.innerHTML = '';
 
@@ -940,7 +1004,8 @@
                     }
                 }
 
-                if (listaOcupados.includes(hora) || ehHorarioPassado) {
+                const vagasOcupadas = agendamentosPorHorario[hora] || 0;
+                if (vagasOcupadas >= vagasSimultaneasAgenda || ehHorarioPassado) {
                     div.className += ' disabled';
                 } else {
                     div.onclick = () => {
@@ -964,7 +1029,9 @@
 
     async function enviarFormularioDefinitivo() {
         if(!dataSelecionada || !horarioSelecionado) {
-            return alert('Por favor, escolha o dia e o horário do atendimento.');
+            if(typeof showToast === 'function') showToast('Por favor, escolha o dia e o horário.', 'error');
+            else alert('Por favor, escolha o dia e o horário.');
+            return;
         }
 
         const btn = document.getElementById('btn-finalizar');
@@ -1018,11 +1085,14 @@
 
             if (errAgenda) throw errAgenda;
 
+            if(typeof showToast === 'function') showToast('Agendamento salvo com sucesso!');
             avancarParaSucesso();
             
         } catch(e) {
             console.error(e);
-            alert("Erro ao salvar agendamento: " + (e.message || e));
+            const msg = e.message || e;
+            if(typeof showToast === 'function') showToast("Erro ao salvar: " + msg, "error");
+            else alert("Erro ao salvar agendamento: " + msg);
         } finally {
             btn.disabled = false;
             btn.innerText = 'Confirmar Agendamento';
@@ -1033,10 +1103,13 @@
         const partesData = dataSelecionada.split('-');
         const dataExibicao = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
         
-        document.getElementById('sucesso-detalhe').innerHTML = `
-            Serviço: <b>${servicoTipoSelecionado}</b><br>
-            Data: <b>${dataExibicao}</b> às <b>${horarioSelecionado}</b>
-        `;
+        const detalhe = document.getElementById('sucesso-detalhe');
+        if(detalhe) {
+            detalhe.innerHTML = `
+                Serviço: <b>${servicoTipoSelecionado}</b><br>
+                Data: <b>${dataExibicao}</b> às <b>${horarioSelecionado}</b>
+            `;
+        }
         
         alternarPasso('sucesso');
     }

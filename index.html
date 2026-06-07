@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Mecânica Web — Painel de Controle</title>
+  <title>GO Oficina — Painel de Controle</title>
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='29' cy='22' r='8' stroke='%23FF5A00' stroke-width='1.5' stroke-dasharray='2 1'/%3E%3Cpath d='M29 11V13M29 31V33M18 22H20M38 22H40' stroke='%23FF5A00' stroke-width='1.5' stroke-linecap='round'/%3E%3Crect x='4' y='4' width='18' height='36' rx='4' stroke='%23FF5A00' stroke-width='2' fill='%231A1F26'/%3E%3Ccircle cx='13' cy='35' r='1.5' fill='%23FF5A00'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='48' height='48' rx='10' fill='%2306090e'/%3E%3Cpath d='M15 32 30 17' stroke='%2300E676' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M28 14 34 20 30 24 24 18z' fill='%23FF5A00'/%3E%3Ccircle cx='14' cy='33' r='4' fill='%2300E676'/%3E%3C/svg%3E">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;500;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
   
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -17,6 +17,7 @@
   <script src="js/config.js"></script>
   <script src="js/utils.js"></script>
   <script src="js/components.js"></script>
+  <script src="js/dashboard.js"></script>
 
   <link rel="stylesheet" href="css/global.css">
 </head>
@@ -24,132 +25,174 @@
 
   <!-- CONTEÚDO PRINCIPAL -->
   <main class="main-content">
-    <header class="topbar">
-      <div class="topbar-titles">
-        <h2>Painel de Controle</h2>
-        <p>Visão geral e monitoramento do pátio em tempo real</p>
-      </div>
-    </header>
 
     <div class="dashboard-container">
       
-      <!-- GRID DE MÉTRICAS RÁPIDAS -->
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <span class="metric-title">Agendados Hoje</span>
-          <span class="metric-value orange" id="lbl-m-hoje">--</span>
+      <!-- Seção de KPIs (Baseado no layout solicitado) -->
+      <section class="kpi-grid container-contadores">
+          <!-- Card 1: Agenda Próxima -->
+          <div class="kpi-card card-total">
+              <a class="kpi-card-action" href="agenda.html" data-dashboard-link="agenda" title="Abrir agenda">
+                  <i data-lucide="arrow-up-right"></i>
+              </a>
+              <div class="kpi-icon-wrapper icon-total">
+                  <i data-lucide="calendar-days"></i>
+              </div>
+              <div class="kpi-data">
+                  <div class="kpi-value" id="count-agendamentos">0</div>
+                  <p class="kpi-label">Agenda Próxima</p>
+              </div>
+          </div>
+
+          <!-- Card 2: Orçamentos Pendentes -->
+          <div class="kpi-card card-aguardando">
+              <a class="kpi-card-action" href="orcamentos.html" data-dashboard-link="orcamentos" title="Abrir orçamentos">
+                  <i data-lucide="arrow-up-right"></i>
+              </a>
+              <div class="kpi-icon-wrapper icon-aguardando">
+                  <i data-lucide="calculator"></i>
+              </div>
+              <div class="kpi-data">
+                  <div class="kpi-value" id="count-orcamentos">0</div>
+                  <p class="kpi-label">Orçamentos Pendentes</p>
+              </div>
+          </div>
+
+          <!-- Card 3: O.S. Abertas -->
+          <div class="kpi-card card-confirmados">
+              <a class="kpi-card-action" href="os.html" data-dashboard-link="os" title="Abrir ordens de serviço">
+                  <i data-lucide="arrow-up-right"></i>
+              </a>
+              <div class="kpi-icon-wrapper icon-confirmados">
+                  <i data-lucide="wrench"></i>
+              </div>
+              <div class="kpi-data">
+                  <div class="kpi-value" id="count-os-abertas">0</div>
+                  <p class="kpi-label">O.S. Abertas</p>
+              </div>
+          </div>
+
+          <!-- Card 4: No Pátio -->
+          <div class="kpi-card card-concluidos">
+              <a class="kpi-card-action" href="os.html" data-dashboard-link="os" title="Abrir ordens de serviço">
+                  <i data-lucide="arrow-up-right"></i>
+              </a>
+              <div class="kpi-icon-wrapper icon-concluidos">
+                  <i data-lucide="check-circle"></i>
+              </div>
+              <div class="kpi-data">
+                  <div class="kpi-value" id="count-finalizados">0</div>
+                  <p class="kpi-label">No Pátio</p>
+              </div>
+          </div>
+      </section>
+
+      <div class="journey-panel">
+        <div class="panel-card-header">
+          <h3><i style="width:16px; height:16px; color:var(--brand-green);" data-lucide="route"></i> Jornada da Oficina</h3>
         </div>
-        <div class="metric-card">
-          <span class="metric-title">Em Atendimento</span>
-          <span class="metric-value blue" id="lbl-m-patio">--</span>
-        </div>
-        <div class="metric-card">
-          <span class="metric-title">Concluídos este Mês</span>
-          <span class="metric-value green" id="lbl-m-mes">--</span>
+        <div class="journey-scroll">
+          <div class="workshop-journey" id="workshop-journey">
+            <div class="journey-stage stage-scheduled">
+              <div class="journey-icon"><i data-lucide="calendar-check"></i></div>
+              <div class="journey-copy">
+                <strong>Agendado</strong>
+                <span><b id="journey-agendado">0</b> veículos</span>
+              </div>
+            </div>
+            <div class="journey-stage stage-received">
+              <div class="journey-icon"><i data-lucide="clipboard-check"></i></div>
+              <div class="journey-copy">
+                <strong>Recepcionado</strong>
+                <span><b id="journey-recepcionado">0</b> veículos</span>
+              </div>
+            </div>
+            <div class="journey-stage stage-budget">
+              <div class="journey-icon"><i data-lucide="file-text"></i></div>
+              <div class="journey-copy">
+                <strong>Orçamento</strong>
+                <span><b id="journey-orcamento">0</b> veículos</span>
+              </div>
+            </div>
+            <div class="journey-stage stage-approved">
+              <div class="journey-icon"><i data-lucide="badge-check"></i></div>
+              <div class="journey-copy">
+                <strong>Aprovado</strong>
+                <span><b id="journey-aprovado">0</b> veículos</span>
+              </div>
+            </div>
+            <div class="journey-stage stage-execution">
+              <div class="journey-icon"><i data-lucide="wrench"></i></div>
+              <div class="journey-copy">
+                <strong>Execução</strong>
+                <span><b id="journey-execucao">0</b> veículos</span>
+              </div>
+            </div>
+            <div class="journey-stage stage-parts">
+              <div class="journey-icon"><i data-lucide="package-search"></i></div>
+              <div class="journey-copy">
+                <strong>Esperando Peça</strong>
+                <span><b id="journey-peca">0</b> veículos</span>
+              </div>
+            </div>
+            <div class="journey-stage stage-delivered">
+              <div class="journey-icon"><i data-lucide="key-round"></i></div>
+              <div class="journey-copy">
+                <strong>Entregue</strong>
+                <span><b id="journey-entregue">0</b> veículos</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="dashboard-layout-row">
-        
-        <!-- COLUNA MAIOR: MONITOR DO PÁTIO -->
-        <div class="panel-card">
+      <div class="dashboard-summary-grid">
+        <div class="panel-card dashboard-alert-card" id="card-alertas" style="display:none;">
           <div class="panel-card-header">
-            <h3><i style="width:16px; height:16px; color:var(--brand-orange);" data-lucide="activity"></i> Veículos no Pátio / Atendimento</h3>
+            <h3><i style="width:16px; height:16px; color:var(--brand-yellow);" data-lucide="bell"></i> Alertas</h3>
           </div>
-          <div class="panel-card-body" id="box-patio-realtime">
-            <p style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">Carregando dados operacionais...</p>
+          <div class="panel-card-body" id="box-alertas"></div>
+        </div>
+      </div>
+
+      <div class="dashboard-layout-grid">
+        <div class="panel-card dashboard-os-card">
+          <div class="panel-card-header">
+            <h3><i style="width:16px; height:16px; color:var(--brand-blue);" data-lucide="clipboard-list"></i> Últimas Ordens de Serviço</h3>
+          </div>
+          <div class="panel-card-body dashboard-table-body">
+            <div class="dashboard-table-wrap">
+              <table class="dashboard-table">
+                <thead>
+                  <tr>
+                    <th>Número</th>
+                    <th>Cliente</th>
+                    <th>Veículo</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="tbody-ultimas-os">
+                  <tr>
+                    <td colspan="4" class="dashboard-empty-cell">Carregando ordens...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
-        <!-- COLUNA MENOR: ALERTAS RÁPIDOS -->
-        <div class="panel-card">
+        <div class="panel-card dashboard-agenda-card">
           <div class="panel-card-header">
-            <h3><i style="width:16px; height:16px; color:var(--brand-yellow);" data-lucide="bell"></i> Alertas de Hoje</h3>
+            <h3><i style="width:16px; height:16px; color:var(--brand-blue);" data-lucide="calendar-clock"></i> Agenda de Hoje</h3>
           </div>
-          <div class="panel-card-body">
-            <div class="row-item">
-              <div class="row-item-info">
-                <span class="title">Revisão de frotas</span>
-                <span class="subtitle">3 agendamentos pendentes</span>
-              </div>
-            </div>
-            <div class="row-item">
-              <div class="row-item-info">
-                <span class="title">Sincronização</span>
-                <span class="subtitle">Banco de dados ativo</span>
-              </div>
-            </div>
+          <div class="panel-card-body" id="box-agenda-hoje" style="gap: 8px; padding: 12px;">
+            <p style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">Buscando agenda...</p>
           </div>
         </div>
-
       </div>
 
     </div>
-
-    <footer class="footer-bar">
-      <div style="display:flex; align-items:center; gap:6px; color:var(--brand-green); font-size:12px;"><span style="width:7px; height:7px; background:var(--brand-green); border-radius:50%;"></span> Sistema Online</div>
-      <div>Mecânica Web v2.5</div>
-    </footer>
   </main>
 
-<script>
-'use strict';
-
-async function carregarDadosPainel() {
-    try {
-        const hojeStr = obterDataString();
-
-        // Busca todos os agendamentos da oficina para compor os contadores
-        const { data: agendamentos, error } = await db.from('agendamentos').select('*, veiculos(marca, modelo, placa)').eq('oficina_id', OFICINA_ATIVA_ID);
-        if(error) throw error;
-
-        if(agendamentos) {
-            const hojeLista = agendamentos.filter(a => a.servico_data === hojeStr);
-            const patioLista = agendamentos.filter(a => String(a.status).toLowerCase().includes('atend') || String(a.status).toLowerCase().includes('aguard'));
-            const concluidosLista = agendamentos.filter(a => String(a.status).toLowerCase().includes('concl') || String(a.status).toLowerCase().includes('finaliz'));
-
-            // Atualiza indicadores numéricos
-            document.getElementById('lbl-m-hoje').innerText = hojeLista.length;
-            document.getElementById('lbl-m-patio').innerText = patioLista.length;
-            document.getElementById('lbl-m-mes').innerText = concluidosLista.length;
-
-            // Renderiza pátio em tempo real
-            const boxPatio = document.getElementById('box-patio-realtime');
-            boxPatio.innerHTML = '';
-
-            if(patioLista.length === 0) {
-                boxPatio.innerHTML = '<p style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">Nenhum veículo no pátio neste momento.</p>';
-            } else {
-                patioLista.slice(0, 5).forEach(item => {
-                    let carro = 'Veículo não informado';
-                    if(item.veiculos) {
-                        carro = `${item.veiculos.marca} ${item.veiculos.modelo} [${item.veiculos.placa.toUpperCase()}]`;
-                    }
-                    
-                    const isAguardando = String(item.status).toLowerCase().includes('aguard');
-
-                    boxPatio.innerHTML += `
-                        <div class="row-item">
-                            <div class="row-item-info">
-                                <span class="title">${item.cliente_nome || 'Cliente não identificado'}</span>
-                                <span class="subtitle">${carro} — <b>${item.servico_tipo || 'Geral'}</b></span>
-                            </div>
-                            <span class="badge ${isAguardando ? 'orange' : 'blue'}">${item.status || 'Pátio'}</span>
-                        </div>
-                    `;
-                });
-            }
-        }
-    } catch(e) {
-        console.error("Erro ao alimentar painel:", e);
-        showToast("Erro ao carregar dados do painel", "error");
-    }
-}
-
-window.onload = function() {
-    lucide.createIcons();
-    carregarDadosPainel();
-};
-</script>
 </body>
 </html>

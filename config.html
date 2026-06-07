@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Mecânica Web — Configurações</title>
+  <title>GO Oficina — Configurações Gerais</title>
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='29' cy='22' r='8' stroke='%23FF5A00' stroke-width='1.5' stroke-dasharray='2 1'/%3E%3Cpath d='M29 11V13M29 31V33M18 22H20M38 22H40' stroke='%23FF5A00' stroke-width='1.5' stroke-linecap='round'/%3E%3Crect x='4' y='4' width='18' height='36' rx='4' stroke='%23FF5A00' stroke-width='2' fill='%231A1F26'/%3E%3Ccircle cx='13' cy='35' r='1.5' fill='%23FF5A00'/%3E%3C/svg%3E">
 
@@ -22,14 +22,17 @@
 
   <style>
     .config-container { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
-    
-    .config-layout { display: grid; grid-template-columns: 240px 1fr; gap: 32px; }
+    .config-layout { display: grid; grid-template-columns: 260px 1fr; gap: 32px; }
     @media(max-width: 768px) { .config-layout { grid-template-columns: 1fr; gap: 20px; } }
 
     .config-sidebar { display: flex; flex-direction: column; gap: 6px; }
-    .config-nav-link { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+    .config-nav-link { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 8px; color: var(--text-muted); text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.2s; cursor: pointer; }
     .config-nav-link:hover { background-color: rgba(255,255,255,0.02); color: var(--text-bright); }
     .config-nav-link.active { background-color: rgba(255, 90, 0, 0.1); color: var(--brand-orange); border-left: 3px solid var(--brand-orange); border-radius: 0 8px 8px 0; }
+
+    /* Abas */
+    .tab-content { display: none; }
+    .tab-content.active { display: flex; flex-direction: column; gap: 24px; }
 
     .config-section { display: flex; flex-direction: column; gap: 24px; }
     .config-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
@@ -40,193 +43,620 @@
     .input-saas { background: #121722; border: 1px solid var(--border-color); border-radius: 6px; height: 42px; padding: 0 14px; color: #ffffff; font-size: 14px; width: 100%; outline: none; transition: border-color 0.2s; }
     .input-saas:focus { border-color: var(--brand-orange); }
 
+    /* Upload Logo */
+    .upload-container { display: flex; align-items: center; gap: 20px; background: #121722; border: 1px dashed var(--border-color); padding: 16px; border-radius: 8px; max-width: 500px; }
+    .logo-preview-box { width: 100px; height: 100px; border-radius: 6px; background: #1a1f26; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .logo-preview-box img { width: 100%; height: 100%; object-fit: contain; }
+    .btn-upload-local { background: var(--brand-orange); color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+
+    /* Tabelas Dinâmicas (Usuários) */
+    .saas-table { width: 100%; border-collapse: collapse; margin-top: 12px; background: #121722; border-radius: 8px; overflow: hidden; border: 1px solid var(--border-color); }
+    .saas-table th, .saas-table td { padding: 12px 16px; text-align: left; font-size: 13px; border-bottom: 1px solid var(--border-color); color: var(--text-bright); }
+    .saas-table th { background: #1a1f26; color: var(--text-muted); font-weight: 600; }
+    
+    /* Badges de Níveis de Acesso */
+    .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+    .badge-master { background: rgba(255, 90, 0, 0.15); color: var(--brand-orange); }
+    .badge-mecanico { background: rgba(0, 190, 255, 0.15); color: #00beff; }
+    .badge-secretaria { background: rgba(40, 199, 111, 0.15); color: #28c76f; }
+
+    .btn-danger { background: #ea5455; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+    
+    /* Grid de Planos */
+    .planos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 16px; }
+    .plano-card { background: #121722; border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; transition: border-color 0.2s; }
+    .plano-card.active { border-color: var(--brand-orange); background: rgba(255, 90, 0, 0.02); }
+    .plano-badge-atual { position: absolute; top: 12px; right: 12px; background: var(--brand-orange); color: white; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; }
+    .plano-preco { font-size: 28px; font-weight: 900; color: var(--text-bright); margin: 16px 0 8px 0; }
+    .plano-preco span { font-size: 14px; color: var(--text-muted); font-weight: 400; }
+    .plano-recursos { list-style: none; padding: 0; margin: 16px 0; font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px; }
+
+    /* Checkboxes da Agenda */
+    .dias-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .dia-checkbox-label { display: flex; align-items: center; gap: 6px; background: #121722; border: 1px solid var(--border-color); padding: 8px 12px; border-radius: 6px; color: var(--text-bright); font-size: 13px; cursor: pointer; }
+    .dia-checkbox-label input { accent-color: var(--brand-orange); }
+    .condicional-container { display: none; margin-top: 16px; border-left: 3px solid var(--brand-orange); padding-left: 16px; }
+    .toggle-almoco-label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-bright); font-weight: 500; font-size: 14px; margin-top: 12px; background: rgba(255,255,255,0.01); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); }
+    .toggle-almoco-label input { accent-color: var(--brand-orange); }
+
     hr { border: 0; border-top: 1px solid var(--border-color); }
   </style>
 </head>
 <body>
 
-  <!-- CONTEÚDO PRINCIPAL -->
   <main class="main-content">
     <header class="topbar">
       <div class="topbar-titles">
         <h2>Configurações do Sistema</h2>
-        <p>Controle a identidade e regras da sua plataforma</p>
+        <p>Gerencie dados da oficina, permissões de usuários e assinaturas</p>
       </div>
     </header>
 
     <div class="config-container">
-      
       <div class="config-layout">
         
-        <div class="config-sidebar">
-            <a href="#geral" class="config-nav-link active"><i style="width:16px; height:16px;" data-lucide="store"></i> Perfil da Oficina</a>
-            <a href="#visual" class="config-nav-link"><i style="width:16px; height:16px;" data-lucide="palette"></i> Identidade Visual</a>
-            <a href="#regras" class="config-nav-link"><i style="width:16px; height:16px;" data-lucide="calendar-days"></i> Regras de Agenda</a>
+        <div class="config-sidebar" id="config-menu">
+            <div class="config-nav-link active" onclick="switchTab('geral', this)"><i style="width:16px; height:16px;" data-lucide="store"></i> Perfil da Oficina</div>
+            <div class="config-nav-link" onclick="switchTab('visual', this)"><i style="width:16px; height:16px;" data-lucide="palette"></i> Identidade Visual</div>
+            <div class="config-nav-link" onclick="switchTab('regras', this)"><i style="width:16px; height:16px;" data-lucide="calendar-days"></i> Regras de Agenda</div>
+            <div class="config-nav-link" onclick="switchTab('usuarios', this)"><i style="width:16px; height:16px;" data-lucide="users"></i> Usuários e Permissões</div>
+            <div class="config-nav-link" onclick="switchTab('conta', this)"><i style="width:16px; height:16px;" data-lucide="credit-card"></i> Minha Conta</div>
+            <div class="config-nav-link" onclick="switchTab('plano', this)"><i style="width:16px; height:16px;" data-lucide="award"></i> Plano e Assinatura</div>
         </div>
 
         <div class="panel-card config-section">
             <div class="panel-card-body">
-                <div>
-                    <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Perfil da Oficina</h3>
-                    <p class="form-instruction">Informações básicas exibidas para o cliente na tela de agendamento público.</p>
-                    
-                    <div class="config-row" style="margin-top: 16px;">
-                        <div class="form-group">
-                            <label>Nome Fantasia da Oficina *</label>
-                            <input type="text" id="cfg-nome-oficina" class="input-saas" placeholder="Ex: Mecânica Diones">
-                        </div>
-                        <div class="form-group">
-                            <label>Slogan / Subtítulo</label>
-                            <input type="text" id="cfg-slogan" class="input-saas" placeholder="Ex: Agendamento Rápido e Descomplicado">
-                        </div>
-                    </div>
-
-                    <div class="config-row" style="margin-top: 12px;">
-                        <div class="form-group">
-                            <label>Telefone de Contato (WhatsApp) *</label>
-                            <div class="input-wrap">
-                                <i style="width:14px; height:14px;" data-lucide="phone" class="input-icon"></i>
-                                <input type="tel" id="cfg-whatsapp" class="input-saas" placeholder="(42) 99999-9999" style="padding-left: 38px;">
+                
+                <div id="tab-geral" class="tab-content active">
+                    <div>
+                        <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Perfil da Oficina</h3>
+                        <p class="form-instruction">Informações básicas exibidas para o cliente e relatórios internos.</p>
+                        
+                        <div class="config-row" style="margin-top: 16px;">
+                            <div class="form-group">
+                                <label>Nome Fantasia da Oficina *</label>
+                                <input type="text" id="cfg-nome-oficina" class="input-saas" placeholder="Ex: Mecânica Diones">
+                            </div>
+                            <div class="form-group">
+                                <label>Slogan / Subtítulo</label>
+                                <input type="text" id="cfg-slogan" class="input-saas" placeholder="Ex: Especialistas em Câmbio Automatizado">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label>CNPJ (Opcional)</label>
-                            <input type="text" id="cfg-cnpj" class="input-saas" placeholder="00.000.000/0001-00">
+
+                        <div class="config-row" style="margin-top: 12px;">
+                            <div class="form-group">
+                                <label>Telefone de Contato (WhatsApp) *</label>
+                                <div class="input-wrap">
+                                    <i style="width:14px; height:14px;" data-lucide="phone" class="input-icon"></i>
+                                    <input type="tel" id="cfg-whatsapp" class="input-saas" placeholder="(42) 99999-9999" style="padding-left: 38px;">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>CNPJ (Opcional)</label>
+                                <div class="input-wrap">
+                                    <i style="width:14px; height:14px;" data-lucide="file-text" class="input-icon"></i>
+                                    <input type="text" id="cfg-cnpj" class="input-saas" placeholder="00.000.000/0001-00" style="padding-left: 38px;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label>Endereço Físico da Oficina</label>
+                            <div class="input-wrap">
+                                <i style="width:14px; height:14px;" data-lucide="map-pin" class="input-icon"></i>
+                                <input type="text" id="cfg-endereco" class="input-saas" placeholder="Rua Siqueira Campos, 12345 - Oficinas" style="padding-left: 38px;">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <hr style="margin: 20px 0;">
-
-                <div>
-                    <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Identidade Visual</h3>
-                    <p class="form-instruction">Personalize as imagens e logotipos que dão a cara do seu negócio.</p>
-                    
-                    <div class="form-group" style="margin-top: 16px;">
-                        <label>Link/URL do Logotipo da Oficina</label>
-                        <div class="input-wrap">
-                            <i style="width:14px; height:14px;" data-lucide="link" class="input-icon"></i>
-                            <input type="url" id="cfg-logo-url" class="input-saas" placeholder="https://exemplo.com/sua-logo.png" style="padding-left: 38px;">
-                        </div>
-                        <p class="form-instruction" style="margin-top: 4px;">Cole o link direto da imagem hospedada.</p>
-                    </div>
-                </div>
-
-                <hr style="margin: 20px 0;">
-
-                <div>
-                    <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Regras de Agendamento</h3>
-                    <p class="form-instruction">Padrões operacionais de mercado usados para controlar o fluxo.</p>
-                    
-                    <div class="config-row" style="margin-top: 16px;">
-                        <div class="form-group">
-                            <label>Intervalo entre Horários</label>
-                            <select id="cfg-intervalo" class="input-saas">
-                                <option value="30">30 Minutos</option>
-                                <option value="60" selected>1 Hora (Recomendado)</option>
-                                <option value="120">2 Horas</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Vagas Simultâneas por Horário</label>
-                            <input type="number" id="cfg-vagas-simultaneas" class="input-saas" min="1" value="1">
-                            <p class="form-instruction" style="margin-top: 4px;">Quantos carros a oficina atende ao mesmo tempo.</p>
+                <div id="tab-visual" class="tab-content">
+                    <div>
+                        <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Identidade Visual</h3>
+                        <p class="form-instruction">Faça o upload do logotipo oficial usado no cabeçalho da Nota Fiscal (O.S.) e telas principais.</p>
+                        
+                        <div class="upload-container" style="margin-top: 16px;">
+                            <div class="logo-preview-box" id="logo-preview-box">
+                                <i style="width:24px; height:24px; color:var(--text-muted);" data-lucide="image" id="logo-placeholder-icon"></i>
+                                <img id="cfg-logo-preview" style="display: none;" alt="Logotipo Oficina">
+                            </div>
+                            <div>
+                                <input type="file" id="file-logo-upload" accept="image/png, image/jpeg, image/jpg" style="display: none;" onchange="processarLogotipo(this)">
+                                <button type="button" class="btn-upload-local" onclick="document.getElementById('file-logo-upload').click()">
+                                    <i style="width:16px; height:16px;" data-lucide="upload-cloud"></i> Escolher Imagem Logo
+                                </button>
+                                <p class="form-instruction" style="margin-top: 6px; font-size: 11px;">Tamanho recomendado: Imagem quadrada/proporcional até 1.5MB (PNG ou JPG).</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 20px; display: flex; justify-content: flex-end; gap: 12px;">
-                    <span id="cfg-status-msg" style="align-self: center; font-size: 13px; font-weight: 600; color: var(--brand-green); display: none;"><i style="width:16px; height:16px; display:inline-block; vertical-align:middle;" data-lucide="check-circle"></i> Configurações salvas!</span>
+                <div id="tab-regras" class="tab-content">
+                    <div>
+                        <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Funcionamento & Regras de Agenda</h3>
+                        <p class="form-instruction">Defina os tempos da agenda e os períodos operacionais de atendimento ao cliente.</p>
+                        
+                        <div class="config-row" style="margin-top: 16px;">
+                            <div class="form-group">
+                                <label>Intervalo entre Horários</label>
+                                <select id="cfg-intervalo" class="input-saas">
+                                    <option value="30">30 Minutos</option>
+                                    <option value="60" selected>1 Hora (Recomendado)</option>
+                                    <option value="120">2 Horas</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Horário de Atendimento Comercial</label>
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <input type="time" id="cfg-abertura" class="input-saas" value="08:00">
+                                    <span style="color:var(--text-muted); font-size:12px;">até</span>
+                                    <input type="time" id="cfg-fechamento" class="input-saas" value="18:00">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 16px;">
+                            <label>Dias de Atendimento da Oficina</label>
+                            <div class="dias-grid">
+                                <label class="dia-checkbox-label"><input type="checkbox" name="cfg-dias" value="Seg" checked> Seg</label>
+                                <label class="dia-checkbox-label"><input type="checkbox" name="cfg-dias" value="Ter" checked> Ter</label>
+                                <label class="dia-checkbox-label"><input type="checkbox" name="cfg-dias" value="Qua" checked> Qua</label>
+                                <label class="dia-checkbox-label"><input type="checkbox" name="cfg-dias" value="Qui" checked> Qui</label>
+                                <label class="dia-checkbox-label"><input type="checkbox" name="cfg-dias" value="Sex" checked> Sex</label>
+                                <label class="dia-checkbox-label"><input type="checkbox" name="cfg-dias" value="Sáb"> Sáb</label>
+                                <label class="dia-checkbox-label"><input type="checkbox" name="cfg-dias" value="Dom"> Dom</label>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="toggle-almoco-label">
+                                <input type="checkbox" id="cfg-com-almoco" onchange="toggleIntervaloAlmoco(this.checked)">
+                                Possui intervalo de almoço fechado?
+                            </label>
+
+                            <div class="condicional-container" id="box-horario-almoco">
+                                <div class="form-group" style="max-width: 320px;">
+                                    <label>Intervalo de Fechamento para Almoço</label>
+                                    <div style="display:flex; align-items:center; gap:8px; margin-top: 6px;">
+                                        <input type="time" id="cfg-almoco-inicio" class="input-saas" value="12:00">
+                                        <span style="color:var(--text-muted); font-size:12px;">até</span>
+                                        <input type="time" id="cfg-almoco-fim" class="input-saas" value="13:30">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-usuarios" class="tab-content">
+                    <div>
+                        <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Usuários do Sistema</h3>
+                        <p class="form-instruction">Cadastre mecânicos ou secretárias e defina o que cada um pode ver ou alterar.</p>
+                        
+                        <div style="background: rgba(255,255,255,0.02); padding: 16px; border: 1px solid var(--border-color); border-radius: 8px; margin-top: 16px;">
+                            <h4 style="font-size:14px; margin-bottom:12px; color:var(--text-bright);">Adicionar Novo Integrante</h4>
+                            <div class="config-row">
+                                <input type="text" id="usr-nome" class="input-saas" placeholder="Nome do Funcionário">
+                                <input type="email" id="usr-email" class="input-saas" placeholder="E-mail de Login">
+                                <input type="password" id="usr-senha" class="input-saas" placeholder="Senha Provisória">
+                                <select id="usr-nivel" class="input-saas">
+                                    <option value="mecanico">Mecânico (Apenas O.S.)</option>
+                                    <option value="secretaria">Secretária (Agenda & Clientes)</option>
+                                    <option value="master">Master (Dono / Acesso Total)</option>
+                                </select>
+                            </div>
+                            <button class="btn-top-action primary" style="margin-top:12px; height:36px; padding:0 16px;" onclick="adicionarUsuario()">
+                                <i style="width:14px; height:14px;" data-lucide="user-plus"></i> Convidar / Salvar Usuário
+                            </button>
+                        </div>
+
+                        <table class="saas-table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>Nível de Acesso</th>
+                                    <th style="text-align:right;">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="lista-usuarios-banco">
+                                <tr>
+                                    <td>Diones Garcia (Você)</td>
+                                    <td>contato@garciaflex.com</td>
+                                    <td><span class="badge badge-master">Master</span></td>
+                                    <td style="text-align:right; color:var(--text-muted); font-size:12px;">Conta Principal</td>
+                                </tr>
+                                <tr>
+                                    <td>Marcos Roberto</td>
+                                    <td>marcos.mecanico@gmail.com</td>
+                                    <td><span class="badge badge-mecanico">Mecânico</span></td>
+                                    <td style="text-align:right;"><button class="btn-danger" onclick="excluirUsuario(this)">Excluir</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div style="margin-top: 24px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                            <h3 style="font-size: 15px; color: var(--text-bright); margin-bottom: 4px;">Redefinição Forçada de Senha</h3>
+                            <p class="form-instruction">Altere a senha de um funcionário que esqueceu as credenciais de login.</p>
+                            <div class="config-row" style="margin-top: 12px; max-width: 600px;">
+                                <input type="email" id="reset-user-email" class="input-saas" placeholder="E-mail do usuário para mudar">
+                                <input type="password" id="reset-user-nova-senha" class="input-saas" placeholder="Nova Senha">
+                                <button class="btn-top-action" style="height:42px; background:#1a1f26; border:1px solid var(--border-color); color:#fff;" onclick="mudarSenhaUsuario()">
+                                    Atualizar Senha
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-conta" class="tab-content">
+                    <div>
+                        <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Minha Conta & Faturamento</h3>
+                        <p class="form-instruction">Gerencie o e-mail do proprietário da licença e veja dados de cobrança.</p>
+                        
+                        <div class="config-row" style="margin-top: 16px; max-width: 500px;">
+                            <div class="form-group">
+                                <label>E-mail do Proprietário do SaaS</label>
+                                <input type="email" class="input-saas" value="contato@garciaflex.com" disabled style="opacity:0.6;">
+                                <p class="form-instruction" style="margin-top:4px;">Para alterar o e-mail master da licença, contacte o suporte.</p>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 24px; padding: 20px; background: rgba(255, 90, 0, 0.05); border: 1px solid rgba(255, 90, 0, 0.1); border-radius: 12px; display: flex; justify-content: space-between; align-items: center; max-width: 600px;">
+                            <div>
+                                <span style="font-size: 12px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Plano Atual</span>
+                                <h4 id="lbl-plano-atual-conta" style="font-size: 20px; color: var(--brand-orange); margin-top: 4px;">Plano Expansão</h4>
+                            </div>
+                            <button class="btn-top-action primary" onclick="switchTab('plano', document.querySelector('[onclick*=\'plano\']'))" style="height: 40px; padding: 0 20px;">
+                                <i style="width:16px; height:16px;" data-lucide="zap"></i> Fazer Upgrade
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-plano" class="tab-content">
+                    <div>
+                        <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Plano de Assinatura</h3>
+                        <p class="form-instruction">Gerencie sua licença de uso do ecossistema GO Oficina.</p>
+                        
+                        <div class="planos-grid">
+                            <div class="plano-card">
+                                <h4 style="color:var(--text-bright);">Plano Básico</h4>
+                                <div class="plano-preco">R$ 49<span>/mês</span></div>
+                                <ul class="plano-recursos">
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> 1 Usuário Operador</li>
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> Agenda Básica</li>
+                                    <li><i data-lucide="x" style="width:14px; color:#ea5455; display:inline; margin-right:4px;"></i> Sem Customização de Logo</li>
+                                </ul>
+                                <button class="btn-top-action" style="background:#1a1f26; border:1px solid var(--border-color); color:#fff; width:100%;" onclick="mudarPlano('Básico')">Migrar para este</button>
+                            </div>
+
+                            <div class="plano-card active">
+                                <span class="plano-badge-atual">Plano Ativo</span>
+                                <h4 style="color:var(--brand-orange);">Plano Expansão</h4>
+                                <div class="plano-preco">R$ 89<span>/mês</span></div>
+                                <ul class="plano-recursos">
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> Até 5 Usuários</li>
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> Identidade Visual na OS</li>
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> Regras de Agenda Completas</li>
+                                </ul>
+                                <button class="btn-top-action primary" style="width:100%; height:36px;" disabled>Seu Plano Atual</button>
+                            </div>
+
+                            <div class="plano-card">
+                                <h4 style="color:#ffd700;">Plano Turbinado</h4>
+                                <div class="plano-preco">R$ 149<span>/mês</span></div>
+                                <ul class="plano-recursos">
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> Usuários Ilimitados</li>
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> Multi-oficinas Integradas</li>
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> Suporte VIP Whatsapp 24h</li>
+                                </ul>
+                                <button class="btn-top-action" style="background:#1a1f26; border:1px solid var(--border-color); color:#fff; width:100%;" onclick="mudarPlano('Turbinado')">Fazer Upgrade</button>
+                            </div>
+
+                            <div class="plano-card">
+                                <h4 style="color:#00B0FF;">Personalizado</h4>
+                                <div class="plano-preco" style="font-size: 22px;">Sob Consulta</div>
+                                <ul class="plano-recursos">
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> Funcionalidades Exclusivas</li>
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> Desenvolvimento Sob Demanda</li>
+                                    <li><i data-lucide="check" style="width:14px; color:#28c76f; display:inline; margin-right:4px;"></i> Consultoria de Processos</li>
+                                </ul>
+                                <button class="btn-top-action" style="background:#1a1f26; border:1px solid var(--border-color); color:#fff; width:100%;" onclick="mudarPlano('Personalizado')">Falar com Consultor</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="container-botao-salvar" style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 20px; display: flex; justify-content: flex-end; gap: 12px;">
                     <button class="btn-top-action primary" id="btn-salvar-config" onclick="salvarConfiguracoes()" style="padding: 0 24px; height: 42px;">
-                        <i style="width:16px; height:16px;" data-lucide="save"></i> Salvar Configurações
+                        <i style="width:16px; height:16px;" data-lucide="save"></i> Salvar Configurações da Oficina
                     </button>
                 </div>
+
             </div>
         </div>
       </div>
-
     </div>
 
     <footer class="footer-bar">
-      <div style="display:flex; align-items:center; gap:6px; color:var(--brand-green); font-size:12px;"><span style="width:7px; height:7px; background:var(--brand-green); border-radius:50%;"></span> Sistema Online</div>
-      <div>Mecânica Web v2.5</div>
+      <div id="sync-status" style="display:flex; align-items:center; gap:6px; color:var(--text-muted); font-size:12px;">
+        <span style="width:7px; height:7px; background:var(--text-muted); border-radius:50%;"></span> Verificando conexão...
+      </div>
+      <div>GO Oficina v1.0</div>
     </footer>
   </main>
 
 <script>
 'use strict';
 
-const CONFIG_ID = 1; 
+let stringBase64Logo = ""; 
 
-async function carregarConfiguracoes() {
+// Motor de Abas Avançado
+function switchTab(tabId, element) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.config-nav-link').forEach(link => link.classList.remove('active'));
+    
+    document.getElementById(`tab-${tabId}`).classList.add('active');
+    element.classList.add('active');
+
+    // Esconde o botão de salvar dados da oficina se estiver em abas de Usuários/Planos
+    const btnSalvar = document.getElementById('container-botao-salvar');
+    if (tabId === 'usuarios' || tabId === 'plano' || tabId === 'conta') {
+        btnSalvar.style.display = 'none';
+    } else {
+        btnSalvar.style.display = 'flex';
+    }
+}
+
+function getOficinaId() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlId = urlParams.get('id');
+    if (urlId) return parseInt(urlId);
+    if (typeof OFICINA_ATIVA_ID !== 'undefined' && OFICINA_ATIVA_ID) return parseInt(OFICINA_ATIVA_ID);
+    return null;
+}
+
+function updateSyncIndicator(status, message) {
+    const indicator = document.getElementById('sync-status');
+    if (!indicator) return;
+    if (status === 'success') {
+        indicator.style.color = 'var(--brand-green)';
+        indicator.innerHTML = `<span style="width:7px; height:7px; background:var(--brand-green); border-radius:50%;"></span> ${message}`;
+    } else if (status === 'error') {
+        indicator.style.color = 'var(--brand-orange)';
+        indicator.innerHTML = `<span style="width:7px; height:7px; background:var(--brand-orange); border-radius:50%;"></span> ${message}`;
+    }
+}
+
+function toggleIntervaloAlmoco(exibir) {
+    document.getElementById('box-horario-almoco').style.display = exibir ? 'block' : 'none';
+}
+
+function processarLogotipo(input) {
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 1.5 * 1024 * 1024) {
+        showToast("Imagem muito pesada! Escolha uma logo de até 1.5MB.", "error");
+        return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        document.getElementById('logo-placeholder-icon').style.display = 'none';
+        const imgPreview = document.getElementById('cfg-logo-preview');
+        imgPreview.src = e.target.result;
+        imgPreview.style.display = 'block';
+        stringBase64Logo = e.target.result;
+        showToast("Logotipo pronto para salvar!");
+    };
+    reader.readAsDataURL(file);
+}
+
+// ==========================================
+// FUNÇÕES DE OPERAÇÃO DE USUÁRIOS (SUPABASE)
+// ==========================================
+async function adicionarUsuario() {
+    const nome = document.getElementById('usr-nome').value.trim();
+    const email = document.getElementById('usr-email').value.trim();
+    const senha = document.getElementById('usr-senha').value.trim();
+    const nivel = document.getElementById('usr-nivel').value;
+    const oficinaId = getOficinaId();
+
+    if (!nome || !email || !senha) {
+        showToast("Preencha todos os campos do novo funcionário!", "error");
+        return;
+    }
+
     try {
-        const { data, error } = await db
+        const supabaseClient = typeof db !== 'undefined' ? db : supabase;
+        // Envia para a sua tabela de perfis de usuários vinculada ao tenant da oficina
+        const { error } = await supabaseClient
+            .from('usuarios_oficina') 
+            .insert([{ nome, email, senha_provisoria: senha, nivel_acesso: nivel, oficina_id: oficinaId }]);
+
+        if (error) throw error;
+        showToast(`Usuário ${nome} criado com sucesso!`);
+        // Limpa campos
+        document.getElementById('usr-nome').value = '';
+        document.getElementById('usr-email').value = '';
+        document.getElementById('usr-senha').value = '';
+    } catch (err) {
+        showToast(`Erro ao criar usuário: ${err.message}`, "error");
+    }
+}
+
+async function excluirUsuario(btn) {
+    if (!confirm("Tem certeza que deseja remover este funcionário do sistema? Ele perderá o acesso na hora.")) return;
+    // Lógica para deletar a linha correspondente no Supabase seria inserida aqui
+    btn.closest('tr').remove();
+    showToast("Usuário removido da oficina.");
+}
+
+async function mudarSenhaUsuario() {
+    const email = document.getElementById('reset-user-email').value.trim();
+    const novaSenha = document.getElementById('reset-user-nova-senha').value.trim();
+
+    if (!email || !novaSenha) {
+        showToast("Preencha o e-mail e a nova senha para prosseguir.", "error");
+        return;
+    }
+
+    try {
+        const supabaseClient = typeof db !== 'undefined' ? db : supabase;
+        const { error } = await supabaseClient
+            .from('usuarios_oficina')
+            .update({ senha_provisoria: novaSenha })
+            .eq('email', email);
+
+        if (error) throw error;
+        showToast("Senha redefinida com sucesso!");
+        document.getElementById('reset-user-email').value = '';
+        document.getElementById('reset-user-nova-senha').value = '';
+    } catch (err) {
+        showToast("Erro ao mudar senha: " + err.message, "error");
+    }
+}
+
+function mudarPlano(nomePlano) {
+    alert(`Redirecionando para o checkout de pagamento do Plano ${nomePlano}...`);
+}
+
+// ==========================================
+// CARREGAMENTO E SALVAMENTO DE CONFIGURAÇÕES
+// ==========================================
+async function carregarConfiguracoes() {
+    const oficinaId = getOficinaId();
+    if (!oficinaId) {
+        updateSyncIndicator('error', 'Erro: ID ausente na URL');
+        return;
+    }
+
+    try {
+        const supabaseClient = typeof db !== 'undefined' ? db : supabase;
+        const { data, error } = await supabaseClient
             .from('configuracoes_saas')
             .select('*')
-            .eq('id', CONFIG_ID)
-            .single();
+            .eq('id', oficinaId) 
+            .maybeSingle(); 
 
-        if (error && error.code !== 'PGRST116') throw error;
+        if (error) throw error;
 
         if (data) {
             document.getElementById('cfg-nome-oficina').value = data.nome_oficina || '';
             document.getElementById('cfg-slogan').value = data.slogan || '';
             document.getElementById('cfg-whatsapp').value = data.whatsapp || '';
             document.getElementById('cfg-cnpj').value = data.cnpj || '';
-            document.getElementById('cfg-logo-url').value = data.logo_url || '';
+            document.getElementById('cfg-endereco').value = data.endereço || '';
             document.getElementById('cfg-intervalo').value = data.intervalo_minutos || '60';
-            document.getElementById('cfg-vagas-simultaneas').value = data.vagas_simultaneas || '1';
-        } else {
-            document.getElementById('cfg-nome-oficina').value = 'Mecânica Diones';
-            document.getElementById('cfg-slogan').value = 'Agendamento Rápido e Descomplicado';
-            document.getElementById('cfg-whatsapp').value = '(42) 99999-9999';
+            document.getElementById('cfg-abertura').value = data.horario_abertura || '08:00';
+            document.getElementById('cfg-fechamento').value = data.horario_fechamento || '18:00';
+            
+            const comAlmoco = !!data.com_almoco;
+            document.getElementById('cfg-com-almoco').checked = comAlmoco;
+            toggleIntervaloAlmoco(comAlmoco);
+            
+            document.getElementById('cfg-almoco-inicio').value = data.almoco_inicio || '12:00';
+            document.getElementById('cfg-almoco-fim').value = data.almoco_fim || '13:30';
+
+            if (data.dias_atendimento) {
+                const diasMarcados = data.dias_atendimento.split(',');
+                document.querySelectorAll('input[name="cfg-dias"]').forEach(cb => {
+                    cb.checked = diasMarcados.includes(cb.value);
+                });
+            }
+
+            if (data.logo_url) {
+                stringBase64Logo = data.logo_url;
+                document.getElementById('logo-placeholder-icon').style.display = 'none';
+                const imgPreview = document.getElementById('cfg-logo-preview');
+                imgPreview.src = data.logo_url;
+                imgPreview.style.display = 'block';
+            }
+
+            // Atualiza label do plano na aba Minha Conta
+            const lblPlanoConta = document.getElementById('lbl-plano-atual-conta');
+            if (lblPlanoConta) {
+                lblPlanoConta.innerText = `Plano ${data.plano || 'Expansão'}`;
+            }
+
+            updateSyncIndicator('success', 'Conectado ao Supabase');
         }
     } catch (err) {
-        console.error('Erro ao carregar configurações:', err);
+        console.error(err);
+        updateSyncIndicator('error', 'Erro ao carregar dados');
     }
 }
 
 async function salvarConfiguracoes() {
+    const oficinaId = getOficinaId();
+    if (!oficinaId) return;
+
     const btn = document.getElementById('btn-salvar-config');
-    
     btn.disabled = true;
 
+    const diasArray = [];
+    document.querySelectorAll('input[name="cfg-dias"]:checked').forEach(cb => {
+        diasArray.push(cb.value);
+    });
+
     const payload = {
-        id: CONFIG_ID,
+        id: oficinaId, 
         nome_oficina: document.getElementById('cfg-nome-oficina').value.trim(),
         slogan: document.getElementById('cfg-slogan').value.trim(),
         whatsapp: document.getElementById('cfg-whatsapp').value.trim(),
         cnpj: document.getElementById('cfg-cnpj').value.trim(),
-        logo_url: document.getElementById('cfg-logo-url').value.trim(),
-        intervalo_minutos: parseInt(document.getElementById('cfg-intervalo').value),
-        vagas_simultaneas: parseInt(document.getElementById('cfg-vagas-simultaneas').value) || 1,
+        logo_url: stringBase64Logo, 
+        intervalo_minutos: parseInt(document.getElementById('cfg-intervalo').value) || 60,
+        endereço: document.getElementById('cfg-endereco').value.trim(),
+        horario_abertura: document.getElementById('cfg-abertura').value,
+        horario_fechamento: document.getElementById('cfg-fechamento').value,
+        dias_atendimento: diasArray.join(','),
+        com_almoco: document.getElementById('cfg-com-almoco').checked,
+        almoco_inicio: document.getElementById('cfg-almoco-inicio').value,
+        almoco_fim: document.getElementById('cfg-almoco-fim').value,
         atualizado_em: new Date().toISOString()
     };
 
     try {
-        const { error } = await db
-            .from('configuracoes_saas')
-            .upsert(payload);
-
+        const supabaseClient = typeof db !== 'undefined' ? db : supabase;
+        const { error } = await supabaseClient.from('configuracoes_saas').upsert(payload);
         if (error) throw error;
-
-        showToast("Configurações salvas com sucesso!");
+        showToast("Configurações atualizadas!");
     } catch (err) {
-        console.error('Erro ao salvar:', err);
-        showToast("Erro ao salvar configurações", "error");
+        showToast(`Erro: ${err.message}`, "error");
     } finally {
         btn.disabled = false;
     }
 }
 
-document.getElementById('cfg-whatsapp').addEventListener('input', function() {
-    let v = this.value.replace(/\D/g, '').slice(0, 11);
-    v = v.replace(/^(\d{2})(\d)/g, '($1) $2').replace(/(\d{5})(\d)/, '$1-$2');
-    this.value = v;
+// Máscaras Fluidas
+document.getElementById('cfg-cnpj').addEventListener('input', function (e) {
+    let v = e.target.value.replace(/\D/g, "").slice(0, 14);
+    let f = "";
+    if (v.length > 0) {
+        f = v.slice(0, 2);
+        if (v.length > 2) f += "." + v.slice(2, 5);
+        if (v.length > 5) f += "." + v.slice(5, 8);
+        if (v.length > 8) f += "/" + v.slice(8, 12);
+        if (v.length > 12) f += "-" + v.slice(12, 14);
+    }
+    e.target.value = f;
+});
+
+document.getElementById('cfg-whatsapp').addEventListener('input', function(e) {
+    let v = e.target.value.replace(/\D/g, "").slice(0, 11);
+    let f = "";
+    if (v.length > 0) {
+        f = "(" + v.slice(0, 2);
+        if (v.length > 2) f += ") " + v.slice(2, 7);
+        if (v.length > 7) f += "-" + v.slice(7, 11);
+    }
+    e.target.value = f;
 });
 
 window.onload = () => { 
-    lucide.createIcons();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
     carregarConfiguracoes(); 
 };
 </script>

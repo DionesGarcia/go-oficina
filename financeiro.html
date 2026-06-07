@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>GO Oficina — Financeiro</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/components.js"></script>
+
+  <link rel="stylesheet" href="css/global.css">
+
+  <style>
+    .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
+    .topbar { padding: 20px 24px; border-bottom: 1px solid var(--border-color); background: #070a0f; }
+    .topbar-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .topbar h2 { font-size: 21px; font-weight: 700; color: var(--text-bright); }
+
+    .content-body { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+
+    .kpi-grid-financeiro {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .kpi-card-fin {
+      background: #0b0e14;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .kpi-card-fin span {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .kpi-card-fin strong {
+      display: block;
+      margin-top: 8px;
+      font-size: 24px;
+      color: var(--text-bright);
+    }
+
+    .finance-table-card {
+      background: #0b0e14;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .table-header-row,
+    .table-row {
+      display: grid;
+      grid-template-columns: 90px 1.5fr 1.3fr 120px 130px 120px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+      gap: 10px;
+    }
+
+    .table-header-row {
+      background: #0e121b;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+
+    .table-row:last-child { border-bottom: none; }
+    .table-row:hover { background: rgba(255,255,255,0.01); }
+
+    .btn-receber {
+      background: var(--brand-green);
+      color: #031008;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .status-badge.concluido {
+      color: var(--brand-yellow);
+      background: rgba(255,214,0,.1);
+    }
+
+    .status-badge.faturado {
+      color: var(--brand-green);
+      background: rgba(0,230,118,.1);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3,5,8,.75);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal-card {
+      width: 100%;
+      max-width: 460px;
+      background: #0b0e14;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 18px 20px;
+      background: #0e121b;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .modal-footer {
+      padding: 16px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background: #0e121b;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .input-fin {
+      background: #1a1f26;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 6px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .input-fin:focus { border-color: var(--brand-orange); }
+
+    .btn-cancel {
+      background: #121824;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .btn-save {
+      background: var(--brand-green);
+      color: #031008;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 18px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    @media(max-width: 768px) {
+      .kpi-grid-financeiro { grid-template-columns: 1fr; }
+      .table-header-row { display: none; }
+      .table-row { grid-template-columns: 1fr; gap: 8px; }
+      .topbar-header { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+
+<main class="main-content">
+
+  <header class="topbar">
+    <div class="topbar-header">
+      <div>
+        <h2>Financeiro</h2>
+        <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">
+          Recebimentos simples vinculados às Ordens de Serviço.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-body">
+
+    <section class="kpi-grid-financeiro">
+      <div class="kpi-card-fin">
+        <span>Recebido Hoje</span>
+        <strong id="kpi-recebido-hoje">R$ 0,00</strong>
+      </div>
+
+      <div class="kpi-card-fin">
+        <span>A Receber</span>
+        <strong id="kpi-a-receber">R$ 0,00</strong>
+      </div>
+
+      <div class="kpi-card-fin">
+        <span>Recebido no Mês</span>
+        <strong id="kpi-recebido-mes">R$ 0,00</strong>
+      </div>
+    </section>
+
+    <div class="finance-table-card">
+      <div class="table-header-row">
+        <div>O.S.</div>
+        <div>Cliente</div>
+        <div>Veículo</div>
+        <div>Status</div>
+        <div>Valor</div>
+        <div style="text-align:right;">Ação</div>
+      </div>
+
+      <div id="lista-financeiro">
+        <p style="padding:40px; text-align:center; color:var(--text-muted);">
+          Carregando financeiro...
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="footer-bar">
+    <div style="display:flex; align-items:center; gap:6px; color:var(--brand-green); font-size:12px;">
+      <span style="width:7px; height:7px; background:var(--brand-green); border-radius:50%;"></span>
+      Financeiro Simples
+    </div>
+    <div>GO Oficina v1.0</div>
+  </footer>
+</main>
+
+<div class="modal-overlay" id="modal-receber">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Registrar Recebimento</h3>
+      <button class="btn-cancel" onclick="fecharModalReceber()">Fechar</button>
+    </div>
+
+    <div class="modal-body">
+      <input type="hidden" id="receber-os-id">
+      <input type="hidden" id="receber-cliente-id">
+
+      <div class="form-group">
+        <label>Cliente / O.S.</label>
+        <input type="text" id="receber-resumo" class="input-fin" disabled>
+      </div>
+
+      <div class="form-group">
+        <label>Valor Recebido</label>
+        <input type="number" id="receber-valor" class="input-fin" step="0.01">
+      </div>
+
+      <div class="form-group">
+        <label>Forma de Pagamento</label>
+        <select id="receber-forma" class="input-fin">
+          <option value="PIX">PIX</option>
+          <option value="Dinheiro">Dinheiro</option>
+          <option value="Cartão Débito">Cartão Débito</option>
+          <option value="Cartão Crédito">Cartão Crédito</option>
+          <option value="Prazo">Prazo</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Observação</label>
+        <textarea id="receber-obs" class="input-fin" rows="3" placeholder="Opcional"></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="fecharModalReceber()">Cancelar</button>
+      <button class="btn-save" onclick="salvarRecebimento()">Confirmar Recebimento</button>
+    </div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+let cacheOrdensFinanceiro = [];
+
+window.onload = async () => {
+  await carregarFinanceiro();
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+};
+
+async function carregarFinanceiro() {
+  await carregarKPIsFinanceiros();
+  await carregarOrdensFinanceiro();
+}
+
+async function carregarKPIsFinanceiros() {
+  try {
+    const hoje = new Date();
+    const inicioDia = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()).toISOString();
+    const fimDia = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + 1).toISOString();
+
+    const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1).toISOString();
+    const fimMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 1).toISOString();
+
+    const { data: recebidosHoje } = await db
+      .from('recebimentos')
+      .select('valor')
+      .eq('oficina_id', OFICINA_ATIVA_ID)
+      .gte('recebido_em', inicioDia)
+      .lt('recebido_em', fimDia);
+
+    const { data: recebidosMes } = await db
+      .from('recebimentos')
+      .select('valor')
+      .eq('oficina_id', OFICINA_ATIVA_ID)
+      .gte('recebido_em', inicioMes)
+      .lt('recebido_em', fimMes);
+
+    const { data: aReceber } = await db
+      .from('ordens_servico')
+      .select('valor_total')
+      .eq('oficina_id', OFICINA_ATIVA_ID)
+      .eq('status', 'concluido');
+
+    const totalHoje = somarValores(recebidosHoje);
+    const totalMes = somarValores(recebidosMes);
+    const totalAReceber = somarValores(aReceber, 'valor_total');
+
+    document.getElementById('kpi-recebido-hoje').innerText = formatarMoeda(totalHoje);
+    document.getElementById('kpi-recebido-mes').innerText = formatarMoeda(totalMes);
+    document.getElementById('kpi-a-receber').innerText = formatarMoeda(totalAReceber);
+
+  } catch (e) {
+    console.error("Erro KPIs financeiro:", e);
+  }
+}
+
+function somarValores(lista, campo = 'valor') {
+  return (lista || []).reduce((total, item) => {
+    return total + (parseFloat(item[campo]) || 0);
+  }, 0);
+}
+
+async function carregarOrdensFinanceiro() {
+  const container = document.getElementById('lista-financeiro');
+
+  try {
+    const { data, error } = await db
+      .from('ordens_servico')
+      .select(`
+        *,
+        clientes(nome),
+        veiculos(marca, modelo, placa)
+      `)
+      .eq('oficina_id', OFICINA_ATIVA_ID)
+      .in('status', ['concluido', 'faturado'])
+      .order('criado_em', { ascending: false });
+
+    if (error) throw error;
+
+    cacheOrdensFinanceiro = data || [];
+    container.innerHTML = '';
+
+    if (cacheOrdensFinanceiro.length === 0) {
+      container.innerHTML = `
+        <p style="padding:40px; text-align:center; color:var(--text-muted);">
+          Nenhuma O.S. concluída para faturar.
+        </p>
+      `;
+      return;
+    }
+
+    cacheOrdensFinanceiro.forEach(os => {
+      const numero = os.numero_os || `#${os.id}`;
+      const cliente = os.clientes?.nome || 'Cliente';
+      const veiculo = os.veiculos ? `${os.veiculos.marca || ''} ${os.veiculos.modelo || ''}` : 'Veículo';
+      const statusClass = os.status === 'faturado' ? 'faturado' : 'concluido';
+
+      const botao = os.status === 'faturado'
+        ? `<span style="font-size:12px; color:var(--brand-green); font-weight:800;">Recebido</span>`
+        : `<button class="btn-receber" onclick="abrirModalReceber(${os.id})">Receber</button>`;
+
+      container.innerHTML += `
+        <div class="table-row">
+          <div style="font-weight:800; color:var(--brand-orange); font-family:monospace;">${numero}</div>
+          <div style="font-weight:700; color:var(--text-bright);">${cliente}</div>
+          <div>
+            <div>${veiculo}</div>
+            <div style="font-size:12px; color:var(--text-muted);">${os.veiculos?.placa || ''}</div>
+          </div>
+          <div><span class="status-badge ${statusClass}">${os.status}</span></div>
+          <div style="font-weight:800; color:var(--text-bright);">${formatarMoeda(os.valor_total || 0)}</div>
+          <div style="text-align:right;">${botao}</div>
+        </div>
+      `;
+    });
+
+  } catch (e) {
+    console.error("Erro carregar financeiro:", e);
+    container.innerHTML = `
+      <p style="padding:40px; text-align:center; color:var(--text-muted);">
+        Erro ao carregar financeiro.
+      </p>
+    `;
+  }
+}
+
+function abrirModalReceber(osId) {
+  const os = cacheOrdensFinanceiro.find(item => item.id === osId);
+  if (!os) return;
+
+  document.getElementById('receber-os-id').value = os.id;
+  document.getElementById('receber-cliente-id').value = os.cliente_id;
+  document.getElementById('receber-resumo').value = `${os.numero_os || '#' + os.id} — ${os.clientes?.nome || 'Cliente'}`;
+  document.getElementById('receber-valor').value = parseFloat(os.valor_total || 0).toFixed(2);
+  document.getElementById('receber-forma').value = 'PIX';
+  document.getElementById('receber-obs').value = '';
+
+  document.getElementById('modal-receber').classList.add('active');
+}
+
+function fecharModalReceber() {
+  document.getElementById('modal-receber').classList.remove('active');
+}
+
+async function salvarRecebimento() {
+  const osId = parseInt(document.getElementById('receber-os-id').value);
+  const clienteId = document.getElementById('receber-cliente-id').value;
+  const valor = parseFloat(document.getElementById('receber-valor').value) || 0;
+  const forma = document.getElementById('receber-forma').value;
+  const obs = document.getElementById('receber-obs').value.trim();
+
+  if (!osId || !clienteId || valor <= 0) {
+    showToast("Dados inválidos para recebimento.", "error");
+    return;
+  }
+
+  try {
+    showToast("Registrando recebimento...", "info");
+
+    const { error: errRec } = await db
+      .from('recebimentos')
+      .insert([{
+        oficina_id: OFICINA_ATIVA_ID,
+        os_id: osId,
+        cliente_id: clienteId,
+        valor: valor,
+        forma_pagamento: forma,
+        status: 'recebido',
+        observacao: obs || null
+      }]);
+
+    if (errRec) throw errRec;
+
+    const { error: errOS } = await db
+      .from('ordens_servico')
+      .update({
+        status: 'faturado',
+        atualizado_em: new Date().toISOString()
+      })
+      .eq('id', osId);
+
+    if (errOS) throw errOS;
+
+    showToast("Recebimento registrado com sucesso!");
+    fecharModalReceber();
+    await carregarFinanceiro();
+
+  } catch (e) {
+    console.error("Erro recebimento:", e);
+    showToast("Erro ao registrar recebimento: " + (e.message || "erro desconhecido"), "error");
+  }
+}
+</script>
+
+</body>
+</html>

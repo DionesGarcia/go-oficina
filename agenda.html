@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Mecânica Web — Agenda de Serviços</title>
+  <title>GO Oficina — Agenda de Serviços</title>
 
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='29' cy='22' r='8' stroke='%23FF5A00' stroke-width='1.5' stroke-dasharray='2 1'/%3E%3Cpath d='M29 11V13M29 31V33M18 22H20M38 22H40' stroke='%23FF5A00' stroke-width='1.5' stroke-linecap='round'/%3E%3Crect x='4' y='4' width='18' height='36' rx='4' stroke='%23FF5A00' stroke-width='2' fill='%231A1F26'/%3E%3Ccircle cx='13' cy='35' r='1.5' fill='%23FF5A00'/%3E%3C/svg%3E">
 
@@ -30,10 +30,10 @@
     .topbar-titles h2 { font-size: 21px; font-weight: 700; color: var(--text-bright); letter-spacing: -0.02em; }
     
     /* RÉGUA DE DIAS CORRIGIDA */
-    .day-selector-ribbon { display: flex; gap: 6px; align-items: center; margin-top: 8px; }
-    .ribbon-btn { background: #121824; border: 1px solid var(--border-color); color: var(--text-main); font-size: 13px; font-weight: 600; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+    .day-selector-ribbon { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+    .ribbon-btn { background: #121824; border: 1px solid var(--border-color); color: var(--text-main); font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
     .ribbon-btn:hover { background: #1a2334; color: #fff; border-color: #475569; }
-    .ribbon-btn.active { background: rgba(255, 90, 0, 0.12); border-color: var(--brand-orange); color: var(--brand-orange); font-weight: 700; box-shadow: 0 0 10px rgba(255, 90, 0, 0.05); }
+    .ribbon-btn.active { background: rgba(255, 90, 0, 0.12); border-color: var(--brand-orange); color: var(--brand-orange); font-weight: 800; box-shadow: 0 0 10px rgba(255, 90, 0, 0.05); }
 
     /* BOTÕES DE AÇÃO RÁPIDA */
     .topbar-actions { display: flex; gap: 10px; align-items: center; }
@@ -44,14 +44,14 @@
     .agenda-view-container::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
     /* DIVISÓRIA DE DATA */
-    .extrato-group-header { display: flex; align-items: center; gap: 12px; margin-top: 6px; margin-bottom: 2px; }
+    .extrato-group-header { display: flex; align-items: center; gap: 12px; margin-top: 6px; margin-bottom: 2px; position: relative; z-index: 1; }
     .extrato-group-header span { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--brand-green); background: rgba(0, 230, 118, 0.1); padding: 4px 12px; border-radius: 4px; border: 1px solid rgba(0, 230, 118, 0.15); }
-    .extrato-group-header .divisoria-linha { flex: 1; height: 1px; background: var(--border-color); }
+    .extrato-group-header .divisoria-linha { flex: 1; height: 1px; background: var(--border-color); pointer-events: none; }
 
     /* CARD DA TABELA */
-    .agenda-table-card { background: #0b0e14; border: 1px solid var(--border-color); border-radius: 8px; overflow: visible; margin-bottom: 12px; }
+    .agenda-table-card { background: #0b0e14; border: 1px solid var(--border-color); border-radius: 8px; overflow: visible; margin-bottom: 12px; position: relative; z-index: 2; }
     
-    .table-row { display: grid; grid-template-columns: 120px 1.2fr 1.6fr 130px 1.8fr 240px; align-items: center; padding: 16px 16px; border-bottom: 1px solid var(--border-color); transition: background 0.15s; min-height: 64px; }
+    .table-row { display: grid; grid-template-columns: 120px 1.2fr 1.6fr 130px 1.8fr 240px; align-items: center; padding: 16px 16px; border-bottom: 1px solid var(--border-color); transition: background 0.15s; min-height: 64px; position: relative; }
     .table-row:last-child { border-bottom: none; }
     .table-row:hover { background: rgba(255,255,255,0.01); }
 
@@ -62,6 +62,10 @@
     .col-time .clock { font-size: 15px; font-weight: 700; color: var(--text-bright); font-family: monospace; }
     .col-time .date { font-size: 12px; color: var(--text-muted); font-weight: 500; }
     
+    /* Alerta de horário crítico */
+    .col-time.critical-time .clock { color: #f97316; text-shadow: 0 0 10px rgba(249, 115, 22, 0.2); }
+    .col-time.critical-time .date { color: #f97316; opacity: 0.8; }
+
     .col-type { font-size: 14px; font-weight: 600; color: var(--text-bright); padding-right: 6px; }
     
     .col-vinc { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding-right: 8px; }
@@ -72,13 +76,15 @@
     
     .col-status { display: flex; justify-content: flex-start; min-width: 0; padding-right: 10px; }
     .status-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 9px; border-radius: 4px; border: 1px solid rgba(255, 214, 0, 0.25); color: var(--brand-yellow); background: rgba(255, 214, 0, 0.08); white-space: nowrap; }
-    .status-badge.aguardando { color: #ff6a14; background: rgba(255, 90, 0, 0.08); border-color: rgba(255, 90, 0, 0.25); }
+    .status-badge.aguardando { color: var(--brand-green); background: rgba(0, 230, 118, 0.08); border-color: rgba(0, 230, 118, 0.25); }
 
     .col-obs { font-size: 13px; color: #cbd5e1; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 5px; padding-right: 10px; }
+    .col-obs .empty-obs { color: var(--text-muted); font-style: italic; opacity: 0.7; }
 
     /* BOTÕES OPERACIONAIS */
-    .col-actions { display: flex; gap: 6px; justify-content: flex-end; width: 100%; }
-    .btn-row-action { width: 112px; height: 32px; justify-content: center; background: #1a2233; border: 1px solid var(--border-color); color: var(--text-bright); font-size: 11px; font-weight: 700; text-transform: uppercase; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; white-space: nowrap; }
+
+    .col-actions { display: flex; gap: 6px; justify-content: flex-end; width: 100%; position: relative; z-index: 100; }
+    .btn-row-action { width: 112px; height: 32px; justify-content: center; background: #1a2233; border: 1px solid var(--border-color); color: var(--text-bright); font-size: 11px; font-weight: 700; text-transform: uppercase; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; white-space: nowrap; position: relative; z-index: 101; }
     .btn-row-action i { width: 13px; height: 13px; flex-shrink: 0; }
     .btn-row-action:hover { background: #24304a; border-color: #475569; }
     
@@ -87,6 +93,43 @@
     
     .btn-row-action.os { border-color: rgba(0, 176, 255, 0.35); color: var(--brand-blue); background: rgba(0, 176, 255, 0.04); }
     .btn-row-action.os:hover { background: rgba(0, 176, 255, 0.12); }
+
+    /* Estilo específico para o botão laranja de Mudar Status */
+    .btn-row-action.mudar-status { 
+        background: var(--brand-orange) !important; 
+        color: #fff !important; 
+        border: none !important;
+        width: 150px;
+    }
+    .btn-row-action.mudar-status:hover { 
+        background: #e04f00 !important; 
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(255, 90, 0, 0.2);
+    }
+
+    .btn-row-action.cancel { border-color: rgba(239, 68, 68, 0.35); color: #ef4444; background: rgba(239, 68, 68, 0.04); }
+    .btn-row-action.cancel:hover { background: rgba(239, 68, 68, 0.12); }
+
+    /* Estilos do Modal de Status */
+    .btn-status-action { 
+        width: 100%; 
+        height: 48px; 
+        border: none; 
+        border-radius: 8px; 
+        font-size: 14px; 
+        font-weight: 700; 
+        display: flex; 
+        align-items: center; 
+        justify-content: flex-start; 
+        padding-left: 20px; 
+        gap: 12px; 
+        cursor: pointer; 
+        transition: all 0.2s; 
+    }
+    .btn-status-action:hover { filter: brightness(0.9); transform: translateY(-1px); }
+    .btn-status-action i { width: 18px; height: 18px; }
+
+    .badge-waiting-accept { font-size: 10px; font-weight: 700; color: var(--brand-blue); background: rgba(0, 176, 255, 0.1); padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(0, 176, 255, 0.2); margin-right: 5px; white-space: nowrap; }
 
     .input-group-row { display: flex; gap: 8px; width: 100%; }
     .btn-inline-add { background: #1a2233; border: 1px solid var(--border-color); color: var(--brand-green); font-size: 12px; font-weight: 700; padding: 0 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; transition: all 0.2s; }
@@ -115,7 +158,7 @@
         </div>
         
         <div class="topbar-actions">
-          <button class="btn-top-action secondary" onclick="showToast('Link copiado!')">
+          <button class="btn-top-action secondary" onclick="copiarLinkAgendamento()">
             <i style="width:14px; height:14px;" data-lucide="copy"></i> Copiar Link
           </button>
           <button class="btn-top-action secondary" style="color: var(--brand-whatsapp);" onclick="abrirModalLink()">
@@ -133,7 +176,7 @@
     <div class="agenda-view-container" id="container-extrato-agenda"></div>
 
     <footer class="footer-bar">
-      <div style="display:flex; align-items:center; gap:6px; color:var(--brand-green); font-size:12px;"><span style="width:7px; height:7px; background:var(--brand-green); border-radius:50%;"></span> Sincronizado</div>
+      <div style="display:flex; align-items:center; gap:6px; color:var(--brand-green); font-size:12px;"><span style="width:7px; height:7px; background:var(--brand-green); border-radius:50%;"></span> <span id="sync-status-label">Sincronizado</span></div>
       <div id="lbl-total-registros">Carregando...</div>
     </footer>
   </main>
@@ -227,7 +270,38 @@
       </div>
       <div class="modal-footer">
         <button class="btn-modal-cancel" onclick="fecharModalLink()">Cancelar</button>
-        <button class="btn-top-action" style="height:34px; color:#fff; background:var(--brand-whatsapp);" onclick="showToast('Link disparado!', 'info')">Disparar WhatsApp</button>
+        <button class="btn-top-action" style="height:34px; color:#fff; background:var(--brand-whatsapp);" onclick="dispararLinkWhatsApp()">Disparar WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL MUDAR STATUS -->
+  <div class="modal-overlay" id="modal-confirmar-presenca" style="z-index: 2000;">
+    <div class="modal-card" style="max-width: 450px;">
+      <div class="modal-header">
+        <h3>Confirmar Presença / Atualizar Status</h3>
+        <button class="btn-close-modal" onclick="fecharModalPresenca()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px; padding: 24px;">
+        <button class="btn-status-action" style="background: var(--brand-blue); color: #fff;" onclick="window.acaoPresenca('orcamento')">
+            <i data-lucide="calculator"></i> Enviar para Orçamento
+        </button>
+        
+        <button class="btn-status-action" style="background: var(--brand-green); color: #000;" onclick="window.acaoPresenca('os')">
+            <i data-lucide="wrench"></i> Iniciar O.S. Direta
+        </button>
+
+        <button class="btn-status-action" style="background: var(--brand-yellow); color: #000;" onclick="window.acaoPresenca('remarcou')">
+            <i data-lucide="calendar-days"></i> Remarcar / Agendar Nova Data
+        </button>
+
+        <button class="btn-status-action" style="background: #ef4444; color: #fff;" onclick="window.acaoPresenca('desmarcou')">
+            <i data-lucide="x-circle"></i> Desmarcou / Cancelou
+        </button>
+
+        <button class="btn-status-action" style="background: #64748b; color: #fff;" onclick="window.acaoPresenca('desistiu')">
+            <i data-lucide="user-minus"></i> Cliente Desistiu / Não Compareceu
+        </button>
       </div>
     </div>
   </div>
@@ -236,228 +310,350 @@
 'use strict';
 
 let filtroDataAtual = 'hoje';
+let agendamentoPresencaId = null;
 
-function abrirModalManual() { 
-    document.getElementById('modal-novo-manual').classList.add('active'); 
+// --- 1. FUNÇÕES GLOBAIS DE INTERAÇÃO (Disponíveis para o onclick) ---
+
+window.abrirModalManual = function() {
+    document.getElementById('modal-novo-manual').classList.add('active');
     carregarClientesForm();
-}
-function fecharModalManual() { document.getElementById('modal-novo-manual').classList.remove('active'); }
-function abrirModalLink() { document.getElementById('modal-enviar-link').classList.add('active'); }
-function fecharModalLink() { document.getElementById('modal-enviar-link').classList.remove('active'); }
+};
 
-function abrirModalRapidoCliente() { document.getElementById('modal-rapido-cliente').classList.add('active'); }
-function fecharModalRapidoCliente() { document.getElementById('modal-rapido-cliente').classList.remove('active'); }
+window.fecharModalManual = function() {
+    document.getElementById('modal-novo-manual').classList.remove('active');
+};
+
+window.abrirModalLink = function() {
+    document.getElementById('modal-enviar-link').classList.add('active');
+};
+
+window.fecharModalLink = function() {
+    document.getElementById('modal-enviar-link').classList.remove('active');
+};
+
+window.copiarLinkAgendamento = function() {
+    const link = window.location.origin + '/agendar.html?oficina=' + OFICINA_ATIVA_ID;
+    navigator.clipboard.writeText(link).then(() => {
+        showToast('Link de agendamento copiado!', 'success');
+    }).catch(err => {
+        console.error('Erro ao copiar:', err);
+        showToast('Erro ao copiar link', 'error');
+    });
+};
+
+window.dispararLinkWhatsApp = function() {
+    const fone = document.getElementById('txt-link-whatsapp').value.replace(/\D/g, '');
+    const nome = document.getElementById('txt-link-nome').value.trim();
+    if (!fone) { showToast('Informe o WhatsApp do cliente', 'error'); return; }
+    
+    const linkAgendar = window.location.origin + '/agendar.html?oficina=' + OFICINA_ATIVA_ID;
+    const mensagem = `Olá${nome ? ' ' + nome : ''}! Use este link para realizar seu agendamento em nossa oficina: ${linkAgendar}`;
+    
+    window.open(`https://api.whatsapp.com/send?phone=55${fone}&text=${encodeURIComponent(mensagem)}`, '_blank');
+    showToast('WhatsApp aberto!');
+    fecharModalLink();
+};
+
+window.abrirModalRapidoCliente = function() {
+    document.getElementById('modal-rapido-cliente').classList.add('active');
+};
+
+window.fecharModalRapidoCliente = function() {
+    document.getElementById('modal-rapido-cliente').classList.remove('active');
+};
+
+window.abrirModalPresenca = function(id) {
+    console.log("Chamando abrirModalPresenca para ID:", id);
+    agendamentoPresencaId = id;
+    const modal = document.getElementById('modal-confirmar-presenca');
+    if (modal) {
+        modal.classList.add('active');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    } else {
+        console.error("Modal de status não encontrado!");
+    }
+};
+
+window.fecharModalPresenca = function() {
+    document.getElementById('modal-confirmar-presenca').classList.remove('active');
+    agendamentoPresencaId = null;
+};
+
+window.acaoPresenca = async function(tipo) {
+    try {
+        console.log("Executando ação:", tipo, "para ID:", agendamentoPresencaId);
+        if (tipo === 'orcamento') {
+            await gerarOrcamentoFundo(agendamentoPresencaId);
+        } else if (tipo === 'os') {
+            await iniciarOSDiretaFlow(agendamentoPresencaId);
+        } else {
+            const statusMap = { 'desistiu': 'FALTOU', 'desmarcou': 'CANCELADO', 'remarcou': 'REMARCADO' };
+            await db.from('agendamentos').update({ status: statusMap[tipo] }).eq('id', agendamentoPresencaId);
+            showToast("Status atualizado: " + statusMap[tipo]);
+            renderizarAgendaExtrato();
+        }
+        window.fecharModalPresenca();
+    } catch (e) {
+        console.error(e);
+        showToast("Erro ao processar ação", "error");
+    }
+};
+
+// --- 2. LÓGICA DE NEGÓCIO (SUPABASE) ---
+
+async function iniciarOSDiretaFlow(id) {
+    try {
+        showToast("Preparando abertura direta...", "info");
+        const { data: orcExistente } = await db.from('orcamentos').select('id, status').eq('agendamento_id', id).maybeSingle();
+        
+        if (orcExistente) {
+            const statusLower = (orcExistente.status || '').toLowerCase();
+            if (statusLower === 'aprovado' || statusLower === 'aprovado_manual') {
+                await abrirOS(id);
+            } else {
+                if (confirm("Existe um orçamento pendente. Aprovar manualmente agora para abrir a O.S.?")) {
+                    const novaObs = `[ACEITE MANUAL: Início Direto] em ${new Date().toLocaleString('pt-BR')}`;
+                    await db.from('orcamentos').update({ status: 'APROVADO_MANUAL', observacoes: novaObs }).eq('id', orcExistente.id);
+                    await abrirOS(id);
+                }
+            }
+            return;
+        }
+
+        const { data: agend } = await db.from('agendamentos').select('*').eq('id', id).single();
+        const orcPayload = {
+            oficina_id: OFICINA_ATIVA_ID,
+            cliente_id: agend.cliente_id,
+            veiculo_id: agend.veiculo_id,
+            agendamento_id: id,
+            valor_pecas: 0, valor_servicos: 0, valor_total: 0,
+            status: 'APROVADO_MANUAL',
+            token_aprovacao: 'os-direta-' + Date.now(),
+            observacoes: `[ACEITE MANUAL: O.S. DIRETA] em ${new Date().toLocaleString('pt-BR')}`
+        };
+
+        const { error: errOrc } = await db.from('orcamentos').insert([orcPayload]);
+        if (errOrc) throw errOrc;
+        await abrirOS(id);
+    } catch (e) { console.error(e); showToast("Erro no fluxo direto", "error"); }
+}
+
+async function abrirOS(id) {
+    try {
+        const { data: orc, error: errOrc } = await db.from('orcamentos').select('*, orcamento_itens(*)').eq('agendamento_id', id).maybeSingle();
+        if (errOrc) throw errOrc;
+        if (!orc || !['aprovado', 'aprovado_manual'].includes(orc.status.toLowerCase())) {
+            showToast("Necessário orçamento aprovado.", "error"); return;
+        }
+
+        const osPayload = {
+            oficina_id: OFICINA_ATIVA_ID,
+            cliente_id: orc.cliente_id,
+            veiculo_id: orc.veiculo_id,
+            agendamento_id: id,
+            orcamento_id: orc.id,
+            numero_os: "OS-" + Date.now(),
+            valor_total: orc.valor_total || 0,
+            status: 'aberta',
+            defeito_relatado: orc.observacoes || null,
+            observacoes: orc.observacoes
+        };
+
+        const { data: novaOS, error: errOS } = await db.from('ordens_servico').insert([osPayload]).select().single();
+        if (errOS) throw errOS;
+
+        if (orc.orcamento_itens && orc.orcamento_itens.length > 0) {
+            const itensOS = orc.orcamento_itens.map(i => ({ os_id: novaOS.id, tipo: i.tipo, descricao: i.descricao, quantidade: i.quantidade, valor_unitario: i.valor_unitario, valor_total: i.valor_total }));
+            await db.from('ordem_servico_itens').insert(itensOS);
+        }
+
+        await db.from('agendamentos').update({ status: 'EM EXECUÇÃO' }).eq('id', id);
+        showToast("O.S. #" + novaOS.id + " aberta!");
+        
+        // Redireciona para a tela de O.S.
+        setTimeout(() => {
+            window.location.href = `os.html?id=${OFICINA_ATIVA_ID}`;
+        }, 1500);
+    } catch(e) { console.error(e); showToast("Erro ao abrir O.S.", "error"); }
+}
+
+async function gerarOrcamentoFundo(id) {
+    try {
+        showToast("Processando chegada do cliente...", "info");
+        const { data: orcExistente } = await db.from('orcamentos').select('id').eq('agendamento_id', id).maybeSingle();
+        
+        if (!orcExistente) {
+            const { data: agend } = await db.from('agendamentos').select('*').eq('id', id).single();
+            const orcPayload = {
+                oficina_id: OFICINA_ATIVA_ID, cliente_id: agend.cliente_id, veiculo_id: agend.veiculo_id,
+                agendamento_id: id, valor_pecas: 0, valor_servicos: 0, valor_total: 0, status: 'Rascunho',
+                token_aprovacao: 'tk-' + Date.now(), observacoes: agend.observacoes
+            };
+            await db.from('orcamentos').insert([orcPayload]);
+        }
+
+        await db.from('agendamentos').update({ status: 'EM ANÁLISE' }).eq('id', id);
+        showToast("Status atualizado para EM ANÁLISE");
+        renderizarAgendaExtrato();
+    } catch (e) { console.error(e); showToast("Erro ao atualizar", "error"); }
+}
+
+// --- 3. RENDERIZAÇÃO E FILTROS ---
 
 function mudarFiltroData(tipo) {
     filtroDataAtual = tipo;
     document.querySelectorAll('.ribbon-btn').forEach(btn => btn.classList.remove('active'));
-    if(tipo === 'hoje') document.getElementById('btn-filtra-hoje').classList.add('active');
-    if(tipo === 'amanha') document.getElementById('btn-filtra-amanha').classList.add('active');
-    if(tipo === '7dias') document.getElementById('btn-filtra-7dias').classList.add('active');
-    if(tipo === 'tudo') document.getElementById('btn-filtra-tudo').classList.add('active');
+    document.getElementById('btn-filtra-' + tipo).classList.add('active');
     renderizarAgendaExtrato();
 }
 
-// CARREGA LISTA DE CLIENTES
 async function carregarClientesForm(selecionarId = null) {
     try {
-        const selectCliente = document.getElementById('sel-manual-cliente');
-        selectCliente.innerHTML = '<option value="">Carregando...</option>';
-
-        const { data: clientes } = await db.from('clientes').select('id, nome').order('nome');
-        selectCliente.innerHTML = '<option value="">-- Selecione o Cliente --</option>';
-        
-        if(clientes) {
-            clientes.forEach(c => {
-                const selected = (selecionarId && c.id == selecionarId) ? 'selected' : '';
-                selectCliente.innerHTML += `<option value="${c.id}" ${selected}>${c.nome}</option>`;
-            });
-        }
-        if(selecionarId) {
-            carregarVeiculosDoCliente(selecionarId);
-        }
-    } catch (e) { console.error(e); }
+        const { data: clientes } = await db.from('clientes')
+            .select('id, nome')
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .order('nome');
+        const sel = document.getElementById('sel-manual-cliente');
+        sel.innerHTML = '<option value="">-- Selecione o Cliente --</option>';
+        clientes?.forEach(c => sel.innerHTML += `<option value="${c.id}" ${selecionarId == c.id ? 'selected' : ''}>${c.nome}</option>`);
+        if(selecionarId) carregarVeiculosDoCliente(selecionarId);
+    } catch (e) {}
 }
 
-// FILTRA VEÍCULOS ADICIONADOS DINAMICAMENTE
 async function carregarVeiculosDoCliente(clienteId) {
-    const selectVeiculo = document.getElementById('sel-manual-veiculo');
-    if(!clienteId) {
-        selectVeiculo.innerHTML = '<option value="">Selecione um cliente primeiro</option>';
-        return;
-    }
-    selectVeiculo.innerHTML = '<option value="">Buscando veículos...</option>';
-    try {
-        const { data: veiculos } = await db.from('veiculos').select('id, marca, modelo, placa').eq('cliente_id', clienteId);
-        if(!veiculos || veiculos.length === 0) {
-            selectVeiculo.innerHTML = '<option value="">Nenhum veículo cadastrado para este cliente</option>';
-            return;
-        }
-        selectVeiculo.innerHTML = '<option value="">-- Selecione o Veículo --</option>';
-        veiculos.forEach(v => {
-            selectVeiculo.innerHTML += `<option value="${v.id}">${v.marca} ${v.modelo} [${v.placa.toUpperCase()}]</option>`;
-        });
-    } catch(e) { console.error(e); }
-}
-
-// PERSISTE NOVO CLIENTE DE FORMA RÁPIDA
-async function salvarClienteRapido() {
-    const nome = document.getElementById('txt-novo-cli-nome').value.trim();
-    const telefone = document.getElementById('txt-novo-cli-telefone').value.trim();
-
-    if(!nome) { showToast("O nome do cliente é obrigatório.", "error"); return; }
-
-    try {
-        const { data, error } = await db.from('clientes').insert([{ nome, telefone }]).select();
-        if(error) throw error;
-
-        showToast("Cliente cadastrado com sucesso!");
-        fecharModalRapidoCliente();
-        
-        if(data && data[0]) {
-            carregarClientesForm(data[0].id);
-        }
-    } catch(e) {
-        console.error(e);
-        showToast("Erro ao cadastrar cliente.", "error");
-    }
+    const sel = document.getElementById('sel-manual-veiculo');
+    if(!clienteId) { sel.innerHTML = '<option value="">Selecione um cliente</option>'; return; }
+    const { data: veiculos } = await db.from('veiculos')
+        .select('id, marca, modelo, placa')
+        .eq('cliente_id', clienteId)
+        .eq('oficina_id', OFICINA_ATIVA_ID);
+    sel.innerHTML = veiculos?.length ? '<option value="">-- Selecione --</option>' : '<option value="">Nenhum veículo</option>';
+    veiculos?.forEach(v => sel.innerHTML += `<option value="${v.id}">${v.marca} ${v.modelo} [${v.placa.toUpperCase()}]</option>`);
 }
 
 async function salvarAgendamentoManual() {
-    const clienteId = document.getElementById('sel-manual-cliente').value;
-    const veiculoId = document.getElementById('sel-manual-veiculo').value;
-    const data = document.getElementById('txt-manual-data').value;
-    const hora = document.getElementById('txt-manual-hora').value;
-    const tipo = document.getElementById('txt-manual-tipo').value.trim();
-    const obs = document.getElementById('txt-manual-obs').value.trim();
-
-    if(!clienteId || !data || !hora) {
-        showToast("Preencha cliente, data e horário.", "error");
-        return;
-    }
-
+    const cId = document.getElementById('sel-manual-cliente').value;
+    const d = document.getElementById('txt-manual-data').value;
+    const h = document.getElementById('txt-manual-hora').value;
+    if(!cId || !d || !h) { showToast("Preencha campos obrigatórios", "error"); return; }
     try {
-        const comboCli = document.getElementById('sel-manual-cliente');
-        const nomeTextoCliente = comboCli.options[comboCli.selectedIndex].text;
-
-        const payload = {
-            oficina_id: OFICINA_ATIVA_ID,
-            cliente_id: parseInt(clienteId),
-            veiculo_id: veiculoId ? parseInt(veiculoId) : null,
-            cliente_nome: nomeTextoCliente,
-            servico_data: data,
-            horario: hora + ':00',
-            servico_tipo: tipo || 'Geral',
-            observacoes: obs || null,
-            status: 'Aguardando'
-        };
-
-        const { error } = await db.from('agendamentos').insert([payload]);
-        if(error) throw error;
-        
-        showToast("Agendamento criado com sucesso!");
-        fecharModalManual();
+        const payload = { oficina_id: OFICINA_ATIVA_ID, cliente_id: parseInt(cId), veiculo_id: document.getElementById('sel-manual-veiculo').value || null,
+            servico_data: d, horario: h + ':00', servico_tipo: document.getElementById('txt-manual-tipo').value || 'Geral',
+            status: 'Aguardando', observacoes: document.getElementById('txt-manual-obs').value || null };
+        await db.from('agendamentos').insert([payload]);
+        showToast("Agendado!"); document.getElementById('modal-novo-manual').classList.remove('active');
         renderizarAgendaExtrato();
-    } catch(e) {
-        console.error(e);
-        showToast("Erro ao salvar agendamento.", "error");
-    }
+    } catch(e) { showToast("Erro ao salvar", "error"); }
+}
+
+async function salvarClienteRapido() {
+    const nome = document.getElementById('txt-novo-cli-nome').value.trim();
+    const tel = document.getElementById('txt-novo-cli-telefone').value.trim();
+    if(!nome) { showToast("Nome é obrigatório", "error"); return; }
+    try {
+        const { data, error } = await db.from('clientes').insert([{ 
+            nome, 
+            telefone: tel, 
+            oficina_id: OFICINA_ATIVA_ID 
+        }]).select().single();
+        if(error) throw error;
+        showToast("Cliente cadastrado!");
+        fecharModalRapidoCliente();
+        carregarClientesForm(data.id);
+    } catch(e) { showToast("Erro ao salvar cliente", "error"); }
 }
 
 async function renderizarAgendaExtrato() {
     try {
-        const hojeStr = obterDataString(0);
-        const amanhaStr = obterDataString(1);
-        const seteDiasStr = obterDataString(7);
-
-        let query = db.from('agendamentos').select('*, clientes(nome), veiculos(marca, modelo, placa, ano)').eq('oficina_id', OFICINA_ATIVA_ID);
-
-        if (filtroDataAtual === 'hoje') query = query.eq('servico_data', hojeStr);
-        else if (filtroDataAtual === 'amanha') query = query.eq('servico_data', amanhaStr);
-        else if (filtroDataAtual === '7dias') query = query.gte('servico_data', hojeStr).lte('servico_data', seteDiasStr);
-
-        const { data: agendamentos, error } = await query.order('servico_data', { ascending: true }).order('horario', { ascending: true });
-        if(error) throw error;
+        const hj = obterDataString(0), am = obterDataString(1), st = obterDataString(7);
+        let query = db.from('agendamentos').select('*, clientes(nome), veiculos(marca, modelo, placa, ano), orcamentos(id, status)').eq('oficina_id', OFICINA_ATIVA_ID);
+        if (filtroDataAtual === 'hoje') query = query.eq('servico_data', hj);
+        else if (filtroDataAtual === 'amanha') query = query.eq('servico_data', am);
+        else if (filtroDataAtual === '7dias') query = query.gte('servico_data', hj).lte('servico_data', st);
+        const { data: lista, error: errQuery } = await query.order('servico_data').order('horario');
+        
+        if (errQuery) throw errQuery;
 
         const container = document.getElementById('container-extrato-agenda');
         container.innerHTML = '';
-        document.getElementById('lbl-total-registros').innerText = `${agendamentos ? agendamentos.length : 0} registro(s) listado(s)`;
+        document.getElementById('lbl-total-registros').innerText = `${lista?.length || 0} registro(s)`;
 
-        if (!agendamentos || agendamentos.length === 0) {
-            container.innerHTML = '<p style="text-align:center; padding:40px; font-size:14px; color:var(--text-muted);">Nenhum agendamento encontrado para este período.</p>';
-            return;
+        // Atualiza status de sincronização
+        const syncStatus = document.getElementById('sync-status-label');
+        if (syncStatus) {
+            syncStatus.innerText = "Sincronizado agora";
+            syncStatus.parentElement.style.color = "var(--brand-green)";
         }
+
+        if (!lista?.length) { container.innerHTML = '<p style="text-align:center; padding:40px;">Nada agendado.</p>'; return; }
 
         const grupos = {};
-        agendamentos.forEach(item => {
-            const data = item.servico_data || 'Sem Data';
-            if (!grupos[data]) grupos[data] = [];
-            grupos[data].push(item);
-        });
+        lista.forEach(i => { const d = i.servico_data; if(!grupos[d]) grupos[d] = []; grupos[d].push(i); });
 
-        for (const dataKey of Object.keys(grupos)) {
-            let labelData = formatarDataBR(dataKey);
-            if(dataKey === hojeStr) labelData = "Hoje";
-            else if(dataKey === amanhaStr) labelData = "Amanhã";
+        const agora = new Date();
+        const horaAtualMinutos = (agora.getHours() * 60) + agora.getMinutes();
 
-            container.innerHTML += `<div class="extrato-group-header"><span>${labelData}</span><div class="divisoria-linha"></div></div>`;
+        for (const dKey of Object.keys(grupos)) {
+            let label = formatarDataBR(dKey);
+            if(dKey === hj) label = "Hoje"; else if(dKey === am) label = "Amanhã";
+            container.innerHTML += `<div class="extrato-group-header"><span>${label}</span><div class="divisoria-linha"></div></div>`;
+            let bloco = `<div class="agenda-table-card"><div class="table-header-row"><div>Hora/Data</div><div>Serviço</div><div>Cliente/Veículo</div><div>Status</div><div>Obs</div><div style="text-align:right;">Ação</div></div>`;
 
-            let blocoHtml = `<div class="agenda-table-card">
-                <div class="table-header-row">
-                    <div>Horário / Data</div>
-                    <div>Serviço / Tipo</div>
-                    <div>Vínculo Cliente e Veículo</div>
-                    <div>Status</div>
-                    <div>Observações</div>
-                    <div style="text-align:right;">Ações do Pátio</div>
-                </div>`;
-
-            for (const item of grupos[dataKey]) {
-                const isAguardando = String(item.status || '').toLowerCase().includes('aguard');
+            grupos[dKey].forEach(item => {
+                const sL = String(item.status || '').toLowerCase();
+                const isAg = sL.includes('aguard');
+                const orc = item.orcamentos?.[0];
+                const oS = orc?.status?.toLowerCase();
                 
-                let clienteNome = item.clientes?.nome || item.cliente_nome || 'Não identificado';
-                let carroTexto = 'Veículo não informado';
-                let placaTexto = '';
-
-                if(item.veiculos) {
-                    carroTexto = `${item.veiculos.marca} ${item.veiculos.modelo}`;
-                    placaTexto = item.veiculos.placa || '';
+                // Lógica de Horário Crítico (Somente para hoje e status aguardando)
+                let classeCritica = "";
+                if (isAg && dKey === hj && item.horario) {
+                    const [h, m] = item.horario.split(':').map(Number);
+                    const horaAgendadaMinutos = (h * 60) + m;
+                    // Se o horário já passou ou faltam menos de 15 minutos
+                    if (horaAgendadaMinutos <= (horaAtualMinutos + 15)) {
+                        classeCritica = "critical-time";
+                    }
                 }
 
-                let placaHtml = placaTexto ? `<span class="plate-badge-mini">${placaTexto.toUpperCase().replace(/[-]/g, '')}</span>` : '';
+                // Lógica de Observações Vazias
+                let obsText = item.observacoes;
+                let obsClass = "";
+                if (!obsText || obsText.trim() === "" || obsText.trim() === "---") {
+                    obsText = '<span class="empty-obs">Sem observações</span>';
+                }
 
-                blocoHtml += `
-                    <div class="table-row">
-                        <div class="col-time">
-                            <span class="clock">${item.horario ? item.horario.substring(0,5) : '--:--'}</span>
-                            <span class="date">${formatarDataBR(item.servico_data)}</span>
-                        </div>
-                        <div class="col-type">${item.servico_tipo || 'Geral'}</div>
-                        <div class="col-vinc">
-                            <span class="client">${clienteNome}</span>
-                            <div class="car-info-row">
-                                <span class="car-text">${carroTexto}</span>
-                                ${placaHtml}
-                            </div>
-                        </div>
-                        <div class="col-status">
-                            <span class="status-badge ${isAguardando ? 'aguardando' : ''}">${item.status || 'Pátio'}</span>
-                        </div>
-                        <div class="col-obs" title="${item.observacoes || ''}">${item.observacoes || '<i>Sem observações</i>'}</div>
-                        <div class="col-actions">
-                            <button class="btn-row-action budget" onclick="showToast('Gerando orçamento...', 'info')"><i data-lucide="calculator"></i> Orçamento</button>
-                            <button class="btn-row-action os" onclick="showToast('Abrindo O.S...', 'info')"><i data-lucide="wrench"></i> Abrir O.S.</button>
-                        </div>
-                    </div>`;
-            }
-            blocoHtml += `</div>`;
-            container.innerHTML += blocoHtml;
+                let btn = '';
+                if (isAg) btn = `<button class="btn-row-action mudar-status" onclick="window.abrirModalPresenca(${item.id})"><i data-lucide="refresh-cw"></i> Mudar Status</button>`;
+                else if (sL.includes('análise') || sL.includes('orçamento')) btn = `<button class="btn-row-action budget" style="width:150px;" onclick="window.location.href='orcamentos.html?id=${OFICINA_ATIVA_ID}&agendamento_id=${item.id}'"><i data-lucide="calculator"></i> Ver Orç.</button>`;
+                else if (sL.includes('execução') || sL.includes('pátio') || sL.includes('aberta')) btn = `<button class="btn-row-action os" style="width:150px;" onclick="window.location.href='os.html?id=${OFICINA_ATIVA_ID}'"><i data-lucide="wrench"></i> Ver O.S.</button>`;
+                else btn = `<button class="btn-row-action secondary mudar-status" onclick="window.abrirModalPresenca(${item.id})"><i data-lucide="refresh-cw"></i> Mudar Status</button>`;
+
+                const badge = oS === 'enviado' ? '<span class="badge-waiting-accept">Aguardando Aceite</span>' : '';
+
+                bloco += `<div class="table-row">
+                    <div class="col-time ${classeCritica}"><span class="clock">${item.horario?.substring(0,5)}</span><span class="date">${formatarDataBR(item.servico_data)}</span></div>
+                    <div class="col-type">${item.servico_tipo}</div>
+                    <div class="col-vinc"><span class="client">${item.clientes?.nome || item.cliente_nome}</span><div class="car-info-row">${item.veiculos ? item.veiculos.marca + ' ' + item.veiculos.modelo : '---'}</div></div>
+                    <div class="col-status"><span class="status-badge ${isAg?'aguardando':''}">${item.status}</span></div>
+                    <div class="col-obs" title="${item.observacoes||''}"><i>${obsText}</i></div>
+                    <div class="col-actions">${badge}${btn}</div>
+                </div>`;
+            });
+            container.innerHTML += bloco + `</div>`;
         }
         lucide.createIcons();
-    } catch (e) { console.error(e); showToast("Erro ao carregar agenda", "error"); }
+    } catch (e) { console.error(e); }
 }
 
-window.onload = function() { renderizarAgendaExtrato(); };
+window.onload = () => renderizarAgendaExtrato();
+
+// Helpers para fechar modais adicionais
+window.fecharModalManual = () => document.getElementById('modal-novo-manual').classList.remove('active');
+window.fecharModalRapidoCliente = () => document.getElementById('modal-rapido-cliente').classList.remove('active');
+window.fecharModalLink = () => document.getElementById('modal-enviar-link').classList.remove('active');
+
 </script>
+
 </body>
 </html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GOOFICINA - Administração SaaS</title>
+  <link rel="stylesheet" href="css/global.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/admin.js"></script>
+  
+  <style>
+    /* Mantendo a identidade visual escura da sua imagem image_40479e.png */
+    body { background-color: #0b0f17; color: #f5f6f7; font-family: 'Inter', sans-serif; margin: 0; display: flex; }
+    
+    /* Layout Lateral e Conteúdo */
+    .app-container { display: flex; width: 100%; min-height: 100vh; }
+    .sidebar { width: 260px; background-color: #0c101b; border-right: 1px solid #141b2d; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
+    .main-content { flex: 1; padding: 40px; background-color: #080b11; }
+    
+    /* Top Bar */
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+    .user-profile { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+    
+    /* Cards de Métricas idênticos aos da imagem */
+    .metrics-container { display: flex; gap: 24px; margin-bottom: 32px; }
+    .card-metric { flex: 1; background-color: #0f1624; border: 1px solid #182238; border-radius: 8px; padding: 24px; display: flex; align-items: center; gap: 16px; }
+    .card-metric.blue-border { border-bottom: 3px solid #0091ff; }
+    .card-metric.green-border { border-bottom: 3px solid #00b074; }
+    .card-metric.orange-border { border-bottom: 3px solid #ff5a00; }
+    .card-icon { width: 48px; height: 48px; background: rgba(24, 34, 56, 0.6); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #0091ff; }
+    .card-metric.green-border .card-icon { color: #00b074; }
+    .card-metric.orange-border .card-icon { color: #ff5a00; }
+    .card-info .number { font-size: 28px; font-weight: 700; color: #fff; }
+    .card-info .label { font-size: 13px; color: #6c7a9c; margin-top: 4px; }
+
+    /* Tabela de Oficinas Cadastradas */
+    .section-title { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+    .table-box { background-color: #0f1624; border: 1px solid #182238; border-radius: 8px; overflow: hidden; }
+    .saas-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .saas-table th { background-color: #121b2d; padding: 16px; font-size: 11px; color: #6c7a9c; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+    .saas-table td { padding: 16px; font-size: 13px; color: #cbd5e1; border-bottom: 1px solid #182238; vertical-align: middle; }
+    .saas-table tr:hover td { background-color: #141e33; }
+    
+    /* Badges e Status */
+    .status-dot { inline-size: 8px; block-size: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+    .status-dot.active { background-color: #00b074; }
+    .status-dot.inactive { background-color: #ff3b30; }
+    .badge-plan { background: rgba(0, 145, 255, 0.15); color: #0091ff; padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 12px; }
+    
+    /* Botões */
+    .btn-orange { background-color: #ff5a00; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .btn-whatsapp { background-color: #25d366; color: white; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+    
+    /* Bloqueio de Segurança Inicial */
+    #gatekeeper { position: fixed; top:0; left:0; width:100%; height:100%; background:#080b11; z-index:10000; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
+  </style>
+</head>
+<body>
+
+  <!-- PROTETOR DE TELA: EXIGE SENHA ANTES DE EXIBIR O PAINEL -->
+  <div id="gatekeeper">
+    <i data-lucide="shield-alert" style="width: 48px; height: 48px; color: #ff5a00;"></i>
+    <h3 style="color: #fff; margin: 0;">Acesso Restrito - Administração GOOFICINA</h3>
+    <button class="btn-orange" onclick="destravarPainel()">Inserir Senha de Administrador</button>
+  </div>
+
+  <div class="app-container" id="conteudo-painel" style="display: none;">
+    
+    <!-- MENU LATERAL (Item Admin SaaS Removido conforme solicitado para Produção) -->
+    <aside class="sidebar">
+      <div class="menu-top">
+        <img src="img/logo.png" alt="GOOFICINA" style="height: 32px; margin-bottom: 32px;">
+        <nav style="display: flex; flex-direction: column; gap: 8px;">
+          <!-- Seus links normais do sistema que não dão acesso direto à tela -->
+          <a href="#" class="nav-item"><i data-lucide="layout-dashboard"></i> Painel</a>
+          <a href="#" class="nav-item"><i data-lucide="calendar"></i> Agenda</a>
+          <a href="#" class="nav-item"><i data-lucide="file-text"></i> Orçamentos</a>
+          <a href="#" class="nav-item"><i data-lucide="wrench"></i> Ordens de Serviço</a>
+          <a href="#" class="nav-item"><i data-lucide="users"></i> Clientes</a>
+        </nav>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL DA ADMINISTRAÇÃO -->
+    <main class="main-content">
+      <div class="top-header">
+        <div>
+          <h1 style="font-size: 24px; font-weight: 700; color: #fff; margin: 0;">Administração SaaS</h1>
+          <p style="color: #6c7a9c; font-size: 13px; margin-top: 4px;">Gerenciamento de oficinas, assinaturas e faturamento real do ecossistema.</p>
+        </div>
+        
+        <div class="user-profile">
+          <span style="color: #6c7a9c;">teste@teste.com <br><small style="color: #00b074; float: right;">Logado agora</small></span>
+          <a href="#" class="btn-orange" style="background: rgba(255,59,48,0.1); color: #ff3b30; padding: 8px 12px;"><i data-lucide="log-out"></i> Sair</a>
+        </div>
+      </div>
+
+      <!-- CARDS DE MÉTRICAS ATUALIZADOS (SEM USUÁRIOS, COM FATURAMENTO) -->
+      <section class="metrics-container">
+        <div class="card-metric blue-border">
+          <div class="card-icon"><i data-lucide="building-2"></i></div>
+          <div class="card-info">
+            <div class="number" id="card-ativas">1</div>
+            <div class="label">Oficinas Ativas</div>
+          </div>
+        </div>
+
+        <div class="card-metric orange-border">
+          <div class="card-icon"><i data-lucide="dollar-sign"></i></div>
+          <div class="card-info">
+            <div class="number" id="card-mrr">R$ 149,00</div>
+            <div class="label">Faturamento Mensal (MRR)</div>
+          </div>
+        </div>
+
+        <div class="card-metric green-border">
+          <div class="card-icon"><i data-lucide="credit-card"></i></div>
+          <div class="card-info">
+            <div class="number" id="card-premium">1</div>
+            <div class="label">Assinaturas Ativas</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TABELA ATUALIZADA COM AS INFORMAÇÕES DE RETENÇÃO E COBRANÇA -->
+      <div class="section-title">
+        <i data-lucide="list"></i> Oficinas Cadastradas
+      </div>
+
+      <div class="table-box">
+        <table class="saas-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome da Oficina</th>
+              <th>Responsável / Tel</th>
+              <th>Plano</th>
+              <th>Cliente Desde</th>
+              <th>Último Pagamento</th>
+              <th>Último Login</th>
+              <th>Status</th>
+              <th style="text-align: right;">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-oficinas-corpo">
+            <!-- Linha Exemplo 1: Ativa (Baseada na Revisacar da sua imagem) -->
+            <tr>
+              <td>#1</td>
+              <td><strong style="color: #fff;">RevisaCar - Centro automotivo</strong></td>
+              <td>Diones Garcia<br><span style="color: #6c7a9c; font-size: 11px;">(42) 99999-1111</span></td>
+              <td><span class="badge-plan">Premium</span></td>
+              <td>15/03/2025</td>
+              <td>01/06/2026</td>
+              <td>Hoje às 08:45</td>
+              <td><span class="status-dot active"></span> <span style="color: #00b074; font-weight: 600;">Ativo</span></td>
+              <td style="text-align: right;"><i data-lucide="settings" style="cursor:pointer; color:#6c7a9c;"></i></td>
+            </tr>
+
+            <!-- Linha Exemplo 2: Inativa com gatilho para falar no WhatsApp -->
+            <tr>
+              <td>#2</td>
+              <td><strong style="color: #fff;">Oficina Alvorada Diesel</strong></td>
+              <td>Roberto Silva<br><span style="color: #6c7a9c; font-size: 11px;">(11) 98888-2222</span></td>
+              <td><span class="badge-plan" style="background:rgba(255,165,0,0.1); color:orange;">Padrão</span></td>
+              <td>10/01/2024</td>
+              <td>10/04/2026</td>
+              <td style="color: #ff3b30; font-weight: 600;"><i data-lucide="alert-circle" style="width:12px; display:inline; vertical-align:middle;"></i> Há 18 dias</td>
+              <td><span class="status-dot inactive"></span> <span style="color: #ff3b30; font-weight: 600;">Inativo</span></td>
+              <td style="text-align: right;">
+                <a href="https://wa.me/5511988882222?text=Olá%20Roberto,%20tudo%20bem?%20Notamos%20que%20a%20Alvorada%20Diesel%20não%20acessa%20o%20GOOFICINA%20há%20alguns%20dias.%20Precisa de alguma ajuda?" target="_blank" class="btn-whatsapp">
+                  <i data-lucide="message-square" style="width:14px;"></i> Falar com Ele
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Defina aqui a sua chave mestre de produção
+    const PALAVRA_PASSE_ADMIN = "123456";
+
+    function destravarPainel() {
+        const input = prompt("Digite a palavra-passe mestre para aceder às métricas:");
+        if (input === PALAVRA_PASSE_ADMIN) {
+            document.getElementById('gatekeeper').style.display = 'none';
+            document.getElementById('conteudo-painel').style.display = 'flex';
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+            buscarDadosDoBanco();
+        } else {
+            alert("Acesso negado. Palavra-passe incorreta.");
+        }
+    }
+
+    // Integração dinâmica com o teu Supabase
+    async function buscarDadosDoBanco() {
+        try {
+            const supabaseClient = typeof db !== 'undefined' ? db : supabase;
+            const { data: oficinas, error } = await supabaseClient
+                .from('configuracoes_saas') // mude para o nome exato da sua tabela de Tenants
+                .select('*');
+
+            if (error) throw error;
+
+            if (oficinas) {
+                const corpoTabela = document.getElementById('tabela-oficinas-corpo');
+                corpoTabela.innerHTML = ""; 
+                
+                let totalAtivas = 0;
+                let faturamentoAcumulado = 0;
+
+                oficinas.forEach(oficina => {
+                    // Adicione aqui a sua regra de faturamento baseada nos planos para somar no card
+                    faturamentoAcumulado += 149.00; 
+                    totalAtivas++;
+
+                    const row = document.createElement('tr');
+                    // Renderização dinâmica das colunas adicionais coletadas do banco
+                    row.innerHTML = `
+                        <td>#${oficina.id}</td>
+                        <td><strong style="color: #fff;">${oficina.nome_oficina || 'Sem Nome'}</strong></td>
+                        <td>${oficina.responsavel || 'N/A'}<br><span style="color: #6c7a9c; font-size: 11px;">${oficina.whatsapp || 'Sem telefone'}</span></td>
+                        <td><span class="badge-plan">Premium</span></td>
+                        <td>15/03/2025</td>
+                        <td>01/06/2026</td>
+                        <td>Hoje</td>
+                        <td><span class="status-dot active"></span> <span style="color: #00b074;">Ativo</span></td>
+                        <td style="text-align: right;"><i data-lucide="settings" style="cursor:pointer; color:#6c7a9c;"></i></td>
+                    `;
+                    corpoTabela.appendChild(row);
+                });
+
+                // Atualiza os novos cards na tela
+                document.getElementById('card-ativas').innerText = totalAtivas;
+                document.getElementById('card-mrr').innerText = faturamentoAcumulado.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                lucide.createIcons();
+            }
+        } catch (err) {
+            console.log("Aguardando sincronização real dos dados: ", err.message);
+        }
+    }
+  </script>
+</body>
+</html>
