@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>GO Oficina — Painel de Controle</title>
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 48 48' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='48' height='48' rx='10' fill='%2306090e'/%3E%3Cpath d='M15 32 30 17' stroke='%2300E676' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M28 14 34 20 30 24 24 18z' fill='%23FF5A00'/%3E%3Ccircle cx='14' cy='33' r='4' fill='%2300E676'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +28,86 @@
 
     <div class="dashboard-container">
       
-      <!-- Seção de KPIs (Baseado no layout solicitado) -->
+      <div class="journey-panel">
+        <div class="radar-header">
+          <div class="radar-title-group">
+            <div class="radar-title-line">
+              <i data-lucide="activity"></i>
+              <h3>Radar Operacional</h3>
+            </div>
+            <p>Acompanhe o fluxo dos veículos e identifique gargalos antes que virem problema.</p>
+          </div>
+        </div>
+        <div class="journey-scroll">
+          <div class="workshop-journey" id="workshop-journey">
+            <div class="journey-stage stage-scheduled">
+              <div class="journey-icon">
+                <i data-lucide="calendar-check"></i>
+                <span class="journey-count" id="journey-agendado">0</span>
+              </div>
+              <div class="journey-copy">
+                <strong>Agendado</strong>
+              </div>
+            </div>
+            <div class="journey-stage stage-received">
+              <div class="journey-icon">
+                <i data-lucide="clipboard-check"></i>
+                <span class="journey-count" id="journey-recepcionado">0</span>
+              </div>
+              <div class="journey-copy">
+                <strong>Recepcionado</strong>
+              </div>
+            </div>
+            <div class="journey-stage stage-budget">
+              <div class="journey-icon">
+                <i data-lucide="file-text"></i>
+                <span class="journey-count" id="journey-orcamento">0</span>
+              </div>
+              <div class="journey-copy">
+                <strong>Orçamento</strong>
+              </div>
+            </div>
+            <div class="journey-stage stage-approved">
+              <div class="journey-icon">
+                <i data-lucide="badge-check"></i>
+                <span class="journey-count" id="journey-aprovado">0</span>
+              </div>
+              <div class="journey-copy">
+                <strong>Aprovado</strong>
+              </div>
+            </div>
+            <div class="journey-stage stage-execution">
+              <div class="journey-icon">
+                <i data-lucide="wrench"></i>
+                <span class="journey-count" id="journey-execucao">0</span>
+              </div>
+              <div class="journey-copy">
+                <strong>Execução</strong>
+              </div>
+            </div>
+            <div class="journey-stage stage-parts">
+              <div class="journey-icon">
+                <i data-lucide="package-search"></i>
+                <span class="journey-count" id="journey-peca">0</span>
+              </div>
+              <div class="journey-copy">
+                <strong>Esperando Peça</strong>
+              </div>
+            </div>
+            <div class="journey-stage stage-delivered">
+              <div class="journey-icon">
+                <i data-lucide="key-round"></i>
+                <span class="journey-count" id="journey-entregue">0</span>
+              </div>
+              <div class="journey-copy">
+                <strong>Entregue</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cards operacionais do dia -->
       <section class="kpi-grid container-contadores">
           <!-- Card 1: Agenda Próxima -->
           <div class="kpi-card card-total">
@@ -86,65 +165,6 @@
               </div>
           </div>
       </section>
-
-      <div class="journey-panel">
-        <div class="panel-card-header">
-          <h3><i style="width:16px; height:16px; color:var(--brand-green);" data-lucide="route"></i> Jornada da Oficina</h3>
-        </div>
-        <div class="journey-scroll">
-          <div class="workshop-journey" id="workshop-journey">
-            <div class="journey-stage stage-scheduled">
-              <div class="journey-icon"><i data-lucide="calendar-check"></i></div>
-              <div class="journey-copy">
-                <strong>Agendado</strong>
-                <span><b id="journey-agendado">0</b> veículos</span>
-              </div>
-            </div>
-            <div class="journey-stage stage-received">
-              <div class="journey-icon"><i data-lucide="clipboard-check"></i></div>
-              <div class="journey-copy">
-                <strong>Recepcionado</strong>
-                <span><b id="journey-recepcionado">0</b> veículos</span>
-              </div>
-            </div>
-            <div class="journey-stage stage-budget">
-              <div class="journey-icon"><i data-lucide="file-text"></i></div>
-              <div class="journey-copy">
-                <strong>Orçamento</strong>
-                <span><b id="journey-orcamento">0</b> veículos</span>
-              </div>
-            </div>
-            <div class="journey-stage stage-approved">
-              <div class="journey-icon"><i data-lucide="badge-check"></i></div>
-              <div class="journey-copy">
-                <strong>Aprovado</strong>
-                <span><b id="journey-aprovado">0</b> veículos</span>
-              </div>
-            </div>
-            <div class="journey-stage stage-execution">
-              <div class="journey-icon"><i data-lucide="wrench"></i></div>
-              <div class="journey-copy">
-                <strong>Execução</strong>
-                <span><b id="journey-execucao">0</b> veículos</span>
-              </div>
-            </div>
-            <div class="journey-stage stage-parts">
-              <div class="journey-icon"><i data-lucide="package-search"></i></div>
-              <div class="journey-copy">
-                <strong>Esperando Peça</strong>
-                <span><b id="journey-peca">0</b> veículos</span>
-              </div>
-            </div>
-            <div class="journey-stage stage-delivered">
-              <div class="journey-icon"><i data-lucide="key-round"></i></div>
-              <div class="journey-copy">
-                <strong>Entregue</strong>
-                <span><b id="journey-entregue">0</b> veículos</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div class="dashboard-summary-grid">
         <div class="panel-card dashboard-alert-card" id="card-alertas" style="display:none;">

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>GO Oficina — Ordens de Serviço</title>
 
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 44 44' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='29' cy='22' r='8' stroke='%23FF5A00' stroke-width='1.5' stroke-dasharray='2 1'/%3E%3Cpath d='M29 11V13M29 31V33M18 22H20M38 22H40' stroke='%23FF5A00' stroke-width='1.5' stroke-linecap='round'/%3E%3Crect x='4' y='4' width='18' height='36' rx='4' stroke='%23FF5A00' stroke-width='2' fill='%231A1F26'/%3E%3Ccircle cx='13' cy='35' r='1.5' fill='%23FF5A00'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,8 +43,12 @@
     .table-header-row { display: grid; grid-template-columns: 90px 1.5fr 1.5fr 100px 120px 120px; align-items: center; padding: 14px 16px; background: #0e121b; border-bottom: 1px solid var(--border-color); font-size: 12px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.03em; }
 
     .status-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-color); }
-    .status-badge.aberta { color: var(--brand-blue); background: rgba(0, 176, 255, 0.1); border-color: rgba(0, 176, 255, 0.2); }
-    .status-badge.concluido { color: var(--brand-green); background: rgba(0, 230, 118, 0.1); border-color: rgba(0, 230, 118, 0.2); }
+    .status-badge.aberta,
+    .status-badge.em_execucao { color: var(--brand-blue); background: rgba(0, 176, 255, 0.1); border-color: rgba(0, 176, 255, 0.2); }
+    .status-badge.aguardando_peca { color: var(--brand-orange); background: rgba(255, 90, 0, 0.1); border-color: rgba(255, 90, 0, 0.22); }
+    .status-badge.concluido,
+    .status-badge.entregue,
+    .status-badge.faturado { color: var(--brand-green); background: rgba(0, 230, 118, 0.1); border-color: rgba(0, 230, 118, 0.2); }
     .status-badge.cancelada { color: #ef4444; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); }
 
     .col-actions { display: flex; gap: 6px; justify-content: flex-end; }
@@ -63,6 +67,10 @@
 
     .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--brand-orange); margin-bottom: 10px; }
     .info-card { background: #121722; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; }
+    .status-flow-card { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
+    .status-flow-card label { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .btn-status-save { height: 32px; border: 1px solid rgba(0, 230, 118, 0.28); background: rgba(0, 230, 118, 0.1); color: var(--brand-green); border-radius: 6px; font-weight: 800; padding: 0 12px; cursor: pointer; }
+    .btn-status-save:hover { background: var(--brand-green); color: #06100b; }
 
     .os-item-row { display: flex; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
     .os-item-row:last-child { border-bottom: none; }
@@ -103,6 +111,8 @@
           <div class="status-filters">
             <button class="filter-btn active" onclick="filtrarStatus('Todos')">Todas</button>
             <button class="filter-btn" onclick="filtrarStatus('aberta')">Em Aberto</button>
+            <button class="filter-btn" onclick="filtrarStatus('em_execucao')">Em execuÃ§Ã£o</button>
+            <button class="filter-btn" onclick="filtrarStatus('aguardando_peca')">Aguardando peÃ§a</button>
             <button class="filter-btn" onclick="filtrarStatus('concluido')">Concluídas</button>
             <button class="filter-btn" onclick="filtrarStatus('cancelada')">Canceladas</button>
           </div>
@@ -168,6 +178,22 @@
           <div class="section-title">Defeito / Observações</div>
           <div class="info-card" id="dr-os-obs" style="font-size: 13px; font-style: italic; color: #cbd5e1;">
             Nenhuma observação.
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">Etapa Operacional</div>
+          <div class="info-card status-flow-card">
+            <div>
+              <label for="dr-os-status">Status da O.S.</label>
+              <select id="dr-os-status" class="input-os-mini">
+                <option value="aberta">Aberta</option>
+                <option value="em_execucao">Em execuÃ§Ã£o</option>
+                <option value="aguardando_peca">Aguardando peÃ§a</option>
+                <option value="concluido">Entregue / ConcluÃ­da</option>
+              </select>
+            </div>
+            <button class="btn-status-save" id="btn-salvar-status-os">Salvar</button>
           </div>
         </div>
 
@@ -295,6 +321,50 @@ function normalizarStatus(status) {
   return String(status || '').toLowerCase();
 }
 
+function normalizarStatusOperacional(status) {
+  return String(status || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+function statusOSCanonico(status) {
+  const st = normalizarStatusOperacional(status);
+
+  const mapa = {
+    aberta: 'aberta',
+    aberto: 'aberta',
+    em_aberto: 'aberta',
+    em_execucao: 'em_execucao',
+    execucao: 'em_execucao',
+    em_andamento: 'em_execucao',
+    aguardando_peca: 'aguardando_peca',
+    esperando_peca: 'aguardando_peca',
+    concluido: 'concluido',
+    concluida: 'concluido',
+    entregue: 'concluido',
+    finalizado_entregue: 'concluido',
+    faturado: 'concluido',
+    cancelada: 'cancelada'
+  };
+
+  return mapa[st] || st || 'aberta';
+}
+
+function labelStatusOS(status) {
+  const labels = {
+    aberta: 'Aberta',
+    em_execucao: 'Em execução',
+    aguardando_peca: 'Aguardando peça',
+    concluido: 'Entregue / Concluída',
+    cancelada: 'Cancelada'
+  };
+
+  return labels[statusOSCanonico(status)] || status || 'Sem status';
+}
+
 async function carregarOrdens() {
   try {
     const { data, error } = await db
@@ -335,7 +405,7 @@ function renderizarListaOS() {
 
   const filtradas = filtroStatusAtual === 'Todos'
     ? cacheOS
-    : cacheOS.filter(o => normalizarStatus(o.status) === normalizarStatus(filtroStatusAtual));
+    : cacheOS.filter(o => statusOSCanonico(o.status) === statusOSCanonico(filtroStatusAtual));
 
   document.getElementById('lbl-total-os').innerText =
     `${filtradas.length} O.S. listada(s)`;
@@ -352,7 +422,7 @@ function renderizarListaOS() {
   }
 
   filtradas.forEach(os => {
-    const statusClass = normalizarStatus(os.status || 'aberta');
+    const statusClass = statusOSCanonico(os.status || 'aberta');
     const numero = os.numero_os || `#${String(os.id).padStart(4, '0')}`;
 
     container.innerHTML += `
@@ -376,7 +446,7 @@ function renderizarListaOS() {
 
         <div>
           <span class="status-badge ${statusClass}">
-            ${os.status || 'aberta'}
+            ${labelStatusOS(os.status)}
           </span>
         </div>
 
@@ -460,9 +530,16 @@ async function abrirDetalhesOS(id) {
 
     document.getElementById('btn-imprimir-os').onclick = () => imprimirOS(id);
 
+    const selectStatus = document.getElementById('dr-os-status');
+    const btnSalvarStatus = document.getElementById('btn-salvar-status-os');
+    if (selectStatus) selectStatus.value = statusOSCanonico(os.status);
+    if (btnSalvarStatus) {
+      btnSalvarStatus.onclick = () => atualizarStatusOS(id, selectStatus.value);
+    }
+
     const btnConcluir = document.getElementById('btn-concluir-os');
 
-    if (normalizarStatus(os.status) === 'concluido') {
+    if (statusOSCanonico(os.status) === 'concluido') {
       btnConcluir.style.display = 'none';
     } else {
       btnConcluir.style.display = 'flex';
@@ -486,6 +563,55 @@ function fecharDrawerOS() {
   osSelecionadaId = null;
 }
 
+async function atualizarStatusOS(id, novoStatus) {
+  const statusCanonico = statusOSCanonico(novoStatus);
+  const statusPermitidos = ['aberta', 'em_execucao', 'aguardando_peca', 'concluido'];
+
+  if (!statusPermitidos.includes(statusCanonico)) {
+    showToast("Status operacional inválido.", "error");
+    return;
+  }
+
+  try {
+    showToast("Atualizando etapa da O.S...", "info");
+
+    const payload = {
+      status: statusCanonico,
+      atualizado_em: new Date().toISOString()
+    };
+
+    if (statusCanonico === 'concluido') {
+      payload.concluido_em = new Date().toISOString();
+    }
+
+    const { error } = await db
+      .from('ordens_servico')
+      .update(payload)
+      .eq('id', id)
+      .eq('oficina_id', OFICINA_ATIVA_ID);
+
+    if (error) throw error;
+
+    const os = cacheOS.find(o => o.id === id);
+
+    if (os && os.agendamento_id && statusCanonico === 'concluido') {
+      await db
+        .from('agendamentos')
+        .update({ status: 'Finalizado / Entregue' })
+        .eq('id', os.agendamento_id)
+        .eq('oficina_id', OFICINA_ATIVA_ID);
+    }
+
+    showToast(`O.S. atualizada para ${labelStatusOS(statusCanonico)}.`);
+    fecharDrawerOS();
+    await carregarOrdens();
+
+  } catch (e) {
+    console.error(e);
+    showToast("Erro ao atualizar etapa da O.S.", "error");
+  }
+}
+
 async function concluirOS(id) {
   if (!confirm("Deseja concluir esta Ordem de Serviço?")) return;
 
@@ -499,7 +625,8 @@ async function concluirOS(id) {
         concluido_em: new Date().toISOString(),
         atualizado_em: new Date().toISOString()
       })
-      .eq('id', id);
+      .eq('id', id)
+      .eq('oficina_id', OFICINA_ATIVA_ID);
 
     if (error) throw error;
 
@@ -509,7 +636,8 @@ async function concluirOS(id) {
       await db
         .from('agendamentos')
         .update({ status: 'Finalizado / Entregue' })
-        .eq('id', os.agendamento_id);
+        .eq('id', os.agendamento_id)
+        .eq('oficina_id', OFICINA_ATIVA_ID);
     }
 
     showToast("O.S. concluída com sucesso!");

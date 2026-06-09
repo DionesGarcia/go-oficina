@@ -12,7 +12,7 @@ async function inicializarPainel() {
         await Promise.all([
             configurarAtalhosDashboard(),
             renderizarContadores(),
-            carregarJornadaOficina(),
+            carregarRadarOperacional(),
             carregarUltimasOrdensServico(),
             carregarAgendaHoje(),
             carregarAlertasReais()
@@ -49,6 +49,39 @@ function statusLower(status) {
     return String(status || '').toLowerCase();
 }
 
+function statusNormalizado(status) {
+    return String(status || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+}
+
+const RADAR_STATUS = {
+    agendado: ['aguardando'],
+    orcamento: ['rascunho', 'enviado', 'em_analise'],
+    aprovado: ['aprovado', 'aprovado_manual'],
+    osExecucao: ['aberta', 'aberto', 'em_aberto', 'em_execucao', 'execucao', 'em_andamento'],
+    osPeca: ['aguardando_peca', 'esperando_peca'],
+    osEntregue: ['concluido', 'concluida', 'entregue', 'finalizado_entregue', 'faturado']
+};
+
+function statusEm(status, lista) {
+    return lista.includes(statusNormalizado(status));
+}
+
+function statusOSCanonico(status) {
+    const st = statusNormalizado(status);
+
+    if (statusEm(st, RADAR_STATUS.osExecucao)) return st === 'aberta' || st === 'aberto' || st === 'em_aberto' ? 'aberta' : 'em_execucao';
+    if (statusEm(st, RADAR_STATUS.osPeca)) return 'aguardando_peca';
+    if (statusEm(st, RADAR_STATUS.osEntregue)) return 'concluido';
+    if (st.includes('cancel')) return 'cancelada';
+
+    return st || 'sem_status';
+}
+
 function escaparHTML(valor) {
     return String(valor ?? '').replace(/[&<>"']/g, (char) => ({
         '&': '&amp;',
@@ -68,6 +101,17 @@ function montarVeiculo(veiculo) {
 }
 
 function statusOSLabel(status) {
+    const canonico = statusOSCanonico(status);
+    const labelsOperacionais = {
+        aberta: 'Aberta',
+        em_execucao: 'Em execução',
+        aguardando_peca: 'Aguardando peça',
+        concluido: 'Concluída / Entregue',
+        cancelada: 'Cancelada'
+    };
+
+    if (labelsOperacionais[canonico]) return labelsOperacionais[canonico];
+
     const statusMap = {
         aberta: 'Em andamento',
         concluido: 'Concluída',
@@ -78,7 +122,7 @@ function statusOSLabel(status) {
 }
 
 function statusClasse(status) {
-    return statusLower(status)
+    return statusOSCanonico(status)
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-z0-9-]+/g, '-')
@@ -150,9 +194,8 @@ async function renderizarContadores() {
 
         const { data: osEmAndamento, error: errOS } = await db
             .from('ordens_servico')
-            .select('id')
-            .eq('oficina_id', OFICINA_ATIVA_ID)
-            .eq('status', 'aberta');
+            .select('id, status')
+            .eq('oficina_id', OFICINA_ATIVA_ID);
 
         if (errOS) throw errOS;
 
@@ -172,7 +215,9 @@ async function renderizarContadores() {
 
         setTexto('count-agendamentos', countAgenda);
         setTexto('count-orcamentos', orcamentos ? orcamentos.length : 0);
-        setTexto('count-os-abertas', osEmAndamento ? osEmAndamento.length : 0);
+        setTexto('count-os-abertas', (osEmAndamento || []).filter(os =>
+            statusEm(os.status, [...RADAR_STATUS.osExecucao, ...RADAR_STATUS.osPeca])
+        ).length);
         setTexto('count-finalizados', countPatio);
     } catch (e) {
         console.error("Erro ao renderizar contadores:", e);
@@ -180,64 +225,57 @@ async function renderizarContadores() {
 }
 
 /* =========================
-   JORNADA DA OFICINA
+   RADAR OPERACIONAL
 ========================= */
 
-async function carregarJornadaOficina() {
+async function carregarRadarOperacional() {
     const hojeStr = hojeISO();
-    const amanhaStr = dataISO(new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate() + 1));
 
     try {
-        const [agendamentosResp, orcamentosPendentesResp, orcamentosAprovadosResp, osExecucaoResp, entreguesResp] = await Promise.all([
+        const [agendamentosResp, orcamentosPendentesResp, orcamentosAprovadosResp, ordensServicoResp] = await Promise.all([
             db
                 .from('agendamentos')
-                .select('id, status')
+                .select('id, status, servico_data')
                 .eq('oficina_id', OFICINA_ATIVA_ID)
-                .eq('servico_data', hojeStr),
+                .gte('servico_data', hojeStr),
             db
                 .from('orcamentos')
-                .select('id')
+                .select('id, status')
                 .eq('oficina_id', OFICINA_ATIVA_ID)
                 .in('status', ['Rascunho', 'Enviado', 'Em Análise']),
             db
                 .from('orcamentos')
-                .select('id')
+                .select('id, status')
                 .eq('oficina_id', OFICINA_ATIVA_ID)
                 .in('status', ['Aprovado', 'APROVADO_MANUAL']),
             db
                 .from('ordens_servico')
-                .select('id')
+                .select('id, status')
                 .eq('oficina_id', OFICINA_ATIVA_ID)
-                .eq('status', 'aberta'),
-            db
-                .from('ordens_servico')
-                .select('id')
-                .eq('oficina_id', OFICINA_ATIVA_ID)
-                .in('status', ['concluido', 'faturado'])
-                .gte('concluido_em', hojeStr)
-                .lt('concluido_em', amanhaStr)
         ]);
 
-        const respostas = [agendamentosResp, orcamentosPendentesResp, orcamentosAprovadosResp, osExecucaoResp, entreguesResp];
+        const respostas = [agendamentosResp, orcamentosPendentesResp, orcamentosAprovadosResp, ordensServicoResp];
         const erro = respostas.find(resp => resp.error)?.error;
         if (erro) throw erro;
 
         const agendamentos = agendamentosResp.data || [];
-        setTexto('journey-agendado', agendamentos.filter(a => statusLower(a.status) === 'aguardando').length);
+        const ordensServico = ordensServicoResp.data || [];
+        setTexto('journey-agendado', agendamentos.filter(a => statusEm(a.status, RADAR_STATUS.agendado)).length);
         // "Recepcionado" não possui campo próprio; considera agendamentos de hoje que já saíram de Aguardando.
         setTexto('journey-recepcionado', agendamentos.filter(a => {
+            if (a.servico_data !== hojeStr) return false;
             const st = statusLower(a.status);
             return ehComparecimento(a.status) && !st.includes('execução') && !st.includes('orçamento') && !st.includes('análise');
         }).length);
         setTexto('journey-orcamento', orcamentosPendentesResp.data?.length || 0);
         // Status de aprovação usados pelos fluxos existentes de orçamento.
         setTexto('journey-aprovado', orcamentosAprovadosResp.data?.length || 0);
-        setTexto('journey-execucao', osExecucaoResp.data?.length || 0);
-        // Pendente: SUPABASE_SCHEMA.md não confirma campo/status específico para "Esperando Peça".
-        setTexto('journey-peca', 0);
-        setTexto('journey-entregue', entreguesResp.data?.length || 0);
+        setTexto('journey-execucao', ordensServico.filter(os => statusEm(os.status, RADAR_STATUS.osExecucao)).length);
+        // "Esperando Peça" usa o campo existente ordens_servico.status com valor operacional aguardando_peca.
+        setTexto('journey-peca', ordensServico.filter(os => statusEm(os.status, RADAR_STATUS.osPeca)).length);
+        setTexto('journey-entregue', ordensServico.filter(os => statusEm(os.status, RADAR_STATUS.osEntregue)).length);
     } catch (e) {
-        console.error("Erro ao carregar jornada da oficina:", e);
+        console.error("Erro ao carregar radar operacional:", e);
     }
 }
 

@@ -13,12 +13,14 @@ function renderizarComponentesGlobais() {
     <aside class="sidebar ${isCollapsed ? 'collapsed' : ''}" id="main-sidebar">
         <div class="sidebar-top">
             <div class="brand-logo">
-                <div class="brand-icon-wrapper">
-                    <i data-lucide="wrench"></i>
-                </div>
-                <div class="brand-name" id="sidebar-workshop-name">
-                    <span class="brand-go">GO</span>
-                    <span class="brand-oficina">OFICINA</span>
+                <div class="brand-lockup" aria-label="GO Oficina">
+                    <div class="brand-mark" aria-hidden="true">
+                        <img class="brand-mark-img" src="favicon-go.svg" alt="">
+                    </div>
+                    <div class="brand-wordmark" id="sidebar-workshop-name">
+                        <span class="brand-main">GO</span>
+                        <span class="brand-product">OFICINA</span>
+                    </div>
                 </div>
                 <button class="btn-sidebar-toggle" onclick="toggleSidebar()">
                     <i data-lucide="${isCollapsed ? 'chevron-right' : 'chevron-left'}"></i>
@@ -92,7 +94,13 @@ function renderizarComponentesGlobais() {
                     <div class="plan-text"><span class="title">Oficina</span><span class="subtitle">Premium</span></div>
                 </div>
             </div>
-            <div class="sidebar-version">GO Oficina v1.0</div>
+            <div class="sidebar-version">
+                <span class="sidebar-version-product">GO Oficina</span>
+                <span class="sidebar-version-credit">
+                    <span class="sidebar-version-prefix">Desenvolvido por</span>
+                    <span class="sidebar-version-maker">Garcia One</span>
+                </span>
+            </div>
         </div>
     </aside>
     <div class="sidebar-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
@@ -103,7 +111,7 @@ function renderizarComponentesGlobais() {
         <button class="btn-mobile-menu" onclick="toggleMobileMenu()">
             <i data-lucide="menu"></i>
         </button>
-        <div class="topbar-workshop-name" id="topbar-workshop-name">GO OFICINA</div>
+        <div class="topbar-workshop-name" id="topbar-workshop-name">GO Oficina</div>
         <div class="header-user-nav">
             <div class="user-info">
                 <div class="user-name" id="header-user-name">Usuário</div>
