@@ -589,6 +589,55 @@ body {
   font-weight: 800;
 }
 
+.workshop-protection-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(0, 230, 118, 0.055), rgba(0, 176, 255, 0.035));
+  box-shadow: var(--theme-shadow-soft);
+}
+
+.workshop-protection-icon {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 230, 118, 0.22);
+  color: var(--brand-green);
+  background: rgba(0, 230, 118, 0.075);
+}
+
+.workshop-protection-icon i {
+  width: 18px;
+  height: 18px;
+}
+
+.workshop-protection-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.workshop-protection-copy h3 {
+  color: var(--text-bright);
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.workshop-protection-copy p {
+  max-width: 900px;
+  color: var(--theme-text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
 .dashboard-table-body {
   padding: 0;
 }

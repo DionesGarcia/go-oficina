@@ -331,10 +331,14 @@
             } 
         }
         .highlight-green { color: var(--green-premium); font-weight: 600; }
+        .confirm-label { color: #FFF; font-weight: 600; }
+        .confirm-highlight { color: var(--green-premium); font-weight: 700; }
         
         .system-footer-branding {
-            text-align: center; padding: 10px 0 8px 0; font-size: 11px; color: rgba(255, 255, 255, 0.2); letter-spacing: 0.8px; width: 100%; text-transform: uppercase;
+            text-align: center; padding: 10px 0 8px 0; font-size: 11px; color: rgba(255, 255, 255, 0.32); letter-spacing: 0.4px; width: 100%;
         }
+        .system-footer-branding .footer-maker { color: rgba(255, 255, 255, 0.86); font-weight: 700; }
+        .whatsapp-reminder-note { color:#94A3B8; margin-top:0; margin-bottom:20px; font-size:14px; line-height:1.5; }
         
         .alert-cadastro-sucesso {
             display: none;
@@ -511,18 +515,14 @@
             <div class="conversational-step" id="step-sucesso">
                 <i class="fas fa-check-circle" style="font-size:60px; color:var(--green-premium); margin-bottom:20px"></i>
                 <h2 style="font-family:'Inter'; margin-bottom:4px; font-size:26px; font-weight:700;">Agendamento Confirmado</h2>
-                <p style="color:#94A3B8; margin-top:0; margin-bottom:20px; font-size:14px;">Você receberá os detalhes de confirmação no WhatsApp.</p>
+                <p class="whatsapp-reminder-note">Você receberá um lembrete automático pelo WhatsApp.</p>
                 <p id="sucesso-detalhe" style="line-height:1.6; margin-bottom:25px;"></p>
-                
-                <button class="btn-primary-premium" style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#FFF;" onclick="window.open('https://calendar.google.com', '_blank')">
-                    <i class="fab fa-google"></i> Adicionar ao Google Agenda
-                </button>
             </div>
         </div>
     </div>
 
     <div class="system-footer-branding">
-        POWERED BY <b>GO Oficina</b> • v1.0
+        Desenvolvido por <span class="footer-maker">Garcia One</span>
     </div>
 </div>
 
@@ -1106,8 +1106,8 @@
         const detalhe = document.getElementById('sucesso-detalhe');
         if(detalhe) {
             detalhe.innerHTML = `
-                Serviço: <b>${servicoTipoSelecionado}</b><br>
-                Data: <b>${dataExibicao}</b> às <b>${horarioSelecionado}</b>
+                <span class="confirm-label">Serviço:</span> <span class="confirm-highlight">${servicoTipoSelecionado}</span><br>
+                <span class="confirm-label">Data:</span> <span class="confirm-highlight">${dataExibicao}</span> <span class="confirm-label">às</span> <span class="confirm-highlight">${horarioSelecionado}</span>
             `;
         }
         

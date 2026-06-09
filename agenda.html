@@ -51,11 +51,11 @@
     /* CARD DA TABELA */
     .agenda-table-card { background: #0b0e14; border: 1px solid var(--border-color); border-radius: 8px; overflow: visible; margin-bottom: 12px; position: relative; z-index: 2; }
     
-    .table-row { display: grid; grid-template-columns: 120px 1.2fr 1.6fr 130px 1.8fr 240px; align-items: center; padding: 16px 16px; border-bottom: 1px solid var(--border-color); transition: background 0.15s; min-height: 64px; position: relative; }
+    .table-row { display: grid; grid-template-columns: 120px 1.2fr 1.6fr 130px 1.5fr 340px; align-items: center; padding: 16px 16px; border-bottom: 1px solid var(--border-color); transition: background 0.15s; min-height: 64px; position: relative; }
     .table-row:last-child { border-bottom: none; }
     .table-row:hover { background: rgba(255,255,255,0.01); }
 
-    .table-header-row { display: grid; grid-template-columns: 120px 1.2fr 1.6fr 130px 1.8fr 240px; align-items: center; padding: 14px 16px; background: #0e121b; border-bottom: 1px solid var(--border-color); font-size: 12px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.03em; border-top-left-radius: 7px; border-top-right-radius: 7px; }
+    .table-header-row { display: grid; grid-template-columns: 120px 1.2fr 1.6fr 130px 1.5fr 340px; align-items: center; padding: 14px 16px; background: #0e121b; border-bottom: 1px solid var(--border-color); font-size: 12px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.03em; border-top-left-radius: 7px; border-top-right-radius: 7px; }
 
     /* COLUNAS INTERNAS */
     .col-time { display: flex; flex-direction: column; gap: 2px; }
@@ -83,8 +83,8 @@
 
     /* BOTÕES OPERACIONAIS */
 
-    .col-actions { display: flex; gap: 6px; justify-content: flex-end; width: 100%; position: relative; z-index: 100; }
-    .btn-row-action { width: 112px; height: 32px; justify-content: center; background: #1a2233; border: 1px solid var(--border-color); color: var(--text-bright); font-size: 11px; font-weight: 700; text-transform: uppercase; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; white-space: nowrap; position: relative; z-index: 101; }
+    .col-actions { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; width: 100%; position: relative; z-index: 100; }
+    .btn-row-action { min-width: 104px; height: 32px; justify-content: center; background: #1a2233; border: 1px solid var(--border-color); color: var(--text-bright); font-size: 11px; font-weight: 700; text-transform: uppercase; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; white-space: nowrap; position: relative; z-index: 101; padding: 0 10px; }
     .btn-row-action i { width: 13px; height: 13px; flex-shrink: 0; }
     .btn-row-action:hover { background: #24304a; border-color: #475569; }
     
@@ -94,23 +94,17 @@
     .btn-row-action.os { border-color: rgba(0, 176, 255, 0.35); color: var(--brand-blue); background: rgba(0, 176, 255, 0.04); }
     .btn-row-action.os:hover { background: rgba(0, 176, 255, 0.12); }
 
-    /* Estilo específico para o botão laranja de Mudar Status */
-    .btn-row-action.mudar-status { 
-        background: var(--brand-orange) !important; 
-        color: #fff !important; 
-        border: none !important;
-        width: 150px;
-    }
-    .btn-row-action.mudar-status:hover { 
-        background: #e04f00 !important; 
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(255, 90, 0, 0.2);
-    }
+    .btn-row-action.start { border-color: rgba(0, 230, 118, 0.35); color: var(--brand-green); background: rgba(0, 230, 118, 0.05); }
+    .btn-row-action.start:hover { background: rgba(0, 230, 118, 0.12); }
+    .btn-row-action.reschedule { border-color: rgba(255, 214, 0, 0.32); color: var(--brand-yellow); background: rgba(255, 214, 0, 0.05); }
+    .btn-row-action.reschedule:hover { background: rgba(255, 214, 0, 0.12); }
 
     .btn-row-action.cancel { border-color: rgba(239, 68, 68, 0.35); color: #ef4444; background: rgba(239, 68, 68, 0.04); }
     .btn-row-action.cancel:hover { background: rgba(239, 68, 68, 0.12); }
 
-    /* Estilos do Modal de Status */
+    .btn-row-action.done { min-width: 116px; color: var(--text-muted); cursor: default; opacity: 0.72; }
+
+    /* Estilos dos modais de ação operacional */
     .btn-status-action { 
         width: 100%; 
         height: 48px; 
@@ -275,33 +269,43 @@
     </div>
   </div>
 
-  <!-- MODAL MUDAR STATUS -->
-  <div class="modal-overlay" id="modal-confirmar-presenca" style="z-index: 2000;">
+  <div class="modal-overlay" id="modal-iniciar-atendimento" style="z-index: 2000;">
     <div class="modal-card" style="max-width: 450px;">
       <div class="modal-header">
-        <h3>Confirmar Presença / Atualizar Status</h3>
-        <button class="btn-close-modal" onclick="fecharModalPresenca()"><i data-lucide="x"></i></button>
+        <h3>Iniciar atendimento</h3>
+        <button class="btn-close-modal" onclick="fecharModalAtendimento()"><i data-lucide="x"></i></button>
       </div>
       <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px; padding: 24px;">
-        <button class="btn-status-action" style="background: var(--brand-blue); color: #fff;" onclick="window.acaoPresenca('orcamento')">
-            <i data-lucide="calculator"></i> Enviar para Orçamento
+        <button class="btn-status-action" style="background: var(--brand-blue); color: #fff;" onclick="window.executarAtendimento('orcamento')">
+            <i data-lucide="calculator"></i> Gerar orçamento
         </button>
         
-        <button class="btn-status-action" style="background: var(--brand-green); color: #000;" onclick="window.acaoPresenca('os')">
-            <i data-lucide="wrench"></i> Iniciar O.S. Direta
+        <button class="btn-status-action" style="background: var(--brand-green); color: #000;" onclick="window.executarAtendimento('os')">
+            <i data-lucide="wrench"></i> Abrir O.S.
         </button>
+      </div>
+    </div>
+  </div>
 
-        <button class="btn-status-action" style="background: var(--brand-yellow); color: #000;" onclick="window.acaoPresenca('remarcou')">
-            <i data-lucide="calendar-days"></i> Remarcar / Agendar Nova Data
-        </button>
-
-        <button class="btn-status-action" style="background: #ef4444; color: #fff;" onclick="window.acaoPresenca('desmarcou')">
-            <i data-lucide="x-circle"></i> Desmarcou / Cancelou
-        </button>
-
-        <button class="btn-status-action" style="background: #64748b; color: #fff;" onclick="window.acaoPresenca('desistiu')">
-            <i data-lucide="user-minus"></i> Cliente Desistiu / Não Compareceu
-        </button>
+  <div class="modal-overlay" id="modal-remarcar-agendamento" style="z-index: 2000;">
+    <div class="modal-card" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3>Remarcar agendamento</h3>
+        <button class="btn-close-modal" onclick="fecharModalRemarcacao()"><i data-lucide="x"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Nova data</label>
+          <input type="date" id="txt-remarcar-data" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>Novo horário</label>
+          <input type="time" id="txt-remarcar-hora" class="form-control">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-cancel" onclick="fecharModalRemarcacao()">Cancelar</button>
+        <button class="btn-top-action primary" style="height:34px;" onclick="salvarRemarcacao()">Confirmar remarcação</button>
       </div>
     </div>
   </div>
@@ -310,7 +314,8 @@
 'use strict';
 
 let filtroDataAtual = 'hoje';
-let agendamentoPresencaId = null;
+let agendamentoAtendimentoId = null;
+let agendamentoRemarcacaoId = null;
 
 // --- 1. FUNÇÕES GLOBAIS DE INTERAÇÃO (Disponíveis para o onclick) ---
 
@@ -362,40 +367,109 @@ window.fecharModalRapidoCliente = function() {
     document.getElementById('modal-rapido-cliente').classList.remove('active');
 };
 
-window.abrirModalPresenca = function(id) {
-    console.log("Chamando abrirModalPresenca para ID:", id);
-    agendamentoPresencaId = id;
-    const modal = document.getElementById('modal-confirmar-presenca');
+window.abrirModalAtendimento = function(id) {
+    agendamentoAtendimentoId = id;
+    const modal = document.getElementById('modal-iniciar-atendimento');
     if (modal) {
         modal.classList.add('active');
         if (typeof lucide !== 'undefined') lucide.createIcons();
     } else {
-        console.error("Modal de status não encontrado!");
+        console.error("Modal de atendimento não encontrado!");
     }
 };
 
-window.fecharModalPresenca = function() {
-    document.getElementById('modal-confirmar-presenca').classList.remove('active');
-    agendamentoPresencaId = null;
+window.fecharModalAtendimento = function() {
+    document.getElementById('modal-iniciar-atendimento').classList.remove('active');
+    agendamentoAtendimentoId = null;
 };
 
-window.acaoPresenca = async function(tipo) {
+window.executarAtendimento = async function(tipo) {
     try {
-        console.log("Executando ação:", tipo, "para ID:", agendamentoPresencaId);
         if (tipo === 'orcamento') {
-            await gerarOrcamentoFundo(agendamentoPresencaId);
+            await gerarOrcamentoFundo(agendamentoAtendimentoId);
         } else if (tipo === 'os') {
-            await iniciarOSDiretaFlow(agendamentoPresencaId);
-        } else {
-            const statusMap = { 'desistiu': 'FALTOU', 'desmarcou': 'CANCELADO', 'remarcou': 'REMARCADO' };
-            await db.from('agendamentos').update({ status: statusMap[tipo] }).eq('id', agendamentoPresencaId);
-            showToast("Status atualizado: " + statusMap[tipo]);
-            renderizarAgendaExtrato();
+            await iniciarOSDiretaFlow(agendamentoAtendimentoId);
         }
-        window.fecharModalPresenca();
+        window.fecharModalAtendimento();
     } catch (e) {
         console.error(e);
-        showToast("Erro ao processar ação", "error");
+        showToast("Erro ao iniciar atendimento", "error");
+    }
+};
+
+window.abrirModalRemarcacao = function(id) {
+    agendamentoRemarcacaoId = id;
+    document.getElementById('txt-remarcar-data').value = '';
+    document.getElementById('txt-remarcar-hora').value = '';
+    document.getElementById('modal-remarcar-agendamento').classList.add('active');
+};
+
+window.fecharModalRemarcacao = function() {
+    document.getElementById('modal-remarcar-agendamento').classList.remove('active');
+    agendamentoRemarcacaoId = null;
+};
+
+window.salvarRemarcacao = async function() {
+    const novaData = document.getElementById('txt-remarcar-data').value;
+    const novoHorario = document.getElementById('txt-remarcar-hora').value;
+
+    if (!agendamentoRemarcacaoId || !novaData || !novoHorario) {
+        showToast("Informe nova data e horário", "error");
+        return;
+    }
+
+    try {
+        const { data: agendamentoAtual, error: errBusca } = await db.from('agendamentos')
+            .select('*')
+            .eq('id', agendamentoRemarcacaoId)
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .single();
+        if (errBusca) throw errBusca;
+
+        const { error: errUpdate } = await db.from('agendamentos')
+            .update({ status: 'REMARCADO' })
+            .eq('id', agendamentoRemarcacaoId)
+            .eq('oficina_id', OFICINA_ATIVA_ID);
+        if (errUpdate) throw errUpdate;
+
+        const novoAgendamento = {
+            oficina_id: agendamentoAtual.oficina_id,
+            cliente_id: agendamentoAtual.cliente_id,
+            veiculo_id: agendamentoAtual.veiculo_id,
+            servico_tipo: agendamentoAtual.servico_tipo,
+            servico_data: novaData,
+            horario: novoHorario,
+            status: 'Aguardando',
+            observacoes: agendamentoAtual.observacoes
+        };
+
+        const { error: errInsert } = await db.from('agendamentos').insert([novoAgendamento]);
+        if (errInsert) throw errInsert;
+
+        showToast("Agendamento remarcado", "success");
+        window.fecharModalRemarcacao();
+        renderizarAgendaExtrato();
+    } catch (e) {
+        console.error(e);
+        showToast("Erro ao remarcar agendamento", "error");
+    }
+};
+
+window.cancelarAgendamento = async function(id) {
+    if (!confirm("Cancelar este agendamento? O registro será mantido no histórico.")) return;
+
+    try {
+        const { error } = await db.from('agendamentos')
+            .update({ status: 'CANCELADO' })
+            .eq('id', id)
+            .eq('oficina_id', OFICINA_ATIVA_ID);
+        if (error) throw error;
+
+        showToast("Agendamento cancelado", "success");
+        renderizarAgendaExtrato();
+    } catch (e) {
+        console.error(e);
+        showToast("Erro ao cancelar agendamento", "error");
     }
 };
 
@@ -403,71 +477,52 @@ window.acaoPresenca = async function(tipo) {
 
 async function iniciarOSDiretaFlow(id) {
     try {
-        showToast("Preparando abertura direta...", "info");
-        const { data: orcExistente } = await db.from('orcamentos').select('id, status').eq('agendamento_id', id).maybeSingle();
-        
-        if (orcExistente) {
-            const statusLower = (orcExistente.status || '').toLowerCase();
-            if (statusLower === 'aprovado' || statusLower === 'aprovado_manual') {
-                await abrirOS(id);
-            } else {
-                if (confirm("Existe um orçamento pendente. Aprovar manualmente agora para abrir a O.S.?")) {
-                    const novaObs = `[ACEITE MANUAL: Início Direto] em ${new Date().toLocaleString('pt-BR')}`;
-                    await db.from('orcamentos').update({ status: 'APROVADO_MANUAL', observacoes: novaObs }).eq('id', orcExistente.id);
-                    await abrirOS(id);
-                }
-            }
-            return;
-        }
-
-        const { data: agend } = await db.from('agendamentos').select('*').eq('id', id).single();
-        const orcPayload = {
-            oficina_id: OFICINA_ATIVA_ID,
-            cliente_id: agend.cliente_id,
-            veiculo_id: agend.veiculo_id,
-            agendamento_id: id,
-            valor_pecas: 0, valor_servicos: 0, valor_total: 0,
-            status: 'APROVADO_MANUAL',
-            token_aprovacao: 'os-direta-' + Date.now(),
-            observacoes: `[ACEITE MANUAL: O.S. DIRETA] em ${new Date().toLocaleString('pt-BR')}`
-        };
-
-        const { error: errOrc } = await db.from('orcamentos').insert([orcPayload]);
-        if (errOrc) throw errOrc;
         await abrirOS(id);
-    } catch (e) { console.error(e); showToast("Erro no fluxo direto", "error"); }
+    } catch (e) { console.error(e); showToast("Erro ao abrir O.S.", "error"); }
 }
 
 async function abrirOS(id) {
     try {
-        const { data: orc, error: errOrc } = await db.from('orcamentos').select('*, orcamento_itens(*)').eq('agendamento_id', id).maybeSingle();
+        const { data: orc, error: errOrc } = await db.from('orcamentos')
+            .select('*, orcamento_itens(*)')
+            .eq('agendamento_id', id)
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .maybeSingle();
         if (errOrc) throw errOrc;
-        if (!orc || !['aprovado', 'aprovado_manual'].includes(orc.status.toLowerCase())) {
-            showToast("Necessário orçamento aprovado.", "error"); return;
-        }
+
+        const orcAprovado = orc && ['aprovado', 'aprovado_manual'].includes((orc.status || '').toLowerCase());
+        const { data: agend, error: errAgend } = await db.from('agendamentos')
+            .select('*')
+            .eq('id', id)
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .single();
+        if (errAgend) throw errAgend;
 
         const osPayload = {
             oficina_id: OFICINA_ATIVA_ID,
-            cliente_id: orc.cliente_id,
-            veiculo_id: orc.veiculo_id,
+            cliente_id: orcAprovado ? orc.cliente_id : agend.cliente_id,
+            veiculo_id: orcAprovado ? orc.veiculo_id : agend.veiculo_id,
             agendamento_id: id,
-            orcamento_id: orc.id,
+            orcamento_id: orcAprovado ? orc.id : null,
             numero_os: "OS-" + Date.now(),
-            valor_total: orc.valor_total || 0,
+            valor_total: orcAprovado ? (orc.valor_total || 0) : 0,
             status: 'aberta',
-            defeito_relatado: orc.observacoes || null,
-            observacoes: orc.observacoes
+            defeito_relatado: orcAprovado ? (orc.observacoes || null) : (agend.observacoes || null),
+            observacoes: orcAprovado ? orc.observacoes : agend.observacoes
         };
 
         const { data: novaOS, error: errOS } = await db.from('ordens_servico').insert([osPayload]).select().single();
         if (errOS) throw errOS;
 
-        if (orc.orcamento_itens && orc.orcamento_itens.length > 0) {
+        if (orcAprovado && orc.orcamento_itens && orc.orcamento_itens.length > 0) {
             const itensOS = orc.orcamento_itens.map(i => ({ os_id: novaOS.id, tipo: i.tipo, descricao: i.descricao, quantidade: i.quantidade, valor_unitario: i.valor_unitario, valor_total: i.valor_total }));
             await db.from('ordem_servico_itens').insert(itensOS);
         }
 
-        await db.from('agendamentos').update({ status: 'EM EXECUÇÃO' }).eq('id', id);
+        await db.from('agendamentos')
+            .update({ status: 'EM EXECUÇÃO' })
+            .eq('id', id)
+            .eq('oficina_id', OFICINA_ATIVA_ID);
         showToast("O.S. #" + novaOS.id + " aberta!");
         
         // Redireciona para a tela de O.S.
@@ -479,11 +534,19 @@ async function abrirOS(id) {
 
 async function gerarOrcamentoFundo(id) {
     try {
-        showToast("Processando chegada do cliente...", "info");
-        const { data: orcExistente } = await db.from('orcamentos').select('id').eq('agendamento_id', id).maybeSingle();
+        showToast("Gerando orçamento...", "info");
+        const { data: orcExistente } = await db.from('orcamentos')
+            .select('id')
+            .eq('agendamento_id', id)
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .maybeSingle();
         
         if (!orcExistente) {
-            const { data: agend } = await db.from('agendamentos').select('*').eq('id', id).single();
+            const { data: agend } = await db.from('agendamentos')
+                .select('*')
+                .eq('id', id)
+                .eq('oficina_id', OFICINA_ATIVA_ID)
+                .single();
             const orcPayload = {
                 oficina_id: OFICINA_ATIVA_ID, cliente_id: agend.cliente_id, veiculo_id: agend.veiculo_id,
                 agendamento_id: id, valor_pecas: 0, valor_servicos: 0, valor_total: 0, status: 'Rascunho',
@@ -492,8 +555,11 @@ async function gerarOrcamentoFundo(id) {
             await db.from('orcamentos').insert([orcPayload]);
         }
 
-        await db.from('agendamentos').update({ status: 'EM ANÁLISE' }).eq('id', id);
-        showToast("Status atualizado para EM ANÁLISE");
+        await db.from('agendamentos')
+            .update({ status: 'EM ANÁLISE' })
+            .eq('id', id)
+            .eq('oficina_id', OFICINA_ATIVA_ID);
+        showToast("Orçamento gerado", "success");
         renderizarAgendaExtrato();
     } catch (e) { console.error(e); showToast("Erro ao atualizar", "error"); }
 }
@@ -623,11 +689,19 @@ async function renderizarAgendaExtrato() {
                     obsText = '<span class="empty-obs">Sem observações</span>';
                 }
 
-                let btn = '';
-                if (isAg) btn = `<button class="btn-row-action mudar-status" onclick="window.abrirModalPresenca(${item.id})"><i data-lucide="refresh-cw"></i> Mudar Status</button>`;
-                else if (sL.includes('análise') || sL.includes('orçamento')) btn = `<button class="btn-row-action budget" style="width:150px;" onclick="window.location.href='orcamentos.html?id=${OFICINA_ATIVA_ID}&agendamento_id=${item.id}'"><i data-lucide="calculator"></i> Ver Orç.</button>`;
-                else if (sL.includes('execução') || sL.includes('pátio') || sL.includes('aberta')) btn = `<button class="btn-row-action os" style="width:150px;" onclick="window.location.href='os.html?id=${OFICINA_ATIVA_ID}'"><i data-lucide="wrench"></i> Ver O.S.</button>`;
-                else btn = `<button class="btn-row-action secondary mudar-status" onclick="window.abrirModalPresenca(${item.id})"><i data-lucide="refresh-cw"></i> Mudar Status</button>`;
+                const agendamentoIdSeguro = JSON.stringify(item.id);
+                let btn = `
+                    <button class="btn-row-action start" onclick="window.abrirModalAtendimento(${agendamentoIdSeguro})"><i data-lucide="play-circle"></i> Iniciar atendimento</button>
+                    <button class="btn-row-action reschedule" onclick="window.abrirModalRemarcacao(${agendamentoIdSeguro})"><i data-lucide="calendar-clock"></i> Remarcar</button>
+                    <button class="btn-row-action cancel" onclick="window.cancelarAgendamento(${agendamentoIdSeguro})"><i data-lucide="x-circle"></i> Cancelar</button>
+                `;
+                if (sL.includes('execução') || sL.includes('pátio') || sL.includes('aberta')) {
+                    btn = `<button class="btn-row-action os" onclick="window.location.href='os.html?id=${OFICINA_ATIVA_ID}'"><i data-lucide="wrench"></i> Ver O.S.</button>`;
+                } else if (sL.includes('cancel') || sL.includes('remarc') || sL.includes('faltou') || sL.includes('conclu') || sL.includes('entreg')) {
+                    btn = `<span class="btn-row-action done"><i data-lucide="history"></i> Registrado</span>`;
+                }
+
+                // Pendência: Agendamentos vencidos há mais de 1 hora sem orçamento, O.S., remarcação ou cancelamento devem virar FALTOU automaticamente via automação futura.
 
                 const badge = oS === 'enviado' ? '<span class="badge-waiting-accept">Aguardando Aceite</span>' : '';
 
