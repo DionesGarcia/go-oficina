@@ -1432,8 +1432,23 @@ body.theme-light .sidebar-bottom-meta {
 body.theme-light .sidebar-plan-line,
 body.theme-light .sidebar-credit {
     width: 100%;
-    text-align: left;
-    padding-left: 12px;
+    text-align: center;
+    padding-left: 0;
+}
+
+body.theme-light .sidebar-footer-divider {
+    width: 100%;
+    height: 1px;
+    margin: 4px 0 2px;
+    background: #e5e7eb;
+}
+
+body.theme-light .sidebar-footer-text {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 4px;
 }
 
 body.theme-light .sidebar-utility-button {
@@ -1488,7 +1503,7 @@ body.theme-light.dashboard-page .journey-panel::before {
 }
 
 body.theme-light.dashboard-page .radar-header {
-    padding: 18px 22px 4px;
+    padding: 16px 22px 2px;
 }
 
 body.theme-light.dashboard-page .radar-title-line i,
@@ -1610,6 +1625,10 @@ body.theme-light.dashboard-page .journey-copy strong {
     white-space: normal;
     overflow-wrap: normal;
     min-height: 24px;
+}
+
+body.theme-light.dashboard-page .journey-copy {
+    margin-top: 10px;
 }
 
 body.theme-light.dashboard-page .quick-actions-panel {
@@ -1826,4 +1845,98 @@ body.theme-light.dashboard-page .status-badge.faturado {
     body.theme-light.dashboard-page .topbar-user-chevron {
         display: none;
     }
+}
+
+/* Acessibilidade visual do painel claro */
+body.theme-light.dashboard-page .topbar-workshop-name {
+    font-size: 18px;
+}
+
+body.theme-light.dashboard-page .topbar-workspace-copy strong,
+body.theme-light.dashboard-page .user-name {
+    font-size: 15px;
+}
+
+body.theme-light.dashboard-page .topbar-workspace-copy span,
+body.theme-light.dashboard-page .user-status {
+    font-size: 13px;
+}
+
+body.theme-light.dashboard-page .radar-title-line h3,
+body.theme-light.dashboard-page .quick-actions-header h3,
+body.theme-light.dashboard-page .panel-card-header h3 {
+    font-size: 18px;
+}
+
+body.theme-light.dashboard-page .radar-title-group p {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+body.theme-light.dashboard-page .journey-count {
+    font-size: 22px;
+}
+
+body.theme-light.dashboard-page .journey-copy strong {
+    font-size: 13px;
+    font-weight: 800;
+}
+
+body.theme-light.dashboard-page .quick-action-button,
+body.theme-light.dashboard-page .dashboard-card-link {
+    font-size: 15px;
+    font-weight: 700;
+}
+
+body.theme-light.dashboard-page .dashboard-agenda-title {
+    font-size: 15px;
+}
+
+body.theme-light.dashboard-page .dashboard-agenda-subtitle {
+    font-size: 13px;
+}
+
+body.theme-light.dashboard-page .service-tag {
+    font-size: 11px;
+}
+
+body.theme-light.dashboard-page .dashboard-table th {
+    font-size: 12px;
+}
+
+body.theme-light.dashboard-page .dashboard-table td {
+    font-size: 14px;
+}
+
+body.theme-light.dashboard-page .status-badge {
+    font-size: 11px !important;
+}
+
+body.theme-light.dashboard-page,
+body.theme-light.dashboard-page h1,
+body.theme-light.dashboard-page h2,
+body.theme-light.dashboard-page h3,
+body.theme-light.dashboard-page strong,
+body.theme-light.dashboard-page b,
+body.theme-light.dashboard-page .topbar-workshop-name,
+body.theme-light.dashboard-page .topbar-workspace-copy strong,
+body.theme-light.dashboard-page .topbar-workspace-copy span,
+body.theme-light.dashboard-page .user-name,
+body.theme-light.dashboard-page .user-status,
+body.theme-light.dashboard-page .radar-title-line h3,
+body.theme-light.dashboard-page .quick-actions-header h3,
+body.theme-light.dashboard-page .panel-card-header h3,
+body.theme-light.dashboard-page .radar-title-group p,
+body.theme-light.dashboard-page .journey-count,
+body.theme-light.dashboard-page .journey-copy strong,
+body.theme-light.dashboard-page .quick-action-button,
+body.theme-light.dashboard-page .dashboard-card-link,
+body.theme-light.dashboard-page .dashboard-agenda-title,
+body.theme-light.dashboard-page .dashboard-agenda-subtitle,
+body.theme-light.dashboard-page .agenda-time-display,
+body.theme-light.dashboard-page .service-tag,
+body.theme-light.dashboard-page .dashboard-table th,
+body.theme-light.dashboard-page .dashboard-table td,
+body.theme-light.dashboard-page .status-badge {
+    font-weight: 400 !important;
 }

@@ -181,8 +181,6 @@ function renderizarComponentesGlobais() {
             </ul>
         </div>
         <div class="sidebar-bottom-meta">
-            <div class="sidebar-plan-line" id="sidebar-plan-label">GO Oficina v1.0 • Plano Premium</div>
-            <div class="sidebar-credit">Desenvolvido por Garcia One</div>
             <button type="button" class="sidebar-utility-button" aria-label="Acessibilidade">
                 <i data-lucide="accessibility"></i>
                 <span>Acessibilidade</span>
@@ -192,6 +190,11 @@ function renderizarComponentesGlobais() {
                 <span>Tema claro</span>
                 <i class="sidebar-utility-chevron" data-lucide="chevron-down"></i>
             </button>
+            <div class="sidebar-footer-divider"></div>
+            <div class="sidebar-footer-text">
+                <div class="sidebar-plan-line" id="sidebar-plan-label">GO Oficina v1.0 • Plano Premium</div>
+                <div class="sidebar-credit">Desenvolvido por Garcia One</div>
+            </div>
         </div>
     </aside>
     <div class="sidebar-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
