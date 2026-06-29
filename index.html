@@ -40,17 +40,21 @@
         <div class="journey-scroll">
           <div class="workshop-journey" id="workshop-journey">
             <div class="journey-stage stage-scheduled">
-              <div class="journey-icon">
-                <i data-lucide="calendar-check"></i>
+              <div class="journey-metric">
+                <div class="journey-icon">
+                  <i data-lucide="calendar-check"></i>
+                </div>
                 <span class="journey-count" id="journey-agendado">0</span>
               </div>
               <div class="journey-copy">
-                <strong>Agendado</strong>
+                <strong>Agendadas</strong>
               </div>
             </div>
             <div class="journey-stage stage-received">
-              <div class="journey-icon">
-                <i data-lucide="clipboard-check"></i>
+              <div class="journey-metric">
+                <div class="journey-icon">
+                  <i data-lucide="clipboard-check"></i>
+                </div>
                 <span class="journey-count" id="journey-recepcionado">0</span>
               </div>
               <div class="journey-copy">
@@ -58,8 +62,10 @@
               </div>
             </div>
             <div class="journey-stage stage-budget">
-              <div class="journey-icon">
-                <i data-lucide="file-text"></i>
+              <div class="journey-metric">
+                <div class="journey-icon">
+                  <i data-lucide="file-text"></i>
+                </div>
                 <span class="journey-count" id="journey-orcamento">0</span>
               </div>
               <div class="journey-copy">
@@ -67,8 +73,10 @@
               </div>
             </div>
             <div class="journey-stage stage-approved">
-              <div class="journey-icon">
-                <i data-lucide="badge-check"></i>
+              <div class="journey-metric">
+                <div class="journey-icon">
+                  <i data-lucide="badge-check"></i>
+                </div>
                 <span class="journey-count" id="journey-aprovado">0</span>
               </div>
               <div class="journey-copy">
@@ -76,8 +84,10 @@
               </div>
             </div>
             <div class="journey-stage stage-execution">
-              <div class="journey-icon">
-                <i data-lucide="wrench"></i>
+              <div class="journey-metric">
+                <div class="journey-icon">
+                  <i data-lucide="wrench"></i>
+                </div>
                 <span class="journey-count" id="journey-execucao">0</span>
               </div>
               <div class="journey-copy">
@@ -85,8 +95,10 @@
               </div>
             </div>
             <div class="journey-stage stage-parts">
-              <div class="journey-icon">
-                <i data-lucide="package-search"></i>
+              <div class="journey-metric">
+                <div class="journey-icon">
+                  <i data-lucide="package-search"></i>
+                </div>
                 <span class="journey-count" id="journey-peca">0</span>
               </div>
               <div class="journey-copy">
@@ -94,12 +106,14 @@
               </div>
             </div>
             <div class="journey-stage stage-delivered">
-              <div class="journey-icon">
-                <i data-lucide="key-round"></i>
+              <div class="journey-metric">
+                <div class="journey-icon">
+                  <i data-lucide="key-round"></i>
+                </div>
                 <span class="journey-count" id="journey-entregue">0</span>
               </div>
               <div class="journey-copy">
-                <strong>Entregue</strong>
+                <strong>Entrega</strong>
               </div>
             </div>
           </div>
@@ -142,6 +156,12 @@
           <div class="panel-card-body" id="box-agenda-hoje" style="gap: 8px; padding: 12px;">
             <p style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">Buscando agenda...</p>
           </div>
+          <div class="panel-card-footer">
+            <a class="dashboard-card-link" href="agenda.html" data-dashboard-link="agenda">
+              <i data-lucide="calendar"></i>
+              <span>Ver agenda completa</span>
+            </a>
+          </div>
         </div>
 
         <div class="panel-card dashboard-os-card">
@@ -166,6 +186,12 @@
                 </tbody>
               </table>
             </div>
+          </div>
+          <div class="panel-card-footer">
+            <a class="dashboard-card-link" href="os.html" data-dashboard-link="os">
+              <i data-lucide="list"></i>
+              <span>Ver todas as ordens</span>
+            </a>
           </div>
         </div>
       </div>

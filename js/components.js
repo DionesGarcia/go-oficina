@@ -183,6 +183,15 @@ function renderizarComponentesGlobais() {
         <div class="sidebar-bottom-meta">
             <div class="sidebar-plan-line" id="sidebar-plan-label">GO Oficina v1.0 • Plano Premium</div>
             <div class="sidebar-credit">Desenvolvido por Garcia One</div>
+            <button type="button" class="sidebar-utility-button" aria-label="Acessibilidade">
+                <i data-lucide="accessibility"></i>
+                <span>Acessibilidade</span>
+            </button>
+            <button type="button" class="sidebar-utility-button" onclick="alternarTemaGoOficina()" aria-label="Alternar tema">
+                <i data-lucide="sun"></i>
+                <span>Tema claro</span>
+                <i class="sidebar-utility-chevron" data-lucide="chevron-down"></i>
+            </button>
         </div>
     </aside>
     <div class="sidebar-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
@@ -190,20 +199,46 @@ function renderizarComponentesGlobais() {
 
     const topbarHtml = `
     <header class="global-topbar">
-        <button class="btn-mobile-menu" onclick="toggleMobileMenu()">
-            <i data-lucide="menu"></i>
-        </button>
-        <div class="topbar-workshop-name" id="topbar-workshop-name">GO Oficina</div>
+        <div class="topbar-left">
+            <button class="btn-mobile-menu" onclick="toggleMobileMenu()">
+                <i data-lucide="menu"></i>
+            </button>
+            <button type="button" class="topbar-menu-button" onclick="toggleSidebar()" aria-label="Alternar menu lateral">
+                <i data-lucide="menu"></i>
+            </button>
+            <div class="topbar-workshop-name" id="topbar-workshop-name">GO Oficina</div>
+        </div>
+        <div class="topbar-workspace-card" id="topbar-workspace-card">
+            <div class="topbar-workspace-icon">
+                <i data-lucide="warehouse"></i>
+            </div>
+            <div class="topbar-workspace-copy">
+                <strong>GO Oficina</strong>
+                <span id="topbar-plan-label">Plano Premium</span>
+            </div>
+            <i class="topbar-workspace-chevron" data-lucide="chevron-down"></i>
+        </div>
         <div class="topbar-banner hidden md:block border border-slate-700/50 rounded-lg overflow-hidden" id="topbar-dynamic-banner">
             <img src="assets/banner-dinamico.svg"
                  alt="Banner Dinamico"
                  class="topbar-banner-img max-w-[468px] max-h-[50px]">
         </div>
         <div class="header-user-nav">
+            <button type="button" class="topbar-icon-button" onclick="alternarTemaGoOficina()" aria-label="Alternar tema">
+                <i data-lucide="sun"></i>
+            </button>
+            <button type="button" class="topbar-icon-button topbar-notification-button" aria-label="Notificacoes">
+                <i data-lucide="bell"></i>
+                <span>3</span>
+            </button>
+            <div class="topbar-avatar" aria-hidden="true">U</div>
             <div class="user-info">
                 <div class="user-name" id="header-user-name">Usuario</div>
                 <div class="user-status" id="header-user-email">usuario@email.com</div>
             </div>
+            <button type="button" class="topbar-user-chevron" aria-label="Abrir menu do usuario">
+                <i data-lucide="chevron-down"></i>
+            </button>
         </div>
     </header>
     `;
@@ -237,10 +272,12 @@ async function carregarDadosDinamicos() {
         }
 
         const planLabel = document.getElementById('sidebar-plan-label');
+        const topbarPlanLabel = document.getElementById('topbar-plan-label');
         if (planLabel) {
             const plano = config?.plano || config?.plano_atual || config?.tipo_plano || 'Premium';
             const planoFormatado = String(plano).charAt(0).toUpperCase() + String(plano).slice(1);
             planLabel.innerText = `GO Oficina v1.0 • Plano ${planoFormatado}`;
+            if (topbarPlanLabel) topbarPlanLabel.innerText = `Plano ${planoFormatado}`;
         }
 
         const bannerImg = document.querySelector('#topbar-dynamic-banner img');
@@ -252,8 +289,12 @@ async function carregarDadosDinamicos() {
         if (user) {
             const userName = document.getElementById('header-user-name');
             const userEmail = document.getElementById('header-user-email');
+            const userAvatar = document.querySelector('.topbar-avatar');
             if (userName) userName.innerText = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario';
             if (userEmail) userEmail.innerText = user.email || '';
+            if (userAvatar) {
+                userAvatar.innerText = String(user.user_metadata?.full_name || user.email || 'U').trim().charAt(0).toUpperCase();
+            }
         }
     } catch (e) {
         console.warn("Erro ao carregar dados dinâmicos da UI:", e);
