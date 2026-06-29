@@ -1,0 +1,233 @@
+:root {
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --shadow-sm: 0 8px 18px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 18px 40px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 24px 70px rgba(15, 23, 42, 0.18);
+
+  --status-success: #22c55e;
+  --status-warning: #facc15;
+  --status-info: #38bdf8;
+  --status-danger: #ef4444;
+  --status-neutral: #94a3b8;
+}
+
+.panel-card,
+.kpi-card,
+.quick-actions-panel,
+.orcamento-table-card,
+.os-table-card,
+.agenda-table-card,
+.table-box {
+  border-radius: var(--radius-md);
+}
+
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-tech,
+.btn-modal-cancel,
+.btn-top-action,
+.quick-action-button,
+.filter-btn,
+button[class*="btn-"] {
+  border-radius: var(--radius-sm);
+}
+
+.form-control,
+.input-os-mini,
+input,
+select,
+textarea {
+  border-radius: var(--radius-sm);
+}
+
+.modal-card,
+.drawer-card,
+.os-drawer,
+.drawer-orcamento {
+  border-radius: var(--radius-lg);
+}
+
+.sidebar .brand-mark,
+.plan-box {
+  border-radius: var(--radius-md);
+}
+
+.shadow-sm { box-shadow: var(--shadow-sm); }
+.shadow-md { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+
+.btn-primary,
+.btn-tech {
+  background: #00a94f;
+  border-color: #00c853;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background: transparent;
+  border-color: rgba(34, 197, 94, 0.5);
+  color: var(--status-success);
+}
+
+.btn-danger {
+  background: #dc2626;
+  border-color: #ef4444;
+  color: #ffffff;
+}
+
+.page-title,
+h1 {
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 800;
+}
+
+.section-title,
+h2 {
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 800;
+}
+
+.card-title,
+.panel-card-header h3,
+h3 {
+  font-size: 15px;
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+.status-badge,
+.dashboard-status-badge,
+.badge-waiting-accept {
+  min-height: 28px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: var(--space-2) !important;
+  padding: 0 var(--space-3) !important;
+  border-radius: 999px !important;
+  border: 1px solid rgba(148, 163, 184, 0.5) !important;
+  background: transparent !important;
+  color: var(--status-neutral) !important;
+  font-size: 10px !important;
+  line-height: 1 !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  box-shadow: none !important;
+}
+
+.status-success,
+.status-badge.status-success,
+.status-badge.status-compareceu,
+.dashboard-status-badge.status-success,
+.status-badge.aprovado,
+.status-badge.aprovado_manual,
+.status-badge.concluido,
+.status-badge.concluida,
+.status-badge.entregue,
+.status-badge.finalizada,
+.status-badge.finalizado,
+.status-badge.faturado,
+.dashboard-status-badge.status-concluido,
+.dashboard-status-badge.status-faturado {
+  color: var(--status-success) !important;
+  border-color: rgba(34, 197, 94, 0.5) !important;
+  background: rgba(34, 197, 94, 0.1) !important;
+}
+
+.status-confirmado,
+.status-badge.status-confirmado,
+.dashboard-status-badge.status-confirmado,
+.status-badge.confirmado {
+  color: var(--status-info) !important;
+  border-color: rgba(56, 189, 248, 0.5) !important;
+  background: rgba(56, 189, 248, 0.1) !important;
+}
+
+.status-warning,
+.status-badge.status-warning,
+.status-badge.status-aguardando,
+.dashboard-status-badge.status-warning,
+.status-badge.aguardando_peca,
+.status-badge.pendente,
+.status-badge.aguardando,
+.dashboard-status-badge.status-aguardando-peca {
+  color: var(--status-warning) !important;
+  border-color: rgba(250, 204, 21, 0.5) !important;
+  background: rgba(250, 204, 21, 0.1) !important;
+}
+
+.status-info,
+.status-badge.status-info,
+.dashboard-status-badge.status-info,
+.status-badge.aberta,
+.status-badge.em_aberto,
+.status-badge.em_execucao,
+.status-badge.enviado,
+.dashboard-status-badge.status-aberta,
+.dashboard-status-badge.status-em-execucao {
+  color: var(--status-info) !important;
+  border-color: rgba(56, 189, 248, 0.5) !important;
+  background: rgba(56, 189, 248, 0.1) !important;
+}
+
+.status-danger,
+.status-badge.status-danger,
+.dashboard-status-badge.status-danger,
+.status-badge.cancelada,
+.status-badge.cancelado,
+.status-badge.reprovada,
+.status-badge.reprovado {
+  color: var(--status-danger) !important;
+  border-color: rgba(239, 68, 68, 0.5) !important;
+  background: rgba(239, 68, 68, 0.1) !important;
+}
+
+.status-neutral,
+.status-badge.status-neutral,
+.dashboard-status-badge.status-neutral,
+.dashboard-status-badge.status-sem-status {
+  color: var(--status-neutral) !important;
+  border-color: rgba(148, 163, 184, 0.5) !important;
+  background: rgba(148, 163, 184, 0.08) !important;
+}
+
+.status-badge.rascunho,
+.status-badge.status-rascunho,
+.dashboard-status-badge.status-rascunho {
+  color: #fbbf24 !important;
+  border-color: rgba(251, 191, 36, 0.62) !important;
+  background: rgba(180, 83, 9, 0.28) !important;
+}
+
+.journey-icon {
+  gap: 10px;
+}
+
+.journey-icon i {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  opacity: 1;
+  z-index: 2;
+  flex: 0 0 auto;
+}
+
+.journey-count {
+  position: relative;
+  z-index: 2;
+}

@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GO Oficina - Administração SaaS</title>
-  <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/design-system.css">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <script src="js/config.js"></script>
@@ -19,10 +20,21 @@
     .app-container { display: flex; width: 100%; min-height: 100vh; }
     .sidebar { width: 260px; background-color: #0c101b; border-right: 1px solid #141b2d; padding: 24px; display: flex; flex-direction: column; justify-content: space-between; }
     .main-content { flex: 1; padding: 40px; background-color: #080b11; }
+    .admin-brand { display: flex; align-items: center; gap: 16px; padding: 16px 12px; margin-bottom: 32px; color: #fff; }
+    .admin-brand .brand-mark-img { width: 56px; height: 56px; display: block; flex: 0 0 auto; object-fit: contain; filter: drop-shadow(0 4px 12px rgba(255,255,255,0.08)); }
+    .admin-brand-copy { display: flex; align-items: center; line-height: 1; font-weight: 900; letter-spacing: 0.08em; }
+    .admin-brand-copy span { color: #10b981; font-size: 21px; text-shadow: 0 0 14px rgba(16, 185, 129, 0.18); }
     
     /* Top Bar */
     .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
     .user-profile { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+    .admin-logo-frame { width: fit-content; max-width: 180px; margin: 10px auto 28px; padding: 0; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(148, 163, 184, 0.14); border-radius: 8px; overflow: hidden; box-shadow: 0 10px 24px rgba(0,0,0,0.18); }
+    .admin-logo-frame img { width: 180px; max-width: 100%; height: auto; display: block; object-fit: contain; }
+    .admin-sidebar-footer { position: absolute; left: 24px; right: 24px; bottom: 14px; display: flex; flex-direction: column; align-items: center; gap: 4px; pointer-events: none; }
+    .admin-plan-line { color: #475569; font-size: 11px; font-weight: 600; letter-spacing: 0.025em; }
+    .admin-credit { color: #64748b; font-size: 10px; font-weight: 700; }
+    .admin-nav-logout { width: 100%; border: 1px solid transparent; background: transparent; color: #94a3b8; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; transition: color 0.18s ease, background-color 0.18s ease; font-family: inherit; }
+    .admin-nav-logout:hover { color: #fff; background: rgba(148, 163, 184, 0.08); }
     
     /* Cards de Métricas idênticos aos da imagem */
     .metrics-container { display: flex; gap: 24px; margin-bottom: 32px; }
@@ -72,7 +84,10 @@
     <!-- MENU LATERAL (Item Admin SaaS Removido conforme solicitado para Produção) -->
     <aside class="sidebar">
       <div class="menu-top">
-        <img src="img/logo.png" alt="GO Oficina" style="height: 32px; margin-bottom: 32px;">
+        <div class="admin-logo-frame" aria-label="GO Oficina">
+          <img src="Gemini_Generated_Image_6hobk36hobk36hob-removebg-preview.png"
+               alt="GO Oficina Logo">
+        </div>
         <nav style="display: flex; flex-direction: column; gap: 8px;">
           <!-- Seus links normais do sistema que não dão acesso direto à tela -->
           <a href="#" class="nav-item"><i data-lucide="layout-dashboard"></i> Painel</a>
@@ -80,7 +95,15 @@
           <a href="#" class="nav-item"><i data-lucide="file-text"></i> Orçamentos</a>
           <a href="#" class="nav-item"><i data-lucide="wrench"></i> Ordens de Serviço</a>
           <a href="#" class="nav-item"><i data-lucide="users"></i> Clientes</a>
+          <a href="#" class="nav-item"><i data-lucide="life-buoy"></i> Suporte</a>
+          <button type="button" class="admin-nav-logout" onclick="confirmarLogoutAdmin()">
+            <i data-lucide="log-out"></i> Sair
+          </button>
         </nav>
+      </div>
+      <div class="admin-sidebar-footer">
+        <div class="admin-plan-line">GO Oficina v1.0 • Plano Premium</div>
+        <div class="admin-credit">Desenvolvido por Garcia One</div>
       </div>
     </aside>
 
@@ -93,8 +116,7 @@
         </div>
         
         <div class="user-profile">
-          <span style="color: #6c7a9c;">teste@teste.com <br><small style="color: #00b074; float: right;">Logado agora</small></span>
-          <a href="#" class="btn-orange" style="background: rgba(255,59,48,0.1); color: #ff3b30; padding: 8px 12px;"><i data-lucide="log-out"></i> Sair</a>
+          <span style="color: #fff; font-weight: 700; line-height: 1.35;">Garcia One<br><small style="color: #94a3b8; font-weight: 500;">garcia@email.com</small></span>
         </div>
       </div>
 
@@ -198,6 +220,11 @@
     }
 
     // Integração dinâmica com o teu Supabase
+    function confirmarLogoutAdmin() {
+        if (!confirm('Deseja mesmo sair do sistema?')) return;
+        window.location.href = 'login.html';
+    }
+
     async function buscarDadosDoBanco() {
         try {
             const supabaseClient = typeof db !== 'undefined' ? db : supabase;

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MecanOS - Dashboard</title>
+  
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="min-h-screen bg-[#090604] text-[#f4f0ec] antialiased">
+  <div class="flex min-h-screen">
+    <aside class="hidden w-64 shrink-0 flex-col justify-between border-r border-white/10 bg-[#151515] lg:flex">
+      <div>
+        <div class="flex h-16 items-center gap-3 border-b border-white/10 px-5">
+          <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#ff7300] text-black">
+            <i data-lucide="wrench" class="h-5 w-5"></i>
+          </div>
+          <div>
+            <h1 class="text-sm font-bold leading-tight text-white">MecanOS</h1>
+            <p class="text-xs text-zinc-400">Oficina Mecânica</p>
+          </div>
+        </div>
+
+        <nav class="space-y-8 px-3 py-5">
+          <div>
+            <p class="px-3 pb-2 text-xs font-bold uppercase tracking-wide text-zinc-500">Principal</p>
+            <div class="space-y-1">
+              <a href="#" class="flex items-center gap-3 rounded-lg bg-blue-600 px-3 py-3 text-sm font-semibold text-white">
+                <i data-lucide="layout-dashboard" class="h-4 w-4"></i>
+                Dashboard
+              </a>
+              <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/5 hover:text-white">
+                <i data-lucide="calendar-days" class="h-4 w-4"></i>
+                Agendamento
+                <span class="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-xs text-zinc-200">8</span>
+              </a>
+              <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/5 hover:text-white">
+                <i data-lucide="clipboard-list" class="h-4 w-4"></i>
+                Ordens de Serviço
+                <span class="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-xs text-zinc-200">14</span>
+              </a>
+              <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/5 hover:text-white">
+                <i data-lucide="list-checks" class="h-4 w-4"></i>
+                Check List
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <p class="px-3 pb-2 text-xs font-bold uppercase tracking-wide text-zinc-500">Comercial</p>
+            <div class="space-y-1">
+              <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/5 hover:text-white">
+                <i data-lucide="file-text" class="h-4 w-4"></i>
+                Orçamentos
+                <span class="ml-auto rounded-full bg-white/10 px-2 py-0.5 text-xs text-zinc-200">5</span>
+              </a>
+              <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/5 hover:text-white">
+                <i data-lucide="wallet" class="h-4 w-4"></i>
+                Financeiro
+              </a>
+              <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/5 hover:text-white">
+                <i data-lucide="users-round" class="h-4 w-4"></i>
+                Clientes
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <div class="border-t border-white/10 p-3">
+        <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/5 hover:text-white">
+          <i data-lucide="settings" class="h-4 w-4"></i>
+          Configurações
+        </a>
+        <a href="#" class="flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-semibold text-zinc-300 transition hover:bg-white/5 hover:text-white">
+          <i data-lucide="log-out" class="h-4 w-4"></i>
+          Sair
+        </a>
+      </div>
+    </aside>
+
+    <main class="flex min-w-0 flex-1 flex-col">
+      <header class="flex h-16 items-center justify-between border-b border-white/10 bg-[#1b1511] px-5 lg:px-6">
+        <div class="relative hidden w-full max-w-sm sm:block">
+          <i data-lucide="search" class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"></i>
+          <input type="text" placeholder="Buscar OS, cliente ou placa..." class="h-9 w-full rounded-lg border border-white/15 bg-white/5 pl-10 pr-3 text-sm text-zinc-100 placeholder:text-zinc-400 outline-none transition focus:border-[#ff7300]/70" />
+        </div>
+
+        <div class="ml-auto flex items-center gap-3">
+          <button class="inline-flex h-10 items-center gap-2 rounded-lg bg-[#ff7300] px-4 text-sm font-semibold text-black transition hover:bg-[#ff8a1f]">
+            <i data-lucide="plus" class="h-4 w-4"></i>
+            Nova OS
+          </button>
+          <button class="relative flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/5 text-zinc-200">
+            <i data-lucide="bell" class="h-4 w-4"></i>
+            <span class="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-[#ff7300]"></span>
+          </button>
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-[#ff7300] text-sm font-semibold text-black">CM</div>
+            <div class="hidden md:block">
+              <p class="text-sm font-semibold leading-tight text-white">Carlos Mendes</p>
+              <p class="text-xs text-zinc-400">Gerente</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="flex-1 overflow-y-auto p-5 lg:p-6">
+        <section class="mb-6">
+          <h2 class="text-2xl font-bold tracking-[-0.02em] text-white">Bem-vindo de volta, Carlos</h2>
+          <p class="mt-1 text-sm text-zinc-400">Aqui está um resumo da sua oficina hoje.</p>
+        </section>
+
+        <section class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <article class="rounded-xl border border-white/10 bg-[#1b1511] p-5">
+            <div class="flex items-start justify-between">
+              <p class="text-sm text-zinc-400">OS Abertas</p>
+              <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff7300]/20 text-[#ff7300]">
+                <i data-lucide="clipboard-list" class="h-4 w-4"></i>
+              </span>
+            </div>
+            <p class="mt-6 text-3xl font-bold text-white">14</p>
+            <p class="mt-2 text-xs font-semibold text-[#ff7300]">↗ +3 hoje</p>
+          </article>
+
+          <article class="rounded-xl border border-white/10 bg-[#1b1511] p-5">
+            <div class="flex items-start justify-between">
+              <p class="text-sm text-zinc-400">Agendamentos Hoje</p>
+              <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff7300]/20 text-[#ff7300]">
+                <i data-lucide="calendar-days" class="h-4 w-4"></i>
+              </span>
+            </div>
+            <p class="mt-6 text-3xl font-bold text-white">8</p>
+            <p class="mt-2 text-xs font-semibold text-[#ff7300]">↗ 2 pendentes</p>
+          </article>
+
+          <article class="rounded-xl border border-white/10 bg-[#1b1511] p-5">
+            <div class="flex items-start justify-between">
+              <p class="text-sm text-zinc-400">Orçamentos Pendentes</p>
+              <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff7300]/20 text-[#ff7300]">
+                <i data-lucide="file-text" class="h-4 w-4"></i>
+              </span>
+            </div>
+            <p class="mt-6 text-3xl font-bold text-white">5</p>
+            <p class="mt-2 text-xs font-semibold text-red-400">↘ -1 esta semana</p>
+          </article>
+
+          <article class="rounded-xl border border-white/10 bg-[#1b1511] p-5">
+            <div class="flex items-start justify-between">
+              <p class="text-sm text-zinc-400">Faturamento do Mês</p>
+              <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-[#ff7300]/20 text-[#ff7300]">
+                <i data-lucide="dollar-sign" class="h-4 w-4"></i>
+              </span>
+            </div>
+            <p class="mt-6 text-3xl font-bold text-white">R$ 48.250</p>
+            <p class="mt-2 text-xs font-semibold text-[#ff7300]">↗ +12,5%</p>
+          </article>
+        </section>
+
+        <section class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,2fr)_416px]">
+          <article class="overflow-hidden rounded-xl border border-white/10 bg-[#1b1511]">
+            <div class="flex items-center justify-between border-b border-white/10 px-5 py-5">
+              <div>
+                <h3 class="font-bold text-white">Ordens de Serviço Recentes</h3>
+                <p class="mt-1 text-sm text-zinc-400">Últimas OS registradas na oficina</p>
+              </div>
+              <a href="#" class="text-sm font-semibold text-[#ff7300] hover:text-[#ff8a1f]">Ver todas</a>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full min-w-[760px] text-left text-sm">
+                <thead class="border-b border-white/10 text-white">
+                  <tr>
+                    <th class="px-3 py-3 font-semibold first:pl-5">OS</th>
+                    <th class="px-3 py-3 font-semibold">Cliente</th>
+                    <th class="px-3 py-3 font-semibold">Veículo</th>
+                    <th class="px-3 py-3 font-semibold">Placa</th>
+                    <th class="px-3 py-3 font-semibold">Status</th>
+                    <th class="px-3 py-3 text-right font-semibold last:pr-5">Valor</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/10">
+                  <tr>
+                    <td class="px-3 py-3 font-bold text-white first:pl-5">OS-1042</td>
+                    <td class="px-3 py-3 font-semibold text-white">João Silva</td>
+                    <td class="px-3 py-3 text-zinc-400">VW Gol 1.6</td>
+                    <td class="px-3 py-3"><span class="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-zinc-400">BRA2E19</span></td>
+                    <td class="px-3 py-3"><span class="rounded-full bg-[#ff7300]/20 px-3 py-1 text-xs font-bold text-[#ff7300]">Em andamento</span></td>
+                    <td class="px-3 py-3 text-right font-bold text-white last:pr-5">R$ 1.250</td>
+                  </tr>
+                  <tr>
+                    <td class="px-3 py-3 font-bold text-white first:pl-5">OS-1041</td>
+                    <td class="px-3 py-3 font-semibold text-white">Maria Souza</td>
+                    <td class="px-3 py-3 text-zinc-400">Fiat Argo</td>
+                    <td class="px-3 py-3"><span class="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-zinc-400">QXR7H22</span></td>
+                    <td class="px-3 py-3"><span class="rounded-full bg-amber-500/20 px-3 py-1 text-xs font-bold text-amber-400">Aguardando peça</span></td>
+                    <td class="px-3 py-3 text-right font-bold text-white last:pr-5">R$ 880</td>
+                  </tr>
+                  <tr>
+                    <td class="px-3 py-3 font-bold text-white first:pl-5">OS-1040</td>
+                    <td class="px-3 py-3 font-semibold text-white">Pedro Lima</td>
+                    <td class="px-3 py-3 text-zinc-400">Honda Civic</td>
+                    <td class="px-3 py-3"><span class="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-zinc-400">LWK4D88</span></td>
+                    <td class="px-3 py-3"><span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-400">Concluída</span></td>
+                    <td class="px-3 py-3 text-right font-bold text-white last:pr-5">R$ 2.100</td>
+                  </tr>
+                  <tr>
+                    <td class="px-3 py-3 font-bold text-white first:pl-5">OS-1039</td>
+                    <td class="px-3 py-3 font-semibold text-white">Ana Costa</td>
+                    <td class="px-3 py-3 text-zinc-400">Toyota Corolla</td>
+                    <td class="px-3 py-3"><span class="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-zinc-400">FTG9P10</span></td>
+                    <td class="px-3 py-3"><span class="rounded-full bg-zinc-500/20 px-3 py-1 text-xs font-bold text-zinc-300">Aberta</span></td>
+                    <td class="px-3 py-3 text-right font-bold text-white last:pr-5">R$ 540</td>
+                  </tr>
+                  <tr>
+                    <td class="px-3 py-3 font-bold text-white first:pl-5">OS-1038</td>
+                    <td class="px-3 py-3 font-semibold text-white">Rafael Dias</td>
+                    <td class="px-3 py-3 text-zinc-400">Chevrolet Onix</td>
+                    <td class="px-3 py-3"><span class="rounded border border-white/10 bg-white/5 px-2 py-1 text-xs text-zinc-400">MNB3R55</span></td>
+                    <td class="px-3 py-3"><span class="rounded-full bg-[#ff7300]/20 px-3 py-1 text-xs font-bold text-[#ff7300]">Em andamento</span></td>
+                    <td class="px-3 py-3 text-right font-bold text-white last:pr-5">R$ 1.690</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="overflow-hidden rounded-xl border border-white/10 bg-[#1b1511]">
+            <div class="border-b border-white/10 px-5 py-5">
+              <h3 class="font-bold text-white">Agenda de Hoje</h3>
+              <p class="mt-1 text-sm text-zinc-400">5 serviços agendados</p>
+            </div>
+
+            <div class="divide-y divide-white/10">
+              <div class="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4">
+                <div class="flex items-center gap-2 font-bold text-white"><i data-lucide="clock-3" class="h-3.5 w-3.5 text-zinc-500"></i>08:00</div>
+                <div><p class="font-semibold text-white">João Silva</p><p class="text-xs text-zinc-400">Revisão completa</p></div>
+                <span class="rounded-full bg-[#ff7300]/20 px-3 py-1 text-xs font-bold text-[#ff7300]">Confirmado</span>
+              </div>
+              <div class="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4">
+                <div class="flex items-center gap-2 font-bold text-white"><i data-lucide="clock-3" class="h-3.5 w-3.5 text-zinc-500"></i>09:30</div>
+                <div><p class="font-semibold text-white">Maria Souza</p><p class="text-xs text-zinc-400">Troca de óleo</p></div>
+                <span class="rounded-full bg-[#ff7300]/20 px-3 py-1 text-xs font-bold text-[#ff7300]">Confirmado</span>
+              </div>
+              <div class="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4">
+                <div class="flex items-center gap-2 font-bold text-white"><i data-lucide="clock-3" class="h-3.5 w-3.5 text-zinc-500"></i>11:00</div>
+                <div><p class="font-semibold text-white">Pedro Lima</p><p class="text-xs text-zinc-400">Alinhamento e balanceamento</p></div>
+                <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-zinc-400">Pendente</span>
+              </div>
+              <div class="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4">
+                <div class="flex items-center gap-2 font-bold text-white"><i data-lucide="clock-3" class="h-3.5 w-3.5 text-zinc-500"></i>13:30</div>
+                <div><p class="font-semibold text-white">Ana Costa</p><p class="text-xs text-zinc-400">Diagnóstico eletrônico</p></div>
+                <span class="rounded-full bg-[#ff7300]/20 px-3 py-1 text-xs font-bold text-[#ff7300]">Confirmado</span>
+              </div>
+              <div class="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 px-5 py-4">
+                <div class="flex items-center gap-2 font-bold text-white"><i data-lucide="clock-3" class="h-3.5 w-3.5 text-zinc-500"></i>15:00</div>
+                <div><p class="font-semibold text-white">Rafael Dias</p><p class="text-xs text-zinc-400">Troca de pastilhas</p></div>
+                <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-zinc-400">Pendente</span>
+              </div>
+            </div>
+          </article>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>

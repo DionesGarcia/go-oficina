@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>GO Oficina — Painel de Controle</title>
-
-  <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
-
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -20,8 +18,9 @@
   <script src="js/dashboard.js"></script>
 
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/design-system.css">
 </head>
-<body>
+<body class="dashboard-page">
 
   <!-- CONTEÚDO PRINCIPAL -->
   <main class="main-content">
@@ -107,85 +106,44 @@
         </div>
       </div>
 
-      <section class="workshop-protection-note" aria-label="Histórico e Proteção da Oficina">
-        <div class="workshop-protection-icon">
-          <i data-lucide="shield-check"></i>
+      <section class="quick-actions-panel" aria-label="Ações rápidas">
+        <div class="quick-actions-header">
+          <h3><i data-lucide="zap"></i> Ações rápidas</h3>
         </div>
-        <div class="workshop-protection-copy">
-          <h3>Histórico e Proteção da Oficina</h3>
-          <p>Cada atendimento registrado cria um histórico do veículo, ajuda a documentar decisões e protege a oficina em casos de dúvidas, garantias ou contestação.</p>
+        <div class="quick-actions-grid">
+          <a class="quick-action-button" href="os.html" data-dashboard-link="os">
+            <i data-lucide="clipboard-plus"></i>
+            <span>Nova Ordem de Serviço</span>
+          </a>
+          <a class="quick-action-button" href="orcamentos.html" data-dashboard-link="orcamentos">
+            <i data-lucide="file-plus-2"></i>
+            <span>Novo Orçamento</span>
+          </a>
+          <a class="quick-action-button" href="agenda.html" data-dashboard-link="agenda">
+            <i data-lucide="calendar-plus"></i>
+            <span>Novo Agendamento</span>
+          </a>
+          <a class="quick-action-button" href="clientes.html" data-dashboard-link="clientes">
+            <i data-lucide="user-search"></i>
+            <span>Consultar Cliente</span>
+          </a>
+          <a class="quick-action-button" href="veiculos.html" data-dashboard-link="veiculos">
+            <i data-lucide="car-front"></i>
+            <span>Localizar Veículo</span>
+          </a>
         </div>
       </section>
-
-      <!-- Cards operacionais do dia -->
-      <section class="kpi-grid container-contadores">
-          <!-- Card 1: Agenda Próxima -->
-          <div class="kpi-card card-total">
-              <a class="kpi-card-action" href="agenda.html" data-dashboard-link="agenda" title="Abrir agenda">
-                  <i data-lucide="arrow-up-right"></i>
-              </a>
-              <div class="kpi-icon-wrapper icon-total">
-                  <i data-lucide="calendar-days"></i>
-              </div>
-              <div class="kpi-data">
-                  <div class="kpi-value" id="count-agendamentos">0</div>
-                  <p class="kpi-label">Agenda Próxima</p>
-              </div>
-          </div>
-
-          <!-- Card 2: Orçamentos Pendentes -->
-          <div class="kpi-card card-aguardando">
-              <a class="kpi-card-action" href="orcamentos.html" data-dashboard-link="orcamentos" title="Abrir orçamentos">
-                  <i data-lucide="arrow-up-right"></i>
-              </a>
-              <div class="kpi-icon-wrapper icon-aguardando">
-                  <i data-lucide="calculator"></i>
-              </div>
-              <div class="kpi-data">
-                  <div class="kpi-value" id="count-orcamentos">0</div>
-                  <p class="kpi-label">Orçamentos Pendentes</p>
-              </div>
-          </div>
-
-          <!-- Card 3: O.S. Abertas -->
-          <div class="kpi-card card-confirmados">
-              <a class="kpi-card-action" href="os.html" data-dashboard-link="os" title="Abrir ordens de serviço">
-                  <i data-lucide="arrow-up-right"></i>
-              </a>
-              <div class="kpi-icon-wrapper icon-confirmados">
-                  <i data-lucide="wrench"></i>
-              </div>
-              <div class="kpi-data">
-                  <div class="kpi-value" id="count-os-abertas">0</div>
-                  <p class="kpi-label">O.S. Abertas</p>
-              </div>
-          </div>
-
-          <!-- Card 4: No Pátio -->
-          <div class="kpi-card card-concluidos">
-              <a class="kpi-card-action" href="os.html" data-dashboard-link="os" title="Abrir ordens de serviço">
-                  <i data-lucide="arrow-up-right"></i>
-              </a>
-              <div class="kpi-icon-wrapper icon-concluidos">
-                  <i data-lucide="check-circle"></i>
-              </div>
-              <div class="kpi-data">
-                  <div class="kpi-value" id="count-finalizados">0</div>
-                  <p class="kpi-label">No Pátio</p>
-              </div>
-          </div>
-      </section>
-
-      <div class="dashboard-summary-grid">
-        <div class="panel-card dashboard-alert-card" id="card-alertas" style="display:none;">
-          <div class="panel-card-header">
-            <h3><i style="width:16px; height:16px; color:var(--brand-yellow);" data-lucide="bell"></i> Alertas</h3>
-          </div>
-          <div class="panel-card-body" id="box-alertas"></div>
-        </div>
-      </div>
 
       <div class="dashboard-layout-grid">
+        <div class="panel-card dashboard-agenda-card">
+          <div class="panel-card-header">
+            <h3><i style="width:16px; height:16px; color:var(--brand-blue);" data-lucide="calendar-clock"></i> Agenda de Hoje</h3>
+          </div>
+          <div class="panel-card-body" id="box-agenda-hoje" style="gap: 8px; padding: 12px;">
+            <p style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">Buscando agenda...</p>
+          </div>
+        </div>
+
         <div class="panel-card dashboard-os-card">
           <div class="panel-card-header">
             <h3><i style="width:16px; height:16px; color:var(--brand-blue);" data-lucide="clipboard-list"></i> Últimas Ordens de Serviço</h3>
@@ -208,15 +166,6 @@
                 </tbody>
               </table>
             </div>
-          </div>
-        </div>
-
-        <div class="panel-card dashboard-agenda-card">
-          <div class="panel-card-header">
-            <h3><i style="width:16px; height:16px; color:var(--brand-blue);" data-lucide="calendar-clock"></i> Agenda de Hoje</h3>
-          </div>
-          <div class="panel-card-body" id="box-agenda-hoje" style="gap: 8px; padding: 12px;">
-            <p style="font-size:13px; color:var(--text-muted); text-align:center; padding:20px;">Buscando agenda...</p>
           </div>
         </div>
       </div>

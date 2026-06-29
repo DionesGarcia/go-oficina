@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Agendamento Online — GO Oficina</title>
-    
-    <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
     <script src="js/config.js"></script>
     <script src="js/utils.js"></script>
@@ -402,92 +400,10 @@
                         <input type="tel" id="val-telefone" class="huge-input-saas" placeholder="(00) 00000-0000">
                     </div>
                     <div id="cliente-encontrado-alert" class="alert-cadastro-sucesso">
-                        <i class="fas fa-check-circle"></i> Cadastro encontrado! Carregando seus veículos...
+                        <i class="fas fa-check-circle"></i> Cadastro encontrado! Vamos escolher o melhor horario.
                     </div>
                 </div>
                 <button class="btn-primary-premium" id="btn-whats-next" onclick="avancarDoWhats()">Próximo <i class="fas fa-arrow-right"></i></button>
-            </div>
-
-            <div class="conversational-step" id="step-cpf">
-                <div class="question-wrapper">
-                    <div class="welcome-wave-box">👋</div>
-                    <p class="assistant-guide-text">Para sua segurança, informe seu <span class="highlight-green">CPF ou CNPJ</span>:</p>
-                </div>
-                <div class="form-group">
-                    <div class="input-with-prefix">
-                        <i class="fas fa-fingerprint input-prefix-icon"></i>
-                        <input type="text" id="val-cpf" class="huge-input-saas" placeholder="000.000.000-00 ou CNPJ">
-                    </div>
-                    <div id="cliente-cpf-encontrado-alert" class="alert-cadastro-sucesso">
-                        <i class="fas fa-check-circle"></i> Cadastro validado com sucesso!
-                    </div>
-                </div>
-                <button class="btn-primary-premium" id="btn-verificar-cpf" onclick="avancarDoCpf()">Continuar <i class="fas fa-arrow-right"></i></button>
-            </div>
-
-            <div class="conversational-step" id="step-veiculo">
-                <div class="question-wrapper">
-                    <div class="welcome-wave-box">👋</div>
-                    <p class="assistant-guide-text" id="txt-guia-veiculo">Gerencie os veículos do agendamento:</p>
-                </div>
-                
-                <div id="lista-veiculos-existentes" style="display:none; width: 100%; margin-bottom: 15px;"></div>
-                
-                <button type="button" class="btn-secondary-action" id="btn-novo-carro-toggle" style="display:none;" onclick="habilitarFormularioNovoVeiculo()">
-                    <i class="fas fa-plus"></i> Cadastrar Outro Veículo
-                </button>
-
-                <div id="form-cadastro-veiculo-bloco" style="width: 100%;">
-                    <div class="form-group">
-                        <label>Marca</label>
-                        <input type="text" id="val-marca" class="huge-input-saas" placeholder="Ex: Honda">
-                    </div>
-                    <div class="form-group">
-                        <label>Modelo</label>
-                        <input type="text" id="val-modelo" class="huge-input-saas" placeholder="Ex: Civic">
-                    </div>
-                    <div class="form-group">
-                        <label>Placa</label>
-                        <input type="text" id="val-placa" class="huge-input-saas" placeholder="Ex: ABC-1234" style="text-transform:uppercase" maxlength="8">
-                    </div>
-                </div>
-                
-                <button class="btn-primary-premium" id="btn-veiculo-next" onclick="avancarDoVeiculo()">Avançar <i class="fas fa-arrow-right"></i></button>
-            </div>
-
-            <div class="conversational-step" id="step-servico">
-                <div class="question-wrapper">
-                    <div class="welcome-wave-box">👨‍🔧</div>
-                    <p class="assistant-guide-text">Me conta rapidinho o que está <span class="highlight-green">acontecendo com o veículo</span>?</p>
-                </div>
-                
-                <div class="interactive-grid" id="grid-servicos-tipos" style="margin-bottom: 20px;">
-                    <div class="interactive-box service-card" onclick="selecionarTipoServico(this, 'Revisão Geral')">
-                        <i class="fas fa-wrench"></i> Revisão Geral
-                    </div>
-                    <div class="interactive-box service-card" onclick="selecionarTipoServico(this, 'Troca de Óleo')">
-                        <i class="fas fa-oil-can"></i> Troca de Óleo
-                    </div>
-                    <div class="interactive-box service-card" onclick="selecionarTipoServico(this, 'Manutenção do Motor')">
-                        <i class="fas fa-car-battery"></i> Motor / Injeção
-                    </div>
-                    <div class="interactive-box service-card" onclick="selecionarTipoServico(this, 'Freios / Suspensão')">
-                        <i class="fas fa-disc-brake"></i> Suspensão / Freio
-                    </div>
-                    <div class="interactive-box service-card" onclick="selecionarTipoServico(this, 'Ar Condicionado')">
-                        <i class="fas fa-snowflake"></i> Ar Condicionado
-                    </div>
-                    <div class="interactive-box service-card" onclick="selecionarTipoServico(this, 'Outros Serviços')">
-                        <i class="fas fa-ellipsis-h"></i> Outros
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Observações (Opcional)</label>
-                    <textarea id="val-observacao" class="huge-input-saas" rows="3" placeholder="Ex: Barulho na suspension ao passar por lombadas..." style="font-family:'Inter'; resize:none; font-size:14px; padding:15px;"></textarea>
-                </div>
-                
-                <button class="btn-primary-premium" onclick="avancarDoServico()">Ir para o Calendário <i class="fas fa-calendar-alt"></i></button>
             </div>
 
             <div class="conversational-step" id="step-agenda">
@@ -526,23 +442,19 @@
     </div>
 </div>
 
-<script>
+  <script>
     const urlParams = new URLSearchParams(window.location.search);
     const CONFIG_ID = parseInt(urlParams.get('oficina')) || parseInt(urlParams.get('id')) || 1;
 
     let clienteId = null;
-    let veiculoId = null;
     let clienteNomeCompleto = '';
     let clientePrimeiroNome = '';
     let dataSelecionada = '';
     let horarioSelecionado = '';
-    let servicoTipoSelecionado = '';
-    let listaVeiculosCliente = [];
-    let usandoVeiculoExistente = false;
     let intervaloMinutosAgenda = 60;
     let vagasSimultaneasAgenda = 1;
 
-    let maskTel, maskCpfCnpj;
+    let maskTel;
 
     window.addEventListener('DOMContentLoaded', async () => {
         const hoje = new Date();
@@ -565,18 +477,6 @@
         }
 
         maskTel = IMask(document.getElementById('val-telefone'), { mask: '(00) 00000-0000' });
-        maskCpfCnpj = IMask(document.getElementById('val-cpf'), {
-            mask: [{ mask: '000.000.000-00' }, { mask: '00.000.000/0000-00' }]
-        });
-
-        const inputPlaca = document.getElementById('val-placa');
-        inputPlaca.addEventListener('input', () => {
-            let v = inputPlaca.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-            if (v.length > 3 && !v.includes('-') && v.match(/^[A-Z]{3}[0-9]/)) {
-                if(v.length >= 4 && !isNaN(v[3])) { v = v.slice(0, 3) + '-' + v.slice(3); }
-            }
-            inputPlaca.value = v.slice(0, 8);
-        });
         
         alternarPasso('nome');
     });
@@ -587,12 +487,9 @@
         if(targetStep) targetStep.classList.add('active');
         
         const mapaProgresso = {
-            nome: 14,
-            whatsapp: 28,
-            cpf: 42,
-            veiculo: 58,
-            servico: 74,
-            agenda: 90,
+            nome: 25,
+            whatsapp: 50,
+            agenda: 85,
             sucesso: 100
         };
         
@@ -617,8 +514,8 @@
 
     async function avancarDoWhats() {
         if(!maskTel.masked.isComplete) {
-            if(typeof showToast === 'function') showToast('Por favor, insira um WhatsApp válido.', 'error');
-            else alert('Por favor, insira um WhatsApp válido.');
+            if(typeof showToast === 'function') showToast('Por favor, insira um WhatsApp vÃ¡lido.', 'error');
+            else alert('Por favor, insira um WhatsApp vÃ¡lido.');
             return;
         }
         
@@ -626,216 +523,36 @@
         btn.disabled = true;
         btn.innerText = 'Verificando cadastro...';
 
-        const telefoneFormatado = maskTel.value; 
+        const telefoneFormatado = maskTel.value;
 
         try {
             const { data: cliente } = await db.from('clientes')
-                .select('*')
+                .select('id, nome, telefone')
                 .eq('telefone', telefoneFormatado)
                 .eq('oficina_id', CONFIG_ID)
                 .maybeSingle();
 
             if(cliente) {
-                btn.style.display = 'none';
-
                 clienteId = cliente.id;
-                clienteNomeCompleto = cliente.nome;
-                clientePrimeiroNome = cliente.nome.split(' ')[0];
-                document.getElementById('val-nome').value = cliente.nome;
+                clienteNomeCompleto = cliente.nome || clienteNomeCompleto;
+                clientePrimeiroNome = clienteNomeCompleto.split(' ')[0];
+                document.getElementById('val-nome').value = clienteNomeCompleto;
                 document.getElementById('txt-nome-cliente').innerText = clientePrimeiroNome;
-                if(cliente.cpf_cnpj) maskCpfCnpj.value = cliente.cpf_cnpj;
-                
-                const carrosCarregados = await buscarVeiculosDoCliente(cliente.id);
-                renderizarPainelVeiculos(carrosCarregados);
-                
                 document.getElementById('cliente-encontrado-alert').style.display = 'block';
                 setTimeout(() => {
                     document.getElementById('cliente-encontrado-alert').style.display = 'none';
-                    alternarPasso('veiculo');
-                    btn.style.display = 'flex';
-                }, 1300);
-            } else {
-                alternarPasso('cpf');
+                }, 1000);
             }
+
+            montarReguaDiasEDisponibilidade();
+            alternarPasso('agenda');
         } catch(e) {
-            alternarPasso('cpf');
-        } finally {
-            if(!clienteId) {
-                btn.disabled = false;
-                btn.innerText = 'Próximo';
-            }
-        }
-    }
-
-    async function avancarDoCpf() {
-        const docLimpo = maskCpfCnpj.value.replace(/\D/g, '');
-        if(docLimpo.length !== 11 && docLimpo.length !== 14) {
-            if(typeof showToast === 'function') showToast('Por favor, digite um CPF ou CNPJ válido.', 'error');
-            else alert('Por favor, digite um CPF ou CNPJ válido.');
-            return;
-        }
-
-        const btn = document.getElementById('btn-verificar-cpf');
-        btn.disabled = true;
-        btn.innerText = 'Buscando veículos...';
-
-        try {
-            let veiculosParaRenderizar = [];
-            
-            const { data: cliente } = await db.from('clientes')
-                .select('*')
-                .eq('cpf_cnpj', docLimpo)
-                .eq('oficina_id', CONFIG_ID)
-                .maybeSingle();
-
-            btn.style.display = 'none';
-
-            if(cliente) {
-                clienteId = cliente.id;
-                clienteNomeCompleto = cliente.nome;
-                clientePrimeiroNome = cliente.nome.split(' ')[0];
-                document.getElementById('val-nome').value = cliente.nome;
-                maskTel.value = cliente.telefone;
-                document.getElementById('txt-nome-cliente').innerText = clientePrimeiroNome;
-                veiculosParaRenderizar = await buscarVeiculosDoCliente(cliente.id);
-            } else if(clienteId) {
-                await db.from('clientes')
-                    .update({ cpf_cnpj: docLimpo })
-                    .eq('id', clienteId)
-                    .eq('oficina_id', CONFIG_ID);
-                veiculosParaRenderizar = await buscarVeiculosDoCliente(clienteId);
-            }
-
-            renderizarPainelVeiculos(veiculosParaRenderizar);
-            
-            document.getElementById('cliente-cpf-encontrado-alert').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('cliente-cpf-encontrado-alert').style.display = 'none';
-                alternarPasso('veiculo');
-                btn.style.display = 'flex';
-            }, 1000);
-
-        } catch(e) {
-            renderizarPainelVeiculos([]);
-            alternarPasso('veiculo');
-            btn.style.display = 'flex';
+            montarReguaDiasEDisponibilidade();
+            alternarPasso('agenda');
         } finally {
             btn.disabled = false;
-            btn.innerText = 'Continuar';
+            btn.innerText = 'PrÃ³ximo';
         }
-    }
-
-    async function buscarVeiculosDoCliente(cId) {
-        if(!cId) return [];
-        try {
-            const { data, error } = await db.from('veiculos')
-                .select('*')
-                .eq('cliente_id', cId)
-                .eq('oficina_id', CONFIG_ID);
-            
-            if (error) throw error;
-            listaVeiculosCliente = data || [];
-            return listaVeiculosCliente;
-        } catch (err) {
-            listaVeiculosCliente = [];
-            return [];
-        }
-    }
-
-    function renderizarPainelVeiculos(carros = []) {
-        const container = document.getElementById('lista-veiculos-existentes');
-        const formBloco = document.getElementById('form-cadastro-veiculo-bloco');
-        const btnToggle = document.getElementById('btn-novo-carro-toggle');
-        const guiaTexto = document.getElementById('txt-guia-veiculo');
-
-        if(!container) return;
-        container.innerHTML = '';
-
-        if(carros && carros.length > 0) {
-            container.style.display = 'block';
-            if(btnToggle) btnToggle.style.display = 'block';
-            if(formBloco) formBloco.style.display = 'none';
-            if(guiaTexto) guiaTexto.innerHTML = `<span class="highlight-green">${clientePrimeiroNome}</span>, selecione o veículo para o agendamento:`;
-
-            carros.forEach((carro, index) => {
-                const div = document.createElement('div');
-                div.className = 'vehicle-card-select';
-                
-                if(index === 0) {
-                    div.className += ' selected';
-                    veiculoId = carro.id;
-                    usandoVeiculoExistente = true;
-                }
-
-                div.onclick = () => selecionarVeiculoExistente(carro.id, div);
-                div.innerHTML = `
-                    <div class="vehicle-card-info">
-                        <h4>${carro.marca} ${carro.modelo}</h4>
-                        <p>${carro.placa}</p>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        } else {
-            container.style.display = 'none';
-            if(btnToggle) btnToggle.style.display = 'none';
-            if(formBloco) formBloco.style.display = 'block';
-            if(guiaTexto) guiaTexto.innerHTML = `Cadastre os dados do seu <span class="highlight-green">veículo</span>:`;
-            usandoVeiculoExistente = false;
-            veiculoId = null;
-        }
-    }
-
-    function selecionarVeiculoExistente(id, elemento) {
-        document.querySelectorAll('.vehicle-card-select').forEach(el => el.classList.remove('selected'));
-        elemento.classList.add('selected');
-        const formBloco = document.getElementById('form-cadastro-veiculo-bloco');
-        if(formBloco) formBloco.style.display = 'none';
-        veiculoId = id;
-        usandoVeiculoExistente = true;
-    }
-
-    function habilitarFormularioNovoVeiculo() {
-        document.querySelectorAll('.vehicle-card-select').forEach(el => el.classList.remove('selected'));
-        const formBloco = document.getElementById('form-cadastro-veiculo-bloco');
-        if(formBloco) formBloco.style.display = 'block'; 
-        usandoVeiculoExistente = false;
-        veiculoId = null;
-    }
-
-    async function avancarDoVeiculo() {
-        if (usandoVeiculoExistente && veiculoId) {
-            alternarPasso('servico');
-            return;
-        }
-
-        const marca = document.getElementById('val-marca').value.trim();
-        const modelo = document.getElementById('val-modelo').value.trim();
-        const placa = document.getElementById('val-placa').value.trim();
-
-        if(!marca || !modelo || placa.length < 7) {
-            if(typeof showToast === 'function') showToast('Por favor, preencha todos os dados do veículo corretamente.', 'error');
-            else alert('Por favor, preencha todos os dados do veículo corretamente.');
-            return;
-        }
-
-        alternarPasso('servico');
-    }
-
-    function selecionarTipoServico(elemento, tipo) {
-        document.querySelectorAll('#grid-servicos-tipos .interactive-box').forEach(el => el.classList.remove('selected'));
-        elemento.classList.add('selected');
-        servicoTipoSelecionado = tipo;
-    }
-
-    function avancarDoServico() {
-        if(!servicoTipoSelecionado) {
-            if(typeof showToast === 'function') showToast('Por favor, selecione um tipo de serviço.', 'error');
-            else alert('Por favor, selecione um tipo de serviço.');
-            return;
-        }
-        montarReguaDiasEDisponibilidade();
-        alternarPasso('agenda');
     }
 
     function montarReguaDiasEDisponibilidade() {
@@ -1042,8 +759,7 @@
             if(!clienteId) {
                 const { data: novoCliente, error: errCliente } = await db.from('clientes').insert({
                     nome: clienteNomeCompleto,
-                    telefone: maskTel.value, 
-                    cpf_cnpj: maskCpfCnpj.value.replace(/\D/g, '') || null,
+                    telefone: maskTel.value,
                     oficina_id: CONFIG_ID
                 }).select().single();
                 
@@ -1051,34 +767,12 @@
                 clienteId = novoCliente.id;
             }
 
-            if(!usandoVeiculoExistente) {
-                const marca = document.getElementById('val-marca').value.trim();
-                const modelo = document.getElementById('val-modelo').value.trim();
-                const placa = document.getElementById('val-placa').value.trim().toUpperCase();
-                
-                const { data: novoCarro, error: errCarro } = await db.from('veiculos').insert({
-                    cliente_id: clienteId,
-                    marca,
-                    modelo,
-                    placa,
-                    oficina_id: CONFIG_ID 
-                }).select().single();
-                
-                if (errCarro) throw errCarro;
-                veiculoId = novoCarro.id;
-            }
-
-            const obs = document.getElementById('val-observacao').value.trim();
-            
             const agendamentoDados = {
                 cliente_id: clienteId,
-                veiculo_id: veiculoId,
                 servico_data: dataSelecionada,
                 horario: horarioSelecionado,
-                servico_tipo: servicoTipoSelecionado,
-                observacoes: obs, 
-                status: 'Aguardando', 
-                oficina_id: CONFIG_ID 
+                status: 'Aguardando',
+                oficina_id: CONFIG_ID
             };
 
             const { error: errAgenda } = await db.from('agendamentos').insert(agendamentoDados);
@@ -1106,7 +800,6 @@
         const detalhe = document.getElementById('sucesso-detalhe');
         if(detalhe) {
             detalhe.innerHTML = `
-                <span class="confirm-label">Serviço:</span> <span class="confirm-highlight">${servicoTipoSelecionado}</span><br>
                 <span class="confirm-label">Data:</span> <span class="confirm-highlight">${dataExibicao}</span> <span class="confirm-label">às</span> <span class="confirm-highlight">${horarioSelecionado}</span>
             `;
         }

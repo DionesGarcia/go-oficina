@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>GO Oficina — Gestão de Clientes</title>
-
-  <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
-
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -19,6 +17,7 @@
   <script src="js/components.js"></script>
 
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/design-system.css">
 </head>
 <body>
 
@@ -100,7 +99,7 @@
     </div>
   </div>
 
-<script>
+  <script>
 'use strict';
 
 let cacheClientes = []; 
@@ -218,7 +217,7 @@ async function verHistoricoCliente(clienteId, nomeCliente, foneCliente) {
                     <div class="timeline-box" style="background: #121722; border: 1px solid var(--border-color); border-radius: 6px; padding: 12px;">
                         <div class="timeline-meta" style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 4px;">
                             <span>${formatarDataBR(p.servico_data)}</span>
-                            <span style="color: var(--brand-yellow);">${p.status || 'Pátio'}</span>
+                            <span class="status-badge ${statusSistemaClasse(p.status || 'Pátio')}">${p.status || 'Pátio'}</span>
                         </div>
                         <div class="timeline-title" style="font-size: 13px; font-weight: 700; color: var(--text-bright);">${p.servico_tipo || 'Geral'}</div>
                     </div>

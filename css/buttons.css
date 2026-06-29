@@ -6,30 +6,46 @@
     font-family: 'Barlow', sans-serif;
     font-weight: 700;
     font-size: 13px;
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 10px 16px;
+    min-height: 44px;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 0 16px;
+    background: #172033;
+    color: #fff;
     cursor: pointer;
     transition: all var(--transition-fast);
     text-decoration: none;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.btn:hover {
+    background: #22314a;
+    border-color: #64748b;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
 .btn-primary {
-    background-color: var(--orange);
+    background-color: #00a94f;
+    border-color: #00e676;
     color: #FFF;
+    box-shadow: 0 12px 26px rgba(0, 169, 79, 0.28);
 }
-.btn-primary:hover { background-color: var(--orange-hover); }
+.btn-primary:hover { background-color: #00c853; border-color: #5ff29a; color: #fff; box-shadow: 0 16px 30px rgba(0, 169, 79, 0.34); }
 
 .btn-secondary {
-    background-color: var(--bg-input);
-    color: var(--text-primary);
-    border: 1px solid var(--border-color);
+    background-color: #172033;
+    color: #fff;
+    border: 1px solid #334155;
 }
-.btn-secondary:hover { background-color: var(--border-color); }
+.btn-secondary:hover { background-color: #22314a; border-color: #64748b; color: #fff; }
 
 .btn-tech {
-    background-color: var(--green-tech);
-    color: #000;
+    background-color: #00a94f;
+    border-color: #00e676;
+    color: #fff;
+    box-shadow: 0 12px 26px rgba(0, 169, 79, 0.28);
 }
 
 /* Badges Administrativos */

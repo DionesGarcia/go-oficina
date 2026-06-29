@@ -3,7 +3,99 @@
  * Responsável por renderizar Sidebar, Topbar e gerenciar estados de navegação
  */
 
+const GO_OFICINA_THEME_STORAGE_KEY = 'go-oficina:theme';
+const GO_OFICINA_PRODUCT_NAME = 'OFICINA';
+
+function obterTemaGoOficina() {
+    const temaSalvo = localStorage.getItem(GO_OFICINA_THEME_STORAGE_KEY);
+    return temaSalvo === 'dark' ? 'dark' : 'light';
+}
+
+function aplicarTemaGoOficina(tema = obterTemaGoOficina()) {
+    const temaNormalizado = tema === 'dark' ? 'dark' : 'light';
+    const alvos = [document.documentElement, document.body].filter(Boolean);
+
+    alvos.forEach(el => {
+        el.classList.remove('theme-light', 'theme-dark');
+        el.classList.add(`theme-${temaNormalizado}`);
+    });
+
+    document.querySelectorAll('[data-theme-option]').forEach(btn => {
+        const ativo = btn.getAttribute('data-theme-option') === temaNormalizado;
+        btn.classList.toggle('active', ativo);
+        btn.setAttribute('aria-pressed', String(ativo));
+    });
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function definirTemaGoOficina(tema) {
+    const temaNormalizado = tema === 'dark' ? 'dark' : 'light';
+    localStorage.setItem(GO_OFICINA_THEME_STORAGE_KEY, temaNormalizado);
+    aplicarTemaGoOficina(temaNormalizado);
+}
+
+function alternarTemaGoOficina() {
+    const proximoTema = obterTemaGoOficina() === 'dark' ? 'light' : 'dark';
+    definirTemaGoOficina(proximoTema);
+}
+
+aplicarTemaGoOficina();
+
+function normalizarStatusGoOficina(status) {
+    return String(status || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+}
+
+function statusSistemaClasse(status) {
+    const st = normalizarStatusGoOficina(status);
+
+    if (['aguardando', 'a_confirmar'].includes(st)) {
+        return 'status-aguardando';
+    }
+
+    if (['confirmado'].includes(st)) {
+        return 'status-confirmado';
+    }
+
+    if (['compareceu', 'concluido', 'concluida'].includes(st)) {
+        return 'status-compareceu';
+    }
+
+    if (['remarcado'].includes(st)) {
+        return 'status-remarcado';
+    }
+
+    if (['cancelado', 'cancelada', 'desistencia', 'desistencia', 'faltou', 'nao_compareceu', 'nao_comparecido', 'nao_comparecimento'].includes(st)) {
+        return 'status-cancelado';
+    }
+
+    if (['concluida', 'concluido', 'entregue', 'aprovado', 'aprovado_manual', 'finalizada', 'finalizado', 'faturado', 'recebido'].includes(st)) {
+        return 'status-success';
+    }
+
+    if (['aguardando_peca', 'esperando_peca', 'pendente'].includes(st)) {
+        return 'status-warning';
+    }
+
+    if (['aberta', 'aberto', 'em_aberto', 'em_execucao', 'execucao', 'em_andamento', 'enviado'].includes(st)) {
+        return 'status-info';
+    }
+
+    if (['cancelada', 'cancelado', 'reprovada', 'reprovado'].includes(st)) {
+        return 'status-danger';
+    }
+
+    return 'status-neutral';
+}
+
 function renderizarComponentesGlobais() {
+    aplicarTemaGoOficina();
+
     const path = window.location.pathname;
     const page = path.split("/").pop() || "index.html";
     const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
@@ -13,14 +105,10 @@ function renderizarComponentesGlobais() {
     <aside class="sidebar ${isCollapsed ? 'collapsed' : ''}" id="main-sidebar">
         <div class="sidebar-top">
             <div class="brand-logo">
-                <div class="brand-lockup" aria-label="GO Oficina">
-                    <div class="brand-mark" aria-hidden="true">
-                        <img class="brand-mark-img" src="favicon-go.svg" alt="">
-                    </div>
-                    <div class="brand-wordmark" id="sidebar-workshop-name">
-                        <span class="brand-main">GO</span>
-                        <span class="brand-product">OFICINA</span>
-                    </div>
+                <div class="sidebar-logo-panel" aria-label="Produto ${GO_OFICINA_PRODUCT_NAME}" id="sidebar-workshop-name">
+                    <img src="Gemini_Generated_Image_6hobk36hobk36hob-removebg-preview.png"
+                         alt="GO Oficina Logo"
+                         class="sidebar-logo-img">
                 </div>
                 <button class="btn-sidebar-toggle" onclick="toggleSidebar()">
                     <i data-lucide="${isCollapsed ? 'chevron-right' : 'chevron-left'}"></i>
@@ -85,22 +173,16 @@ function renderizarComponentesGlobais() {
                         <i class="nav-chevron" data-lucide="external-link"></i>
                     </a>
                 </li>
+                <li class="nav-item nav-logout">
+                    <button type="button" onclick="confirmarLogoutSistema()" title="Sair / Trocar Usuario">
+                        <div class="nav-item-content"><i data-lucide="log-out"></i><span>Sair</span></div>
+                    </button>
+                </li>
             </ul>
         </div>
-        <div class="sidebar-footer-card">
-            <div class="plan-box">
-                <div class="plan-info-row">
-                    <div class="plan-badge-icon"><i style="width:14px; height:14px;" data-lucide="shield-check"></i></div>
-                    <div class="plan-text"><span class="title">Oficina</span><span class="subtitle">Premium</span></div>
-                </div>
-            </div>
-            <div class="sidebar-version">
-                <span class="sidebar-version-product">GO Oficina</span>
-                <span class="sidebar-version-credit">
-                    <span class="sidebar-version-prefix">Desenvolvido por</span>
-                    <span class="sidebar-version-maker">Garcia One</span>
-                </span>
-            </div>
+        <div class="sidebar-bottom-meta">
+            <div class="sidebar-plan-line" id="sidebar-plan-label">GO Oficina v1.0 • Plano Premium</div>
+            <div class="sidebar-credit">Desenvolvido por Garcia One</div>
         </div>
     </aside>
     <div class="sidebar-overlay" id="mobile-overlay" onclick="toggleMobileMenu()"></div>
@@ -112,16 +194,15 @@ function renderizarComponentesGlobais() {
             <i data-lucide="menu"></i>
         </button>
         <div class="topbar-workshop-name" id="topbar-workshop-name">GO Oficina</div>
+        <div class="topbar-banner hidden md:block border border-slate-700/50 rounded-lg overflow-hidden" id="topbar-dynamic-banner">
+            <img src="assets/banner-dinamico.svg"
+                 alt="Banner Dinamico"
+                 class="topbar-banner-img max-w-[468px] max-h-[50px]">
+        </div>
         <div class="header-user-nav">
             <div class="user-info">
-                <div class="user-name" id="header-user-name">Usuário</div>
-                <div class="user-status">Logado agora</div>
-            </div>
-            <div class="user-actions-dropdown">
-                <button onclick="fazerLogout()" class="btn-logout" title="Sair / Trocar Usuário">
-                    <i data-lucide="log-out"></i>
-                    <span style="font-size:12px; font-weight:700; margin-left:8px;" class="hide-mobile">Sair</span>
-                </button>
+                <div class="user-name" id="header-user-name">Usuario</div>
+                <div class="user-status" id="header-user-email">usuario@email.com</div>
             </div>
         </div>
     </header>
@@ -133,7 +214,7 @@ function renderizarComponentesGlobais() {
         mainContent.insertAdjacentHTML('afterbegin', topbarHtml);
     }
 
-    if (typeof lucide !== 'undefined') lucide.createIcons();
+    aplicarTemaGoOficina();
 
     // --- 2. BUSCA DADOS ASSÍNCRONOS E ATUALIZA ---
     carregarDadosDinamicos();
@@ -142,7 +223,7 @@ function renderizarComponentesGlobais() {
 async function carregarDadosDinamicos() {
     try {
         // Workshop Name (Navbar only)
-        const { data: config } = await db.from('configuracoes_saas').select('nome_oficina').eq('id', OFICINA_ATIVA_ID).maybeSingle();
+        const { data: config } = await db.from('configuracoes_saas').select('*').eq('id', OFICINA_ATIVA_ID).maybeSingle();
         if (config?.nome_oficina) {
             let nome = config.nome_oficina;
 
@@ -155,11 +236,24 @@ async function carregarDadosDinamicos() {
             if (topbarName) topbarName.innerText = nome;
         }
 
+        const planLabel = document.getElementById('sidebar-plan-label');
+        if (planLabel) {
+            const plano = config?.plano || config?.plano_atual || config?.tipo_plano || 'Premium';
+            const planoFormatado = String(plano).charAt(0).toUpperCase() + String(plano).slice(1);
+            planLabel.innerText = `GO Oficina v1.0 • Plano ${planoFormatado}`;
+        }
+
+        const bannerImg = document.querySelector('#topbar-dynamic-banner img');
+        const bannerSrc = config?.banner_topo_url || config?.banner_head_url || config?.banner_url;
+        if (bannerImg && bannerSrc) bannerImg.src = bannerSrc;
+
         // User Data
         const { data: { user } } = await db.auth.getUser();
         if (user) {
             const userName = document.getElementById('header-user-name');
-            if (userName) userName.innerText = user.user_metadata?.full_name || user.email;
+            const userEmail = document.getElementById('header-user-email');
+            if (userName) userName.innerText = user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario';
+            if (userEmail) userEmail.innerText = user.email || '';
         }
     } catch (e) {
         console.warn("Erro ao carregar dados dinâmicos da UI:", e);
@@ -212,5 +306,40 @@ async function fazerLogout() {
     }
 }
 
+function confirmarLogoutSistema() {
+    if (!confirm('Deseja mesmo sair do sistema?')) return;
+    fazerLogout();
+}
+
+document.addEventListener('click', function(event) {
+    const clicouNoDisparador = event.target.closest([
+        '.agenda-menu-button',
+        '.btn-acoes',
+        '.dropdown-toggle',
+        '[data-menu-trigger]',
+        '[aria-haspopup="menu"]',
+        'button[onclick*="toggleAgendaMenu"]',
+        'button[onclick*="toggle"][onclick*="Menu"]'
+    ].join(','));
+    const clicouNoMenu = event.target.closest('.dropdown-menu, .agenda-context-menu, .menu-acoes, [id*="menu-"]');
+
+    if (clicouNoDisparador || clicouNoMenu) return;
+
+    document.querySelectorAll('.dropdown-menu, .menu-acoes, .agenda-context-menu, [id*="menu-"]').forEach(menu => {
+        menu.classList.remove('active', 'show');
+        menu.closest('.table-row')?.classList.remove('menu-open');
+        if (menu.style.display === 'block') {
+            menu.style.display = 'none';
+        }
+    });
+});
+
 // Inicia a renderização global
 document.addEventListener('DOMContentLoaded', renderizarComponentesGlobais);
+window.obterTemaGoOficina = obterTemaGoOficina;
+window.aplicarTemaGoOficina = aplicarTemaGoOficina;
+window.definirTemaGoOficina = definirTemaGoOficina;
+window.alternarTemaGoOficina = alternarTemaGoOficina;
+window.normalizarStatusGoOficina = normalizarStatusGoOficina;
+window.statusSistemaClasse = statusSistemaClasse;
+window.confirmarLogoutSistema = confirmarLogoutSistema;

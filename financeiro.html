@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>GO Oficina — Financeiro</title>
-  <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
-
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
@@ -17,6 +16,7 @@
   <script src="js/components.js"></script>
 
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/design-system.css">
 
   <style>
     .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
@@ -90,24 +90,6 @@
       border-radius: 6px;
       font-weight: 800;
       cursor: pointer;
-    }
-
-    .status-badge {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      padding: 4px 8px;
-      border-radius: 4px;
-    }
-
-    .status-badge.concluido {
-      color: var(--brand-yellow);
-      background: rgba(255,214,0,.1);
-    }
-
-    .status-badge.faturado {
-      color: var(--brand-green);
-      background: rgba(0,230,118,.1);
     }
 
     .modal-overlay {
@@ -319,7 +301,7 @@
   </div>
 </div>
 
-<script>
+  <script>
 'use strict';
 
 let cacheOrdensFinanceiro = [];
@@ -415,7 +397,7 @@ async function carregarOrdensFinanceiro() {
       const numero = os.numero_os || `#${os.id}`;
       const cliente = os.clientes?.nome || 'Cliente';
       const veiculo = os.veiculos ? `${os.veiculos.marca || ''} ${os.veiculos.modelo || ''}` : 'Veículo';
-      const statusClass = os.status === 'faturado' ? 'faturado' : 'concluido';
+      const statusClass = statusSistemaClasse(os.status === 'faturado' ? 'faturado' : 'concluido');
 
       const botao = os.status === 'faturado'
         ? `<span style="font-size:12px; color:var(--brand-green); font-weight:800;">Recebido</span>`

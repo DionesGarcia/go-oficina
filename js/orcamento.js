@@ -389,8 +389,17 @@ function atualizarTotaisOrcamento() {
  */
 async function salvarOrcamento() {
     if (!agendamentoSelecionado) {
-        showToast("Contexto de agendamento não encontrado", "error");
-        return;
+        const clienteAvulso = document.getElementById('sel-orc-cliente')?.value || '';
+        const veiculoAvulso = document.getElementById('sel-orc-veiculo')?.value || '';
+        if (!clienteAvulso || !veiculoAvulso) {
+            showToast("Selecione cliente e veiculo para criar o orcamento", "error");
+            return;
+        }
+        agendamentoSelecionado = {
+            id: null,
+            cliente_id: clienteAvulso,
+            veiculo_id: veiculoAvulso
+        };
     }
 
     if (itensOrcamento.length === 0) {
@@ -413,7 +422,7 @@ async function salvarOrcamento() {
             oficina_id: OFICINA_ATIVA_ID,
             cliente_id: agendamentoSelecionado.cliente_id,
             veiculo_id: agendamentoSelecionado.veiculo_id,
-            agendamento_id: agendamentoSelecionado.id,
+            agendamento_id: agendamentoSelecionado.id || null,
             valor_pecas: pecasTotal,
             valor_servicos: servicosTotal,
             valor_total: pecasTotal + servicosTotal,
@@ -464,8 +473,12 @@ async function salvarOrcamento() {
         const { error: errItens } = await db.from('orcamento_itens').insert(itensPayload);
         if (errItens) throw errItens;
 
-        // 3. Atualiza status do agendamento para 'Orçamento'
-        await db.from('agendamentos').update({ status: 'Orçamento' }).eq('id', agendamentoSelecionado.id);
+        if (agendamentoSelecionado.id) {
+            await db.from('agendamentos')
+                .update({ status: 'Aguardando' })
+                .eq('id', agendamentoSelecionado.id)
+                .eq('oficina_id', OFICINA_ATIVA_ID);
+        }
 
         showToast(isUpdate ? "Orçamento atualizado com sucesso!" : "Orçamento salvo com sucesso!");
         fecharDrawerOrcamento();

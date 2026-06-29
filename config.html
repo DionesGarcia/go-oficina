@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>GO Oficina — Configurações Gerais</title>
-
-  <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
-
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -19,6 +17,7 @@
   <script src="js/components.js"></script>
 
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/design-system.css">
 
   <style>
     .config-container { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
@@ -79,6 +78,40 @@
     .toggle-almoco-label { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-bright); font-weight: 500; font-size: 14px; margin-top: 12px; background: rgba(255,255,255,0.01); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-color); }
     .toggle-almoco-label input { accent-color: var(--brand-orange); }
 
+    .theme-choice-panel { margin-top: 16px; max-width: 620px; padding: 18px; border: 1px solid var(--border-color); border-radius: 10px; background: var(--theme-bg-card-strong); }
+    .theme-choice-group { display: grid; grid-template-columns: repeat(2, minmax(160px, 1fr)); gap: 12px; margin-top: 14px; }
+    .theme-choice-btn { min-height: 64px; display: flex; align-items: center; gap: 12px; padding: 0 16px; border-radius: 10px; border: 1px solid #334155; background: #172033; color: #fff; cursor: pointer; text-align: left; box-shadow: 0 10px 22px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.05); transition: all 0.18s ease; }
+    .theme-choice-btn:hover { transform: translateY(-1px); border-color: #64748b; background: #22314a; }
+    .theme-choice-btn.active { border-color: #00e676; background: #00a94f; color: #fff; box-shadow: 0 14px 28px rgba(0,169,79,0.28); }
+    .theme-choice-icon { width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; border-radius: 8px; background: rgba(255,255,255,0.1); }
+    .theme-choice-icon i { width: 18px; height: 18px; }
+    .theme-choice-copy { display: flex; flex-direction: column; gap: 3px; }
+    .theme-choice-copy strong { font-size: 14px; font-weight: 850; }
+    .theme-choice-copy span { font-size: 12px; color: rgba(255,255,255,0.76); font-weight: 600; }
+    body.theme-light .theme-choice-btn { background: #ffffff; border-color: #cbd5e1; color: #111827; box-shadow: 0 10px 20px rgba(15,23,42,0.08); }
+    body.theme-light .theme-choice-btn:hover { background: #f8fafc; border-color: #94a3b8; }
+    body.theme-light .theme-choice-btn.active { background: #00a94f; border-color: #00c853; color: #fff; }
+    body.theme-light .theme-choice-copy span { color: #64748b; }
+    body.theme-light .theme-choice-btn.active .theme-choice-copy span { color: rgba(255,255,255,0.78); }
+    @media(max-width: 560px) { .theme-choice-group { grid-template-columns: 1fr; } }
+
+    body.theme-light .config-nav-link:hover { background-color: rgba(15, 23, 42, 0.045); color: #111827; }
+    body.theme-light .config-nav-link.active { background-color: rgba(0, 169, 79, 0.1); color: #047a3a; border-left-color: #00a94f; }
+    body.theme-light .input-saas,
+    body.theme-light .upload-container,
+    body.theme-light .logo-preview-box,
+    body.theme-light .saas-table,
+    body.theme-light .plano-card,
+    body.theme-light .dia-checkbox-label {
+        background: #ffffff;
+        border-color: #cbd5e1;
+        color: #111827;
+    }
+    body.theme-light .saas-table th { background: #f5f7fb; color: #64748b; }
+    body.theme-light .saas-table td { color: #111827; }
+    body.theme-light .plano-card.active { background: rgba(0, 169, 79, 0.06); border-color: #00a94f; }
+    body.theme-light .toggle-almoco-label { background: #ffffff; color: #111827; border-color: #cbd5e1; }
+
     hr { border: 0; border-top: 1px solid var(--border-color); }
   </style>
 </head>
@@ -98,6 +131,7 @@
         <div class="config-sidebar" id="config-menu">
             <div class="config-nav-link active" onclick="switchTab('geral', this)"><i style="width:16px; height:16px;" data-lucide="store"></i> Perfil da Oficina</div>
             <div class="config-nav-link" onclick="switchTab('visual', this)"><i style="width:16px; height:16px;" data-lucide="palette"></i> Identidade Visual</div>
+            <div class="config-nav-link" onclick="switchTab('aparencia', this)"><i style="width:16px; height:16px;" data-lucide="monitor-cog"></i> Aparência</div>
             <div class="config-nav-link" onclick="switchTab('regras', this)"><i style="width:16px; height:16px;" data-lucide="calendar-days"></i> Regras de Agenda</div>
             <div class="config-nav-link" onclick="switchTab('usuarios', this)"><i style="width:16px; height:16px;" data-lucide="users"></i> Usuários e Permissões</div>
             <div class="config-nav-link" onclick="switchTab('conta', this)"><i style="width:16px; height:16px;" data-lucide="credit-card"></i> Minha Conta</div>
@@ -166,6 +200,32 @@
                                     <i style="width:16px; height:16px;" data-lucide="upload-cloud"></i> Escolher Imagem Logo
                                 </button>
                                 <p class="form-instruction" style="margin-top: 6px; font-size: 11px;">Tamanho recomendado: Imagem quadrada/proporcional até 1.5MB (PNG ou JPG).</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-aparencia" class="tab-content">
+                    <div>
+                        <h3 style="font-size: 16px; color: var(--text-bright); margin-bottom: 4px;">Aparência do Sistema</h3>
+                        <p class="form-instruction">Escolha o tema visual usado neste navegador.</p>
+
+                        <div class="theme-choice-panel">
+                            <div class="theme-choice-group" role="group" aria-label="Tema visual do sistema">
+                                <button type="button" class="theme-choice-btn" data-theme-option="light" onclick="selecionarTemaSistema('light')" aria-pressed="false">
+                                    <span class="theme-choice-icon"><i data-lucide="sun"></i></span>
+                                    <span class="theme-choice-copy">
+                                        <strong>Claro</strong>
+                                        <span>Menu cinza claro e conteúdo branco.</span>
+                                    </span>
+                                </button>
+                                <button type="button" class="theme-choice-btn" data-theme-option="dark" onclick="selecionarTemaSistema('dark')" aria-pressed="false">
+                                    <span class="theme-choice-icon"><i data-lucide="moon"></i></span>
+                                    <span class="theme-choice-copy">
+                                        <strong>Escuro</strong>
+                                        <span>Visual atual em alto contraste.</span>
+                                    </span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -388,7 +448,7 @@
     </footer>
   </main>
 
-<script>
+  <script>
 'use strict';
 
 let stringBase64Logo = ""; 
@@ -403,11 +463,33 @@ function switchTab(tabId, element) {
 
     // Esconde o botão de salvar dados da oficina se estiver em abas de Usuários/Planos
     const btnSalvar = document.getElementById('container-botao-salvar');
-    if (tabId === 'usuarios' || tabId === 'plano' || tabId === 'conta') {
+    if (tabId === 'usuarios' || tabId === 'plano' || tabId === 'conta' || tabId === 'aparencia') {
         btnSalvar.style.display = 'none';
     } else {
         btnSalvar.style.display = 'flex';
     }
+}
+
+function sincronizarBotoesTema() {
+    const temaAtual = typeof obterTemaGoOficina === 'function' ? obterTemaGoOficina() : 'light';
+    document.querySelectorAll('[data-theme-option]').forEach(btn => {
+        const ativo = btn.getAttribute('data-theme-option') === temaAtual;
+        btn.classList.toggle('active', ativo);
+        btn.setAttribute('aria-pressed', String(ativo));
+    });
+}
+
+function selecionarTemaSistema(tema) {
+    if (typeof definirTemaGoOficina === 'function') {
+        definirTemaGoOficina(tema);
+    } else {
+        const temaNormalizado = tema === 'dark' ? 'dark' : 'light';
+        localStorage.setItem('go-oficina:theme', temaNormalizado);
+        document.body.classList.remove('theme-light', 'theme-dark');
+        document.body.classList.add(`theme-${temaNormalizado}`);
+    }
+
+    sincronizarBotoesTema();
 }
 
 function getOficinaId() {
@@ -657,6 +739,7 @@ document.getElementById('cfg-whatsapp').addEventListener('input', function(e) {
 
 window.onload = () => { 
     if (typeof lucide !== 'undefined') lucide.createIcons();
+    sincronizarBotoesTema();
     carregarConfiguracoes(); 
 };
 </script>

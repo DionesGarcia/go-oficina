@@ -11,11 +11,9 @@ async function inicializarPainel() {
     try {
         await Promise.all([
             configurarAtalhosDashboard(),
-            renderizarContadores(),
             carregarRadarOperacional(),
             carregarUltimasOrdensServico(),
-            carregarAgendaHoje(),
-            carregarAlertasReais()
+            carregarAgendaHoje()
         ]);
 
         if (typeof lucide !== 'undefined') {
@@ -59,7 +57,7 @@ function statusNormalizado(status) {
 }
 
 const RADAR_STATUS = {
-    agendado: ['aguardando'],
+    agendado: ['aguardando', 'confirmado'],
     orcamento: ['rascunho', 'enviado', 'em_analise'],
     aprovado: ['aprovado', 'aprovado_manual'],
     osExecucao: ['aberta', 'aberto', 'em_aberto', 'em_execucao', 'execucao', 'em_andamento'],
@@ -135,7 +133,9 @@ function configurarAtalhosDashboard() {
         const paginas = {
             agenda: 'agenda.html',
             orcamentos: 'orcamentos.html',
-            os: 'os.html'
+            os: 'os.html',
+            clientes: 'clientes.html',
+            veiculos: 'veiculos.html'
         };
 
         if (paginas[destino]) {
@@ -314,7 +314,6 @@ async function carregarUltimasOrdensServico() {
         }
 
         tbody.innerHTML = ordens.map(os => {
-            const status = statusClasse(os.status);
             const numero = os.numero_os || `#${os.id}`;
 
             return `
@@ -323,7 +322,7 @@ async function carregarUltimasOrdensServico() {
                     <td>${escaparHTML(os.clientes?.nome || 'Cliente não informado')}</td>
                     <td>${escaparHTML(montarVeiculo(os.veiculos))}</td>
                     <td>
-                        <span class="dashboard-status-badge status-${escaparHTML(status || 'sem-status')}">
+                        <span class="status-badge ${escaparHTML(statusSistemaClasse(os.status))}">
                             ${escaparHTML(statusOSLabel(os.status))}
                         </span>
                     </td>
@@ -365,20 +364,18 @@ async function carregarAgendaHoje() {
 
         if (error) throw error;
 
-        const agora = new Date();
-        const horaAtual = `${String(agora.getHours()).padStart(2, '0')}:${String(agora.getMinutes()).padStart(2, '0')}`;
-
         const lista = (agendamentos || []).filter(a => {
-            const st = statusLower(a.status);
-            const naoCancelado = !st.includes('cancel') && !st.includes('não compareceu');
-            const aindaVaiAcontecer = !a.horario || String(a.horario).substring(0, 5) >= horaAtual;
-            return naoCancelado && aindaVaiAcontecer;
+            const st = statusNormalizado(a.status);
+            return !st.includes('cancel')
+                && !st.includes('faltou')
+                && !st.includes('nao_compareceu')
+                && !st.includes('desistencia');
         });
 
         if (lista.length === 0) {
             container.innerHTML = `
                 <p class="dashboard-empty-message">
-                    Nenhum próximo agendamento para hoje.
+                    Sem agendamentos para hoje.
                 </p>
             `;
             return;

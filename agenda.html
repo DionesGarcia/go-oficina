@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>GO Oficina — Agenda de Serviços</title>
-
-  <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
-
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -19,27 +17,84 @@
   <script src="js/components.js"></script>
 
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/design-system.css">
 
   <style>
     /* ================= CONTEÚDO PRINCIPAL ================= */
-    .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
+    .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; font-family: 'Inter', 'Montserrat', sans-serif; }
 
     /* TOPBAR COMPACTA COM RÉGUA ACOPLADA */
     .topbar { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; border-bottom: 1px solid var(--border-color); background: #070a0f; }
-    .topbar-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-    .topbar-titles h2 { font-size: 21px; font-weight: 700; color: var(--text-bright); letter-spacing: -0.02em; }
+    .topbar-header { display: flex; justify-content: space-between; align-items: center; width: 100%; font-family: inherit; }
+    .topbar-titles h1,
+    .topbar-titles h2 { font-family: inherit; font-size: 21px; font-weight: 700; color: var(--text-bright); letter-spacing: -0.02em; }
+    .agenda-new-button { background: #10b981; border-color: #10b981; color: #fff; border-radius: 8px; }
+    .agenda-new-button:hover { background: #059669; border-color: #059669; }
     
     /* RÉGUA DE DIAS CORRIGIDA */
     .day-selector-ribbon { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
-    .ribbon-btn { background: #121824; border: 1px solid var(--border-color); color: var(--text-main); font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
-    .ribbon-btn:hover { background: #1a2334; color: #fff; border-color: #475569; }
-    .ribbon-btn.active { background: rgba(255, 90, 0, 0.12); border-color: var(--brand-orange); color: var(--brand-orange); font-weight: 800; box-shadow: 0 0 10px rgba(255, 90, 0, 0.05); }
+    .ribbon-btn { min-height: 40px; background: #172033; border: 1px solid #334155; color: #fff; font-size: 13px; font-weight: 800; padding: 8px 18px; border-radius: 8px; cursor: pointer; transition: all 0.18s ease; box-shadow: 0 8px 18px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.05); }
+    .ribbon-btn:hover { background: #22314a; color: #fff; border-color: #64748b; transform: translateY(-1px); }
+    .ribbon-btn.active { background: #d35400; border-color: #ff7a1a; color: #fff; font-weight: 900; box-shadow: 0 12px 24px rgba(211, 84, 0, 0.26); }
 
     /* BOTÕES DE AÇÃO RÁPIDA */
     .topbar-actions { display: flex; gap: 10px; align-items: center; }
+    .status-filters { display: flex; gap: 12px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+    .filter-btn { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #121824; border: 1px solid var(--border-color); color: var(--text-main); font-size: 13px; font-weight: 750; padding: 0 16px; border-radius: 999px; cursor: pointer; transition: all 0.18s ease; box-shadow: none; }
+    .filter-btn i { width: 15px; height: 15px; color: #94a3b8; stroke-width: 2.2; }
+    .filter-btn:hover { background: #1a2334; color: #fff; border-color: #475569; transform: translateY(-1px); }
+    .filter-btn.active { background: rgba(16, 185, 129, 0.2); border-color: rgba(52, 211, 153, 0.42); color: #34d399; font-weight: 850; }
+    .filter-btn.active i { color: #34d399; }
+    .btn-top-action {
+        min-height: 44px;
+        height: 44px;
+        padding: 0 14px;
+        border-radius: 8px;
+        border: 1px solid #334155;
+        background: #172033;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.24), inset 0 1px 0 rgba(255,255,255,0.05);
+        white-space: nowrap;
+    }
+    .btn-top-action:hover {
+        background: #22314a;
+        border-color: #64748b;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+    .btn-top-action.primary {
+        background: #00a94f;
+        border-color: #00e676;
+        color: #fff;
+        box-shadow: 0 12px 26px rgba(0, 169, 79, 0.28);
+    }
+    .btn-top-action.primary:hover {
+        background: #00c853;
+        color: #fff;
+        box-shadow: 0 16px 30px rgba(0, 169, 79, 0.34);
+    }
+    .btn-top-action.whatsapp {
+        color: #fff;
+        border-color: #25d366;
+        background: #128c4a;
+        box-shadow: 0 12px 26px rgba(18, 140, 74, 0.28);
+    }
+    .btn-top-action.whatsapp:hover {
+        background: #25d366;
+        border-color: #5ff29a;
+        color: #fff;
+    }
 
     /* CONTAINER EXTRATO */
-    .agenda-view-container { flex: 1; overflow-y: auto; padding: 24px 24px 40px 24px; display: flex; flex-direction: column; gap: 20px; }
+    .agenda-view-container { flex: 1; overflow-y: auto; padding: 24px 24px 40px 24px; display: flex; flex-direction: column; gap: 20px; font-family: inherit; }
     .agenda-view-container::-webkit-scrollbar { width: 6px; }
     .agenda-view-container::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
@@ -49,22 +104,39 @@
     .extrato-group-header .divisoria-linha { flex: 1; height: 1px; background: var(--border-color); pointer-events: none; }
 
     /* CARD DA TABELA */
-    .agenda-table-card { background: #0b0e14; border: 1px solid var(--border-color); border-radius: 8px; overflow: visible; margin-bottom: 12px; position: relative; z-index: 2; }
+    .agenda-table-card { background: #0b0e14; border: 1px solid var(--border-color); border-radius: 8px; overflow: visible; margin-bottom: 12px; position: relative; z-index: 2; font-family: inherit; }
+    .agenda-table-card * { font-family: inherit; }
     
-    .table-row { display: grid; grid-template-columns: 120px 1.2fr 1.6fr 130px 1.5fr 340px; align-items: center; padding: 16px 16px; border-bottom: 1px solid var(--border-color); transition: background 0.15s; min-height: 64px; position: relative; }
+    .table-row { display: grid; grid-template-columns: 112px minmax(150px, 1fr) minmax(240px, 1.7fr) 180px 270px; column-gap: 20px; align-items: center; padding: 16px 16px; border-bottom: 1px solid var(--border-color); transition: background 0.15s; min-height: 64px; position: relative; font-family: inherit; }
+    .table-row.menu-open { z-index: 60; }
     .table-row:last-child { border-bottom: none; }
     .table-row:hover { background: rgba(255,255,255,0.01); }
+    .table-row.is-cancelled {
+        opacity: 0.58;
+        background: rgba(249, 115, 22, 0.035);
+        border-left: 3px solid rgba(249, 115, 22, 0.45);
+    }
+    .table-row.is-cancelled .col-time .clock,
+    .table-row.is-cancelled .col-time .date,
+    .table-row.is-cancelled .col-type,
+    .table-row.is-cancelled .col-vinc .client,
+    .table-row.is-cancelled .car-info-row {
+        color: #fb923c;
+    }
 
-    .table-header-row { display: grid; grid-template-columns: 120px 1.2fr 1.6fr 130px 1.5fr 340px; align-items: center; padding: 14px 16px; background: #0e121b; border-bottom: 1px solid var(--border-color); font-size: 12px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.03em; border-top-left-radius: 7px; border-top-right-radius: 7px; }
+    .table-header-row { display: grid; grid-template-columns: 112px minmax(150px, 1fr) minmax(240px, 1.7fr) 180px 270px; column-gap: 20px; align-items: center; padding: 14px 16px; background: #0e121b; border-bottom: 1px solid var(--border-color); font-family: inherit; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.03em; border-top-left-radius: 7px; border-top-right-radius: 7px; }
+    .table-header-row > div:nth-child(4) { text-align: center; }
 
     /* COLUNAS INTERNAS */
     .col-time { display: flex; flex-direction: column; gap: 2px; }
-    .col-time .clock { font-size: 15px; font-weight: 700; color: var(--text-bright); font-family: monospace; }
+    .col-time .clock { font-size: 15px; font-weight: 700; color: var(--text-bright); font-family: inherit; }
     .col-time .date { font-size: 12px; color: var(--text-muted); font-weight: 500; }
     
     /* Alerta de horário crítico */
-    .col-time.critical-time .clock { color: #f97316; text-shadow: 0 0 10px rgba(249, 115, 22, 0.2); }
-    .col-time.critical-time .date { color: #f97316; opacity: 0.8; }
+    .col-time.due-soon .clock { color: #facc15; text-shadow: 0 0 10px rgba(250, 204, 21, 0.2); }
+    .col-time.due-soon .date { color: #facc15; opacity: 0.82; }
+    .col-time.expired-time .clock { color: #f97316; text-shadow: 0 0 10px rgba(249, 115, 22, 0.24); }
+    .col-time.expired-time .date { color: #f97316; opacity: 0.86; }
 
     .col-type { font-size: 14px; font-weight: 600; color: var(--text-bright); padding-right: 6px; }
     
@@ -74,33 +146,296 @@
     .car-info-row { display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; min-width: 0; }
     .car-text { font-size: 13px; font-weight: 500; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     
-    .col-status { display: flex; justify-content: flex-start; min-width: 0; padding-right: 10px; }
-    .status-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 4px 9px; border-radius: 4px; border: 1px solid rgba(255, 214, 0, 0.25); color: var(--brand-yellow); background: rgba(255, 214, 0, 0.08); white-space: nowrap; }
-    .status-badge.aguardando { color: var(--brand-green); background: rgba(0, 230, 118, 0.08); border-color: rgba(0, 230, 118, 0.25); }
-
-    .col-obs { font-size: 13px; color: #cbd5e1; font-weight: 400; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 5px; padding-right: 10px; }
-    .col-obs .empty-obs { color: var(--text-muted); font-style: italic; opacity: 0.7; }
+    .col-status { display: flex; justify-content: center; text-align: center; min-width: 0; padding: 0 8px; }
+    .status-badge { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; padding: 3px 9px; border-radius: 999px; font-size: 10px; font-weight: 850; line-height: 1; text-transform: uppercase; letter-spacing: 0.035em; white-space: nowrap; }
+    .status-badge.status-neutral { background: rgba(30, 41, 59, 0.4); color: #94a3b8; border: 1px solid #334155; }
+    .status-badge.status-aguardando { background: rgba(250, 204, 21, 0.08); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.45); }
+    .status-badge.status-confirmado { background: rgba(56, 189, 248, 0.08); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.45); }
+    .status-badge.status-due-soon { background: rgba(250, 204, 21, 0.14); color: #facc15; border: 1px solid rgba(250, 204, 21, 0.62); box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.08); }
+    .status-badge.status-expired-time { background: rgba(249, 115, 22, 0.16); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.68); box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.1); }
+    .status-badge.status-success,
+    .status-badge.status-compareceu { background: rgba(16, 185, 129, 0.1); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+    .status-badge.status-remarcado { background: rgba(99, 102, 241, 0.1); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.2); }
+    .status-badge.status-danger,
+    .status-badge.status-cancelado { background: rgba(249, 115, 22, 0.1); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.2); }
+    .status-badge.status-info { background: rgba(14, 165, 233, 0.1); color: #38bdf8; border: 1px solid rgba(14, 165, 233, 0.2); }
 
     /* BOTÕES OPERACIONAIS */
 
-    .col-actions { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; width: 100%; position: relative; z-index: 100; }
-    .btn-row-action { min-width: 104px; height: 32px; justify-content: center; background: #1a2233; border: 1px solid var(--border-color); color: var(--text-bright); font-size: 11px; font-weight: 700; text-transform: uppercase; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; white-space: nowrap; position: relative; z-index: 101; padding: 0 10px; }
+    .relative { position: relative; }
+    .col-actions { display: flex; gap: 8px; justify-content: flex-end; align-items: center; flex-wrap: nowrap; width: 100%; position: relative; z-index: 5; overflow: visible; padding-left: 14px; border-left: 1px solid rgba(148, 163, 184, 0.14); }
+    .agenda-action-btn { min-height: 34px; height: 34px; padding: 0 10px; border-radius: 8px; border: 1px solid #334155; background: #172033; color: #fff; font-size: 11px; font-weight: 850; display: inline-flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.18s ease; white-space: nowrap; }
+    .agenda-action-btn i { width: 14px; height: 14px; flex-shrink: 0; }
+    .agenda-action-btn:hover { background: #22314a; border-color: #64748b; transform: translateY(-1px); }
+    .agenda-action-btn.budget { background: #0369a1; border-color: #38bdf8; }
+    .agenda-action-btn.budget:hover { background: #0284c7; border-color: #7dd3fc; }
+    .agenda-action-btn.os { background: #00a94f; border-color: #00e676; }
+    .agenda-action-btn.os:hover { background: #00c853; border-color: #5ff29a; }
+    .agenda-action-btn:disabled,
+    .agenda-action-btn.disabled {
+        background: rgba(30, 41, 59, 0.55);
+        border-color: rgba(100, 116, 139, 0.42);
+        color: #64748b;
+        cursor: not-allowed;
+        opacity: 0.72;
+        box-shadow: none;
+        transform: none;
+    }
+    .agenda-action-btn:disabled:hover,
+    .agenda-action-btn.disabled:hover {
+        background: rgba(30, 41, 59, 0.55);
+        border-color: rgba(100, 116, 139, 0.42);
+        color: #64748b;
+        transform: none;
+    }
+    .agenda-menu-wrap { position: relative; display: inline-flex; }
+    .agenda-menu-button { width: 34px; min-width: 34px; padding: 0; }
+    .agenda-context-menu { display: none; position: absolute; right: 0; top: calc(100% + 8px); min-width: 176px; width: 176px; margin-top: 8px; padding: 6px; border-radius: 6px; background: #1e293b; border: 1px solid rgba(0,0,0,0.35); box-shadow: 0 18px 38px rgba(0,0,0,0.42); z-index: 50; }
+    .absolute { position: absolute; }
+    .right-0 { right: 0; }
+    .mt-2 { margin-top: 8px; }
+    .z-50 { z-index: 50; }
+    .w-44 { width: 176px; }
+    .rounded-md { border-radius: 6px; }
+    .shadow-lg { box-shadow: 0 18px 38px rgba(0,0,0,0.42); }
+    .bg-slate-800 { background: #1e293b; }
+    .ring-1 { border-width: 1px; border-style: solid; }
+    .ring-black { border-color: rgba(0,0,0,0.35); }
+    .ring-opacity-5 { border-color: rgba(0,0,0,0.35); }
+    .agenda-context-menu.active { display: flex; flex-direction: column; gap: 4px; }
+    .agenda-context-menu button { width: 100%; min-height: 34px; padding: 0 10px; border: 0; border-radius: 6px; background: transparent; color: #cbd5e1; font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 8px; cursor: pointer; text-align: left; }
+    .agenda-context-menu button:hover { background: #172033; color: #fff; }
+    .agenda-context-menu button.danger { color: #fca5a5; }
+    .slot-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    .slot-btn { min-height: 38px; border-radius: 8px; border: 1px solid #334155; background: #121824; color: #cbd5e1; font-size: 12px; font-weight: 850; cursor: pointer; transition: all 0.18s ease; }
+    .slot-btn:hover:not(:disabled) { border-color: rgba(31, 177, 115, 0.55); color: #ffffff; background: #182234; transform: translateY(-1px); }
+    .slot-btn.selected { background: #1fb173; color: #ffffff; border-color: #1fb173; box-shadow: 0 12px 24px rgba(31, 177, 115, 0.22); }
+    .slot-btn:disabled,
+    .slot-btn.occupied { opacity: 0.38; cursor: not-allowed; background: rgba(15, 23, 42, 0.32); color: #64748b; border-color: rgba(51, 65, 85, 0.55); transform: none; }
+    .document-modal-card {
+        max-width: 520px;
+        width: min(520px, calc(100vw - 32px));
+        background: #1e1e2e;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+    }
+    .document-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px 24px 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .document-modal-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+    }
+    .document-modal-title i {
+        width: 22px;
+        height: 22px;
+        color: #10b981;
+        flex: 0 0 auto;
+    }
+    .document-modal-title h3 {
+        margin: 0;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 1.2;
+    }
+    .document-modal-close,
+    .modal-close {
+        width: 34px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        background: transparent;
+        color: #94a3b8;
+        cursor: pointer;
+        transition: all 0.18s ease;
+    }
+    .document-modal-close:hover,
+    .modal-close:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
+    }
+    .document-modal-close i,
+    .modal-close i {
+        width: 18px;
+        height: 18px;
+    }
+    .document-modal-body {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        padding: 20px 24px 0;
+    }
+    .document-modal-helper {
+        margin: 0;
+        color: #a0aec0;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.5;
+    }
+    .document-summary-card {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 13px 16px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.035);
+    }
+    .document-summary-label {
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+    .document-summary-client {
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 750;
+        line-height: 1.25;
+    }
+    .document-summary-vehicle {
+        color: #10b981;
+        font-family: 'Inter', monospace;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.3;
+    }
+    .document-field {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+    .document-field label {
+        color: #e2e8f0;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        line-height: 1.2;
+        text-transform: uppercase;
+    }
+    .document-input {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 7px;
+        background: #12121a;
+        color: #ffffff;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .document-input:focus {
+        border-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
+    }
+    textarea.document-input {
+        min-height: 96px;
+        padding: 11px 12px;
+        resize: vertical;
+        line-height: 1.45;
+    }
+    input.document-input {
+        height: 42px;
+        padding: 0 12px;
+    }
+    .document-modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 24px;
+        padding: 16px 24px 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .document-modal-footer .btn-modal-cancel {
+        background: transparent;
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #e2e8f0;
+        box-shadow: none;
+    }
+    .document-modal-footer .btn-modal-cancel:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.22);
+        transform: none;
+    }
+    .document-modal-footer .btn-top-action.primary {
+        height: 42px;
+        min-height: 42px;
+        padding: 0 18px;
+        gap: 8px;
+        background: #10b981;
+        border-color: #10b981;
+        box-shadow: 0 14px 28px rgba(16, 185, 129, 0.22);
+    }
+    .document-modal-footer .btn-top-action.primary:hover {
+        background: #059669;
+        border-color: #059669;
+    }
+    .btn-row-action { min-width: 112px; min-height: 42px; height: 42px; justify-content: center; background: #172033; border: 1px solid #334155; color: #fff; font-size: 11px; font-weight: 850; text-transform: uppercase; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.18s ease; white-space: nowrap; position: relative; z-index: 101; padding: 0 12px; box-shadow: 0 10px 22px rgba(0,0,0,0.26), inset 0 1px 0 rgba(255,255,255,0.05); }
     .btn-row-action i { width: 13px; height: 13px; flex-shrink: 0; }
-    .btn-row-action:hover { background: #24304a; border-color: #475569; }
+    .btn-row-action:hover { background: #22314a; border-color: #64748b; transform: translateY(-1px); box-shadow: 0 14px 28px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.06); }
     
-    .btn-row-action.budget { border-color: rgba(255, 214, 0, 0.35); color: var(--brand-yellow); background: rgba(255, 214, 0, 0.04); }
-    .btn-row-action.budget:hover { background: rgba(255, 214, 0, 0.12); }
+    .btn-row-action.budget { border-color: #f97316; color: #fff; background: #c2410c; }
+    .btn-row-action.budget:hover { background: #f97316; border-color: #fdba74; }
     
-    .btn-row-action.os { border-color: rgba(0, 176, 255, 0.35); color: var(--brand-blue); background: rgba(0, 176, 255, 0.04); }
-    .btn-row-action.os:hover { background: rgba(0, 176, 255, 0.12); }
+    .btn-row-action.os { border-color: #38bdf8; color: #fff; background: #0369a1; }
+    .btn-row-action.os:hover { background: #0284c7; border-color: #7dd3fc; }
 
-    .btn-row-action.start { border-color: rgba(0, 230, 118, 0.35); color: var(--brand-green); background: rgba(0, 230, 118, 0.05); }
-    .btn-row-action.start:hover { background: rgba(0, 230, 118, 0.12); }
-    .btn-row-action.reschedule { border-color: rgba(255, 214, 0, 0.32); color: var(--brand-yellow); background: rgba(255, 214, 0, 0.05); }
-    .btn-row-action.reschedule:hover { background: rgba(255, 214, 0, 0.12); }
+    .btn-row-action.start { min-width: 158px; border-color: #00e676; color: #fff; background: #00a94f; box-shadow: 0 12px 26px rgba(0,169,79,0.28); }
+    .btn-row-action.start:hover { background: #00c853; border-color: #5ff29a; box-shadow: 0 16px 30px rgba(0,169,79,0.34); }
 
-    .btn-row-action.cancel { border-color: rgba(239, 68, 68, 0.35); color: #ef4444; background: rgba(239, 68, 68, 0.04); }
-    .btn-row-action.cancel:hover { background: rgba(239, 68, 68, 0.12); }
+    /* ================= MODAL GERAR ORÇAMENTO (TEMA CLARO AZUL) ================= */
+    #modal-documento-agendamento .orcamento-document-modal {
+        background: #f8f9fa;
+        border: 1px solid #ced4da;
+    }
+    #modal-documento-agendamento .document-modal-header {
+        background: #1e3a8a;
+    }
+    #modal-documento-agendamento .document-modal-title h3 {
+        font-weight: 400;
+        text-transform: none;
+        color: #ffffff;
+    }
+    #modal-documento-agendamento .document-input {
+        background: #ffffff;
+        color: #212529;
+        border-color: #adb5bd;
+    }
+    #modal-documento-agendamento .document-input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+    }
+    #modal-documento-agendamento .btn-top-action.primary {
+        background: #1e3a8a;
+        border-color: #1e3a8a;
+        color: #ffffff;
+    }
+    #modal-documento-agendamento .btn-top-action.primary:hover {
+        background: #1e40af;
+        border-color: #1e40af;
+    }
+
+    .btn-row-action.reschedule { border-color: #f97316; color: #fff; background: #c2410c; }
+    .btn-row-action.reschedule:hover { background: #f97316; border-color: #fdba74; }
+
+    .btn-row-action.cancel { border-color: #ef4444; color: #fff; background: #991b1b; }
+    .btn-row-action.cancel:hover { background: #dc2626; border-color: #f87171; }
 
     .btn-row-action.done { min-width: 116px; color: var(--text-muted); cursor: default; opacity: 0.72; }
 
@@ -108,7 +443,7 @@
     .btn-status-action { 
         width: 100%; 
         height: 48px; 
-        border: none; 
+        border: 1px solid rgba(255,255,255,0.18);
         border-radius: 8px; 
         font-size: 14px; 
         font-weight: 700; 
@@ -118,20 +453,357 @@
         padding-left: 20px; 
         gap: 12px; 
         cursor: pointer; 
-        transition: all 0.2s; 
+        transition: all 0.2s;
+        box-shadow: 0 14px 28px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.08);
     }
-    .btn-status-action:hover { filter: brightness(0.9); transform: translateY(-1px); }
+    .btn-status-action:hover { filter: brightness(1.08); transform: translateY(-1px); }
     .btn-status-action i { width: 18px; height: 18px; }
 
-    .badge-waiting-accept { font-size: 10px; font-weight: 700; color: var(--brand-blue); background: rgba(0, 176, 255, 0.1); padding: 4px 8px; border-radius: 4px; border: 1px solid rgba(0, 176, 255, 0.2); margin-right: 5px; white-space: nowrap; }
-
     .input-group-row { display: flex; gap: 8px; width: 100%; }
-    .btn-inline-add { background: #1a2233; border: 1px solid var(--border-color); color: var(--brand-green); font-size: 12px; font-weight: 700; padding: 0 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; transition: all 0.2s; }
-    .btn-inline-add:hover { background: rgba(0, 230, 118, 0.08); border-color: var(--brand-green); }
+    .btn-inline-add { min-height: 42px; background: #172033; border: 1px solid #334155; color: #fff; font-size: 12px; font-weight: 800; padding: 0 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 6px; white-space: nowrap; transition: all 0.18s ease; box-shadow: 0 10px 22px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.05); }
+    .btn-inline-add:hover { background: #22314a; border-color: #64748b; transform: translateY(-1px); }
 
     select.form-control { padding: 0 8px; color-scheme: dark; }
-    
+
+    .agenda-modal-premium {
+        background: linear-gradient(180deg, #0d121b 0%, #080b11 100%);
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(255,255,255,0.02) inset;
+    }
+    .agenda-modal-premium .modal-header {
+        border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    }
+    .agenda-modal-premium .modal-header h3 {
+        color: var(--text-bright);
+        font-weight: 800;
+        letter-spacing: -0.01em;
+    }
+    .agenda-modal-premium .modal-body {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        padding: 22px 24px;
+    }
+    .agenda-modal-premium .form-group {
+        margin-bottom: 0;
+    }
+    .agenda-modal-premium .form-group label {
+        color: #dbe7f3;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.01em;
+        margin-bottom: 7px;
+    }
+    .agenda-modal-premium .form-control {
+        min-height: 42px;
+        background: rgba(15, 23, 42, 0.86);
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        color: var(--text-bright);
+        border-radius: 8px;
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    .agenda-modal-premium .form-control:focus {
+        border-color: rgba(0, 230, 118, 0.5);
+        box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.08);
+        outline: none;
+    }
+    .agenda-modal-premium .form-control::placeholder {
+        color: #64748b;
+    }
+    .modal-helper {
+        margin: -4px 0 2px;
+        color: #94a3b8;
+        font-size: 13px;
+        line-height: 1.45;
+    }
+    .field-note {
+        color: #7f8da1;
+        font-size: 11px;
+        line-height: 1.4;
+        margin-top: 7px;
+    }
+    .message-preview {
+        background: rgba(0, 230, 118, 0.07);
+        border: 1px solid rgba(0, 230, 118, 0.18);
+        border-radius: 8px;
+        padding: 12px 14px;
+    }
+    .preview-label {
+        display: block;
+        margin-bottom: 6px;
+        color: #7cffad;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+    .preview-text {
+        margin: 0;
+        color: #dbe7f3;
+        font-size: 13px;
+        line-height: 1.5;
+        word-break: break-word;
+    }
+    .agenda-modal-premium .modal-footer {
+        border-top: 1px solid rgba(148, 163, 184, 0.14);
+        gap: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .topbar-header { flex-direction: column; align-items: stretch; gap: 14px; }
+        .topbar-actions { flex-wrap: wrap; }
+        .btn-top-action { flex: 1 1 150px; }
+        .agenda-modal-premium { width: calc(100vw - 28px); max-width: calc(100vw - 28px); }
+        .agenda-modal-premium .modal-footer { flex-direction: column-reverse; align-items: stretch; }
+        .agenda-modal-premium .modal-footer button { width: 100%; }
+        .input-group-row { flex-direction: column; }
+        .btn-inline-add { min-height: 42px; justify-content: center; }
+    }
+
+    body.theme-light .topbar {
+        background: #ffffff;
+        border-bottom-color: #e5e7eb;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.055);
+    }
+    body.theme-light .agenda-table-card,
+    body.theme-light .table-header-row,
+    body.theme-light .agenda-modal-premium {
+        background: #ffffff;
+        border-color: #e5e7eb;
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    }
+    body.theme-light .agenda-table-card,
+    body.theme-light .agenda-modal-premium {
+        border-radius: 14px;
+    }
+    body.theme-light .table-header-row {
+        background: #ffffff;
+        color: #64748b;
+        border-bottom-color: #edf0f5;
+    }
+    body.theme-light .table-row {
+        border-bottom-color: #edf0f5;
+    }
+    body.theme-light .table-row:hover {
+        background: #f8fafc;
+    }
+    body.theme-light .col-time .clock,
+    body.theme-light .col-type,
+    body.theme-light .col-vinc .client,
+    body.theme-light .agenda-modal-premium .modal-header h3,
+    body.theme-light .agenda-modal-premium .form-group label {
+        color: #111827;
+    }
+    body.theme-light .agenda-modal-premium .form-control {
+        background: #ffffff;
+        border-color: #cbd5e1;
+        color: #111827;
+    }
+    body.theme-light .message-preview {
+        background: rgba(0, 169, 79, 0.08);
+        border-color: rgba(0, 169, 79, 0.2);
+    }
+    body.theme-light .preview-text {
+        color: #111827;
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 3000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(3, 5, 8, 0.72);
+        backdrop-filter: blur(8px);
+        visibility: hidden;
+        opacity: 0;
+        transition: opacity 0.22s ease, visibility 0.22s ease;
+    }
+    .modal-backdrop.active {
+        visibility: visible;
+        opacity: 1;
+    }
+    .modal-box {
+        width: min(100%, 520px);
+        background: linear-gradient(180deg, #111827 0%, #080b11 100%);
+        border: 1px solid rgba(245, 158, 11, 0.28);
+        border-radius: 12px;
+        box-shadow: 0 28px 80px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(255,255,255,0.04) inset;
+        overflow: hidden;
+    }
+    .modal-box.small-modal {
+        max-width: 500px;
+    }
+    .animate-pop {
+        transform: translateY(10px) scale(0.98);
+        transition: transform 0.22s ease;
+    }
+    .modal-backdrop.active .animate-pop {
+        transform: translateY(0) scale(1);
+    }
+    .modal-box .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 18px 20px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+    }
+    .modal-box .modal-header h3 {
+        margin: 0;
+        color: var(--text-bright);
+        font-size: 16px;
+        font-weight: 850;
+    }
+    .modal-box .modal-body {
+        padding: 20px;
+    }
+    .modal-box .modal-footer {
+        padding: 0 20px 20px;
+    }
+    .btn-close {
+        width: 34px;
+        height: 34px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 8px;
+        background: rgba(15, 23, 42, 0.72);
+        color: #cbd5e1;
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+    }
+    .btn-close:hover {
+        color: #fff;
+        border-color: rgba(245, 158, 11, 0.44);
+        background: rgba(245, 158, 11, 0.12);
+    }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .gap-2 { gap: 8px; }
+    .text-amber-500 { color: #f59e0b; }
+    .text-amber-500 i { width: 20px; height: 20px; }
+    .button {
+        min-height: 40px;
+        padding: 0 14px;
+        border-radius: 8px;
+        border: 1px solid #334155;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+    .button.secondary {
+        background: #172033;
+        color: #e2e8f0;
+    }
+    .button.primary {
+        background: #00a94f;
+        border-color: #00e676;
+        color: #fff;
+    }
+    .button:hover {
+        filter: brightness(1.08);
+    }
+
     .whatsapp-svg-icon { width: 15px; height: 15px; fill: currentColor; flex-shrink: 0; }
+
+    select.document-input {
+        height: 42px;
+        padding: 0 12px;
+        color-scheme: dark;
+        cursor: pointer;
+    }
+    input[type="date"].document-input {
+        height: 42px;
+        padding: 0 12px;
+    }
+    .document-modal-body .input-group-row {
+        align-items: stretch;
+    }
+    .document-modal-body .btn-inline-add {
+        flex-shrink: 0;
+    }
+    .link-config-card {
+        background: #1e1e2e;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+    .link-url-preview-row {
+        display: flex;
+        align-items: stretch;
+        gap: 8px;
+    }
+    .link-url-preview {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        padding: 0 14px;
+        min-height: 42px;
+        border-radius: 7px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #12121a;
+        color: #94a3b8;
+        font-size: 13px;
+        font-family: 'Inter', monospace;
+        line-height: 1.35;
+        word-break: break-all;
+    }
+    .btn-copy-link {
+        flex-shrink: 0;
+        min-height: 42px;
+        height: 42px;
+        padding: 0 14px;
+        border-radius: 7px;
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        background: rgba(16, 185, 129, 0.12);
+        color: #34d399;
+        font-size: 12px;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: all 0.18s ease;
+        white-space: nowrap;
+    }
+    .btn-copy-link:hover {
+        background: rgba(16, 185, 129, 0.22);
+        border-color: #10b981;
+        color: #fff;
+    }
+    .btn-copy-link i {
+        width: 14px;
+        height: 14px;
+    }
+    .link-message-preview {
+        padding: 13px 16px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(255, 255, 255, 0.035);
+    }
+    .link-message-preview .preview-label {
+        display: block;
+        margin-bottom: 6px;
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    .link-message-preview .preview-text {
+        margin: 0;
+        color: #cbd5e1;
+        font-size: 13px;
+        line-height: 1.5;
+        word-break: break-word;
+    }
   </style>
 </head>
 <body>
@@ -141,27 +813,21 @@
     <header class="topbar">
       <div class="topbar-header">
         <div class="topbar-titles">
-          <h2>Agenda de Serviços</h2>
-          
-          <div class="day-selector-ribbon">
-            <button class="ribbon-btn active" id="btn-filtra-hoje" onclick="mudarFiltroData('hoje')">Hoje</button>
-            <button class="ribbon-btn" id="btn-filtra-amanha" onclick="mudarFiltroData('amanha')">Amanhã</button>
-            <button class="ribbon-btn" id="btn-filtra-7dias" onclick="mudarFiltroData('7dias')">Próximos 7 dias</button>
-            <button class="ribbon-btn" id="btn-filtra-tudo" onclick="mudarFiltroData('tudo')">Ver Tudo</button>
+          <h2>Agenda de Servi&ccedil;os</h2>
+          <div class="status-filters">
+            <button class="filter-btn active" id="btn-filtra-hoje" data-period="hoje" onclick="mudarFiltroData('hoje')"><i data-lucide="calendar-days"></i> Hoje</button>
+            <button class="filter-btn" id="btn-filtra-semana" data-period="semana" onclick="mudarFiltroData('semana')"><i data-lucide="calendar-range"></i> Semana</button>
+            <button class="filter-btn" id="btn-filtra-todos" data-period="todos" onclick="mudarFiltroData('todos')"><i data-lucide="list-filter"></i> Todos</button>
           </div>
         </div>
-        
         <div class="topbar-actions">
-          <button class="btn-top-action secondary" onclick="copiarLinkAgendamento()">
-            <i style="width:14px; height:14px;" data-lucide="copy"></i> Copiar Link
+          <button type="button" onclick="abrirModalLink()" class="btn-top-action whatsapp">
+            <i data-lucide="link"></i>
+            Compartilhar Link
           </button>
-          <button class="btn-top-action secondary" style="color: var(--brand-whatsapp);" onclick="abrirModalLink()">
-            <svg class="whatsapp-svg-icon" viewBox="0 0 24 24" style="width:15px; height:15px; fill:currentColor;">
-              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.003 5.324 5.328 0 11.822 0c3.148.001 6.107 1.227 8.332 3.457 2.225 2.229 3.446 5.19 3.445 8.34-.003 6.497-5.328 11.822-11.822 11.822-2.004-.001-3.971-.51-5.713-1.477L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403 0 9.794-4.392 9.797-9.799.002-2.618-1.013-5.08-2.859-6.93C16.315 2.03 13.856.994 11.237 1a9.783 9.783 0 0 0-9.78 9.784c-.001 1.547.422 3.053 1.223 4.387l-.999 3.648 3.734-.979zm12.115-6.858c-.3-.15-1.774-.875-2.046-.975-.273-.1-.472-.15-.672.15-.2.3-.775.975-.95 1.174-.175.2-.35.225-.65.075-1.205-.6-2.031-1.095-2.83-2.463-.21-.36-.042-.556.108-.707.135-.134.3-.35.45-.525.15-.175.2-.3.3-.5s.05-.375-.025-.525C11.66 8.5 11 6.85 10.725 6.175c-.267-.652-.536-.549-.725-.549-.187-.001-.4-.001-.613-.001s-.562.08-.856.408c-.294.328-1.125 1.101-1.125 2.685 0 1.585 1.15 3.118 1.306 3.328.156.21 2.26 3.452 5.474 4.841.765.329 1.362.527 1.827.674.769.244 1.47.21 2.022.128.614-.092 1.774-.725 2.024-1.425.25-.7.25-1.3 1.175-1.425-.075-.125-.275-.275-.575-.425z"/>
-            </svg> Enviar Link
-          </button>
-          <button class="btn-top-action primary" onclick="abrirModalManual()">
-            <i style="width:16px; height:16px;" data-lucide="plus-circle"></i> Novo Agendamento
+          <button type="button" onclick="abrirModalManual()" class="btn-top-action primary agenda-new-button">
+            <i data-lucide="calendar-plus"></i>
+            Novo Agendamento
           </button>
         </div>
       </div>
@@ -176,49 +842,57 @@
   </main>
 
   <div class="modal-overlay" id="modal-novo-manual">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Novo Agendamento</h3>
-        <button class="btn-close-modal" onclick="fecharModalManual()"><i data-lucide="x"></i></button>
+    <div class="modal-card document-modal-card">
+      <div class="document-modal-header">
+        <div class="document-modal-title">
+          <i data-lucide="calendar-plus"></i>
+          <h3>Novo Agendamento</h3>
+        </div>
+        <button type="button" class="document-modal-close" onclick="fecharModalManual()" aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
       </div>
-      <div class="modal-body">
-        <div class="form-group">
+      <div class="document-modal-body">
+        <p class="document-modal-helper">Escolha cliente, veiculo e um horario disponivel para registrar o atendimento.</p>
+        <div class="document-field">
           <label>Cliente</label>
           <div class="input-group-row">
-            <select id="sel-manual-cliente" class="form-control" onchange="carregarVeiculosDoCliente(this.value)">
+            <select id="sel-manual-cliente" class="document-input" onchange="carregarVeiculosDoCliente(this.value)">
               <option value="">Carregando clientes...</option>
             </select>
-            <button class="btn-inline-add" onclick="abrirModalRapidoCliente()">
+            <button type="button" class="btn-inline-add" onclick="abrirModalRapidoCliente()">
               <i style="width:14px; height:14px;" data-lucide="plus"></i> Novo
             </button>
           </div>
         </div>
-        <div class="form-group">
-          <label>Veículo do Cliente</label>
-          <select id="sel-manual-veiculo" class="form-control">
+        <div class="document-field">
+          <label>Veiculo do Cliente</label>
+          <select id="sel-manual-veiculo" class="document-input">
             <option value="">Selecione um cliente primeiro</option>
           </select>
         </div>
-        <div class="form-group">
-          <label>Data do Serviço</label>
-          <input type="date" id="txt-manual-data" class="form-control">
+        <div class="document-field">
+          <label>Data do Servico</label>
+          <input type="date" id="txt-manual-data" class="document-input" onchange="carregarHorariosDisponiveisManual(this.value)">
         </div>
-        <div class="form-group">
-          <label>Horário</label>
-          <input type="time" id="txt-manual-hora" class="form-control">
+        <div class="document-field">
+          <label>Horario</label>
+          <input type="hidden" id="sel-manual-hora">
+          <div class="slot-grid" id="manual-hora-slots"></div>
+          <div class="field-note" id="manual-hora-note">Escolha um slot disponivel.</div>
         </div>
-        <div class="form-group">
-          <label>Tipo de Serviço</label>
-          <input type="text" id="txt-manual-tipo" class="form-control" placeholder="Ex: Troca de Óleo, Revisão Geral">
+        <div class="document-field">
+          <label>Tipo de Servico</label>
+          <input type="text" id="txt-manual-tipo" class="document-input" placeholder="Ex: Troca de Oleo, Revisao Geral">
         </div>
-        <div class="form-group">
-          <label>Observações Adicionais</label>
-          <input type="text" id="txt-manual-obs" class="form-control" placeholder="Ex: Troque filtro de ar">
+        <div class="document-field">
+          <label>Observacoes Adicionais</label>
+          <input type="text" id="txt-manual-obs" class="document-input" placeholder="Ex: Troque filtro de ar">
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" onclick="fecharModalManual()">Cancelar</button>
-        <button class="btn-top-action primary" style="height:34px;" onclick="salvarAgendamentoManual()">Confirmar Agendamento</button>
+      <div class="document-modal-footer">
+        <button type="button" class="btn-modal-cancel" onclick="fecharModalManual()">Cancelar</button>
+        <button type="button" class="btn-top-action primary" onclick="salvarAgendamentoManual()">Confirmar Agendamento</button>
       </div>
     </div>
   </div>
@@ -227,7 +901,7 @@
     <div class="modal-card" style="max-width: 400px;">
       <div class="modal-header">
         <h3>Cadastrar Novo Cliente</h3>
-        <button class="btn-close-modal" onclick="fecharModalRapidoCliente()"><i data-lucide="x"></i></button>
+        <button type="button" class="btn-close-modal" onclick="fecharModalRapidoCliente()"><i data-lucide="x"></i></button>
       </div>
       <div class="modal-body">
         <div class="form-group">
@@ -239,32 +913,50 @@
           <input type="text" id="txt-novo-cli-telefone" class="form-control" placeholder="Ex: 42999999999">
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" onclick="fecharModalRapidoCliente()">Voltar</button>
-        <button class="btn-top-action primary" style="height:34px; background: var(--brand-green);" onclick="salvarClienteRapido()">Salvar Cliente</button>
+      <div class="document-modal-footer" style="padding: 16px 0 0;">
+        <button type="button" class="btn-modal-cancel" onclick="fecharModalRapidoCliente()">Voltar</button>
+        <button type="button" class="btn-top-action primary" onclick="salvarClienteRapido()">Salvar Cliente</button>
       </div>
     </div>
   </div>
 
   <div class="modal-overlay" id="modal-enviar-link">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Enviar Link de Agendamento</h3>
-        <button class="btn-close-modal" onclick="fecharModalLink()"><i data-lucide="x"></i></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>WhatsApp do Cliente</label>
-          <input type="text" id="txt-link-whatsapp" class="form-control" placeholder="Ex: 42999999999">
+    <div class="modal-card document-modal-card">
+      <div class="document-modal-header">
+        <div class="document-modal-title">
+          <i data-lucide="link"></i>
+          <h3>Configurar Link de Auto-Agendamento</h3>
         </div>
-        <div class="form-group">
-          <label>Nome do Cliente (Opcional)</label>
-          <input type="text" id="txt-link-nome" class="form-control" placeholder="Ex: Carlos">
+        <button type="button" class="document-modal-close" onclick="fecharModalLink()" aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="document-modal-body">
+        <p class="document-modal-helper">Compartilhe o link publico para o cliente escolher o melhor horario.</p>
+        <div class="link-config-card">
+          <div class="document-field">
+            <label>WhatsApp do Cliente</label>
+            <input type="tel" id="txt-link-whatsapp" class="document-input" placeholder="(00) 00000-0000" inputmode="tel">
+          </div>
+          <div class="document-field">
+            <label>URL de auto-agendamento</label>
+            <div class="link-url-preview-row">
+              <div class="link-url-preview" id="preview-url-agendamento">Carregando...</div>
+              <button type="button" class="btn-copy-link" onclick="copiarLinkAgendamento()">
+                <i data-lucide="copy"></i>
+                Copiar
+              </button>
+            </div>
+          </div>
+          <div class="link-message-preview">
+            <span class="preview-label">Previa da mensagem</span>
+            <p class="preview-text" id="preview-link-agendamento">Ola! Para agendar seu atendimento, acesse:</p>
+          </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" onclick="fecharModalLink()">Cancelar</button>
-        <button class="btn-top-action" style="height:34px; color:#fff; background:var(--brand-whatsapp);" onclick="dispararLinkWhatsApp()">Disparar WhatsApp</button>
+      <div class="document-modal-footer">
+        <button type="button" class="btn-modal-cancel" onclick="fecharModalLink()">Cancelar</button>
+        <button type="button" class="btn-top-action whatsapp" onclick="dispararLinkWhatsApp()">Enviar pelo WhatsApp</button>
       </div>
     </div>
   </div>
@@ -273,55 +965,223 @@
     <div class="modal-card" style="max-width: 450px;">
       <div class="modal-header">
         <h3>Iniciar atendimento</h3>
-        <button class="btn-close-modal" onclick="fecharModalAtendimento()"><i data-lucide="x"></i></button>
+        <button type="button" class="btn-close-modal" onclick="fecharModalAtendimento()"><i data-lucide="x"></i></button>
       </div>
       <div class="modal-body" style="display: flex; flex-direction: column; gap: 12px; padding: 24px;">
-        <button class="btn-status-action" style="background: var(--brand-blue); color: #fff;" onclick="window.executarAtendimento('orcamento')">
+        <button type="button" class="btn-status-action" style="background: var(--brand-blue); color: #fff;" onclick="window.executarAtendimento('orcamento')">
             <i data-lucide="calculator"></i> Gerar orçamento
         </button>
         
-        <button class="btn-status-action" style="background: var(--brand-green); color: #000;" onclick="window.executarAtendimento('os')">
+        <button type="button" class="btn-status-action" style="background: #00a94f; border-color:#00e676; color: #fff;" onclick="window.executarAtendimento('os')">
             <i data-lucide="wrench"></i> Abrir O.S.
         </button>
       </div>
     </div>
   </div>
 
-  <div class="modal-overlay" id="modal-remarcar-agendamento" style="z-index: 2000;">
-    <div class="modal-card" style="max-width: 420px;">
-      <div class="modal-header">
-        <h3>Remarcar agendamento</h3>
-        <button class="btn-close-modal" onclick="fecharModalRemarcacao()"><i data-lucide="x"></i></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label>Nova data</label>
-          <input type="date" id="txt-remarcar-data" class="form-control">
+  <div class="modal-overlay" id="modal-documento-agendamento" style="z-index: 2100;">
+    <div class="modal-card document-modal-card orcamento-document-modal">
+      <div class="document-modal-header">
+        <div class="document-modal-title">
+          <i data-lucide="file-text"></i>
+          <h3 id="modal-documento-titulo">Gerar documento</h3>
         </div>
-        <div class="form-group">
-          <label>Novo horário</label>
-          <input type="time" id="txt-remarcar-hora" class="form-control">
+        <button type="button" class="document-modal-close" onclick="fecharModalDocumentoAgendamento()" aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="document-modal-body">
+        <p class="document-modal-helper" id="modal-documento-helper">Confirme os dados iniciais abaixo para abertura do documento.</p>
+        <div class="document-summary-card">
+          <div class="document-summary-label">Vinculo do Agendamento</div>
+          <div class="document-summary-client" id="doc-agenda-cliente">Selecionando...</div>
+          <div class="document-summary-vehicle" id="doc-agenda-veiculo">Selecionando...</div>
+        </div>
+        <div class="document-field">
+          <label>Descricao inicial dos sintomas/servicos *</label>
+          <textarea id="doc-agenda-descricao" class="document-input" placeholder="Ex: Cliente relata ruido ao frear, verificar pastilhas e discos."></textarea>
+        </div>
+        <div class="document-field">
+          <label>Quilometragem atual</label>
+          <input type="number" id="doc-agenda-km" class="document-input" min="0" step="1" placeholder="Ex: 85420">
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn-modal-cancel" onclick="fecharModalRemarcacao()">Cancelar</button>
-        <button class="btn-top-action primary" style="height:34px;" onclick="salvarRemarcacao()">Confirmar remarcação</button>
+      <div class="document-modal-footer">
+        <button type="button" class="btn-modal-cancel" onclick="fecharModalDocumentoAgendamento()">Cancelar</button>
+        <button type="button" class="btn-top-action primary" id="btn-confirmar-documento-agenda" onclick="confirmarGeracaoDocumentoAgendamento()">
+          <span>Confirmar e Gerar</span>
+          <i data-lucide="arrow-right"></i>
+        </button>
       </div>
     </div>
   </div>
 
-<script>
+  <div class="modal-overlay" id="modal-remarcar-agendamento" style="z-index: 2000;">
+    <div class="modal-card document-modal-card" style="padding: 24px;">
+      <div class="document-modal-header" style="padding: 0 0 16px;">
+        <div class="document-modal-title">
+          <i data-lucide="calendar-clock"></i>
+          <h3>Remarcar agendamento</h3>
+        </div>
+        <button type="button" class="modal-close" onclick="fecharModalRemarcacao()" aria-label="Fechar">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="document-modal-body" style="padding: 20px 0 0;">
+        <div class="document-field">
+          <label>Nova data</label>
+          <input type="date" id="txt-remarcar-data" class="document-input" onchange="setNovaDataRemarcacao(this.value)">
+        </div>
+        <div class="document-field">
+          <label>Novo horário</label>
+          <input type="hidden" id="txt-remarcar-hora">
+          <div class="slot-grid" id="remarcar-hora-slots"></div>
+          <div class="field-note" id="remarcar-hora-note">Escolha um slot disponivel para a nova data.</div>
+        </div>
+      </div>
+      <div class="document-modal-footer" style="padding: 16px 0 0;">
+        <button type="button" class="btn-modal-cancel" onclick="fecharModalRemarcacao()">Cancelar</button>
+        <button type="button" class="btn-top-action primary" onclick="handleRemarcar()">Confirmar remarcação</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-aviso-db" class="modal-backdrop">
+    <div class="modal-box small-modal animate-pop">
+      <div class="modal-header">
+        <div class="flex items-center gap-2 text-amber-500">
+          <i data-lucide="alert-triangle" style="stroke: #f59e0b;"></i>
+          <h3 style="color: var(--text-primary); margin: 0; font-size: 1.2rem;">Configuração Pendente</h3>
+        </div>
+        <button type="button" class="btn-close" onclick="fecharModalAvisoDb()">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 15px 0;">
+        <p style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem; margin: 0;">
+          O front-end tentou salvar, mas o banco de dados recusou a alteração.
+          <strong style="color: var(--text-primary); display: block; margin-top: 8px;">Ação Necessária:</strong>
+          Você precisa executar o script do arquivo <code style="background: rgba(255,255,255,0.08); padding: 3px 6px; border-radius: 4px; color: #60a5fa; font-family: monospace;">supabase_agendamentos_update_policy.sql</code> no SQL Editor do seu painel do Supabase para liberar as permissões de escrita (UPDATE).
+        </p>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px;">
+        <button type="button" class="button secondary" onclick="fecharModalAvisoDb()">Entendido</button>
+        <a href="https://app.supabase.com" target="_blank" class="button primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 6px; height: 38px; padding: 0 16px; border-radius: 6px; font-size: 0.9rem;">
+          Ir para o Supabase <i data-lucide="external-link" style="width:14px; height:14px;"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
 'use strict';
 
 let filtroDataAtual = 'hoje';
 let agendamentoAtendimentoId = null;
 let agendamentoRemarcacaoId = null;
+let idAgendamentoAtivo = null;
+let agendamentosEstado = [];
+let agendamentoSelecionado = null;
+let novaData = '';
+let novoHorario = '';
+let documentoAgendamentoContexto = {
+    tipo: null,
+    agendamento: null
+};
+const BASE_PUBLIC_URL = window.location.origin.startsWith('file')
+    ? 'http://localhost:8080'
+    : window.location.origin;
+const HORARIOS_FIXOS_AGENDA = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00', '17:00'];
+const dbLeituraAgenda = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false
+    }
+});
+
+function obterLinkPublicoAgendamento() {
+    return `${BASE_PUBLIC_URL}/agendar.html?oficina=${OFICINA_ATIVA_ID}`;
+}
+
+function obterMensagemLinkAgendamento() {
+    return `Olá! Para agendar seu atendimento, acesse: ${obterLinkPublicoAgendamento()}`;
+}
+
+function atualizarPreviewLinkAgendamento() {
+    const link = obterLinkPublicoAgendamento();
+    const previewUrl = document.getElementById('preview-url-agendamento');
+    const previewMsg = document.getElementById('preview-link-agendamento');
+    if (previewUrl) previewUrl.textContent = link;
+    if (previewMsg) previewMsg.textContent = obterMensagemLinkAgendamento();
+}
+
+window.mostrarModalAvisoDb = function() {
+    const modal = document.getElementById('modal-aviso-db');
+    if (modal) {
+        modal.classList.add('active');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+};
+
+window.fecharModalAvisoDb = function() {
+    const modal = document.getElementById('modal-aviso-db');
+    if (modal) modal.classList.remove('active');
+};
+
+function formatarTelefoneWhatsApp(valor) {
+    const digitos = String(valor || '').replace(/\D/g, '').slice(0, 11);
+    if (digitos.length <= 2) return digitos;
+    if (digitos.length <= 6) return `(${digitos.slice(0, 2)}) ${digitos.slice(2)}`;
+    if (digitos.length <= 10) return `(${digitos.slice(0, 2)}) ${digitos.slice(2, 6)}-${digitos.slice(6)}`;
+    return `(${digitos.slice(0, 2)}) ${digitos.slice(2, 7)}-${digitos.slice(7)}`;
+}
+
+function gerarSlotsPorIntervalo(intervaloMinutos = 60) {
+    const intervalo = Number(intervaloMinutos);
+    if (!Number.isFinite(intervalo) || intervalo < 15 || intervalo > 240) return HORARIOS_FIXOS_AGENDA;
+
+    const slots = [];
+    const inicio = 8 * 60;
+    const fim = 18 * 60;
+    for (let minuto = inicio; minuto < fim; minuto += intervalo) {
+        const h = String(Math.floor(minuto / 60)).padStart(2, '0');
+        const m = String(minuto % 60).padStart(2, '0');
+        slots.push(`${h}:${m}`);
+    }
+    return slots.length ? slots : HORARIOS_FIXOS_AGENDA;
+}
+
+function statusOcupaHorario(status) {
+    const normalizado = String(status || '').trim().toUpperCase();
+    return !['CANCELADO', 'CONCLUIDO', 'CONCLUÍDO', 'FALTOU', 'DESISTENCIA', 'DESISTÊNCIA', 'NAO_COMPARECEU', 'NÃO_COMPARECEU'].includes(normalizado);
+}
 
 // --- 1. FUNÇÕES GLOBAIS DE INTERAÇÃO (Disponíveis para o onclick) ---
 
+function obterPartesDataHora(valorDataHora, horarioFallback = '') {
+    const valor = String(valorDataHora || '').trim();
+    const [dataParte, horaParte = ''] = valor.includes('T') ? valor.split('T') : valor.split(' ');
+    const servicoData = dataParte || valor;
+    const horarioBase = horaParte || horarioFallback;
+    const horario = horarioBase.length === 5 ? `${horarioBase}:00` : horarioBase;
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(servicoData) || !/^\d{2}:\d{2}(:\d{2})?$/.test(horario)) {
+        throw new Error('Informe a nova data e horario em um formato valido.');
+    }
+
+    return { servico_data: servicoData, horario };
+}
+
 window.abrirModalManual = function() {
     document.getElementById('modal-novo-manual').classList.add('active');
+    const campoData = document.getElementById('txt-manual-data');
+    const hoje = obterDataString(0);
+    if (campoData) {
+        campoData.min = hoje;
+        if (!campoData.value || campoData.value < hoje) campoData.value = hoje;
+        carregarHorariosDisponiveisManual(campoData.value);
+    }
     carregarClientesForm();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
 window.fecharModalManual = function() {
@@ -330,6 +1190,8 @@ window.fecharModalManual = function() {
 
 window.abrirModalLink = function() {
     document.getElementById('modal-enviar-link').classList.add('active');
+    atualizarPreviewLinkAgendamento();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 };
 
 window.fecharModalLink = function() {
@@ -337,7 +1199,7 @@ window.fecharModalLink = function() {
 };
 
 window.copiarLinkAgendamento = function() {
-    const link = window.location.origin + '/agendar.html?oficina=' + OFICINA_ATIVA_ID;
+    const link = obterLinkPublicoAgendamento();
     navigator.clipboard.writeText(link).then(() => {
         showToast('Link de agendamento copiado!', 'success');
     }).catch(err => {
@@ -348,11 +1210,8 @@ window.copiarLinkAgendamento = function() {
 
 window.dispararLinkWhatsApp = function() {
     const fone = document.getElementById('txt-link-whatsapp').value.replace(/\D/g, '');
-    const nome = document.getElementById('txt-link-nome').value.trim();
     if (!fone) { showToast('Informe o WhatsApp do cliente', 'error'); return; }
-    
-    const linkAgendar = window.location.origin + '/agendar.html?oficina=' + OFICINA_ATIVA_ID;
-    const mensagem = `Olá${nome ? ' ' + nome : ''}! Use este link para realizar seu agendamento em nossa oficina: ${linkAgendar}`;
+    const mensagem = obterMensagemLinkAgendamento();
     
     window.open(`https://api.whatsapp.com/send?phone=55${fone}&text=${encodeURIComponent(mensagem)}`, '_blank');
     showToast('WhatsApp aberto!');
@@ -397,179 +1256,513 @@ window.executarAtendimento = async function(tipo) {
     }
 };
 
+async function atualizarAgendamentoSupabase(id, payload) {
+    const { data, error } = await db.from('agendamentos')
+        .update(payload)
+        .eq('id', id)
+        .eq('oficina_id', OFICINA_ATIVA_ID)
+        .select('id, status, servico_data, horario')
+        .maybeSingle();
+
+    if (error) throw error;
+    if (!data) throw new Error('Nenhum agendamento foi atualizado. Verifique a oficina ativa ou as permissoes do Supabase.');
+    return data;
+}
+
+async function obterUsuarioAutenticado() {
+    const { data, error } = await db.auth.getUser();
+    if (error) {
+        console.warn('Erro ao validar sessao:', error);
+        return null;
+    }
+    return data?.user || null;
+}
+
+async function exigirUsuarioAutenticado() {
+    const user = await obterUsuarioAutenticado();
+    if (user) return user;
+
+    showToast('Sua sessao expirou. Faca login novamente para salvar alteracoes.', 'error');
+    setTimeout(() => {
+        window.location.href = 'login.html';
+    }, 1200);
+    return null;
+}
+
 window.abrirModalRemarcacao = function(id) {
-    agendamentoRemarcacaoId = id;
-    document.getElementById('txt-remarcar-data').value = '';
+    if (!id) return;
+
+    const idLimpo = String(id).trim();
+    idAgendamentoAtivo = idLimpo;
+    agendamentoRemarcacaoId = idLimpo;
+    agendamentoSelecionado = agendamentosEstado.find(ag => String(ag.id) === idLimpo) || { id: idLimpo };
+    const campoData = document.getElementById('txt-remarcar-data');
+    const hoje = obterDataString(0);
+    novaData = agendamentoSelecionado?.servico_data && agendamentoSelecionado.servico_data >= hoje ? agendamentoSelecionado.servico_data : hoje;
+    novoHorario = '';
+    window.horarioSelecionadoSlot = '';
+    if (campoData) {
+        campoData.min = hoje;
+        campoData.value = novaData;
+    }
     document.getElementById('txt-remarcar-hora').value = '';
+    carregarHorariosDisponiveisRemarcacao(novaData);
     document.getElementById('modal-remarcar-agendamento').classList.add('active');
 };
 
 window.fecharModalRemarcacao = function() {
     document.getElementById('modal-remarcar-agendamento').classList.remove('active');
+    idAgendamentoAtivo = null;
     agendamentoRemarcacaoId = null;
+    agendamentoSelecionado = null;
+    novaData = '';
+    novoHorario = '';
+    window.horarioSelecionadoSlot = '';
+};
+
+window.handleCancelar = async function(id) {
+    if (!id) return;
+    if (!confirm('Deseja mesmo cancelar este agendamento?')) return;
+
+    try {
+        const user = await exigirUsuarioAutenticado();
+        if (!user) return;
+
+        const idLimpo = String(id).trim();
+
+        const { data, error } = await db
+            .from('agendamentos')
+            .update({ status: 'Cancelado' })
+            .eq('id', idLimpo)
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .select();
+
+        if (error) {
+            showToast(`Erro ao cancelar: ${error.message}`, 'error');
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            console.warn('Cancelamento sem linhas alteradas:', { id: idLimpo, oficina_id: OFICINA_ATIVA_ID, user_id: user.id });
+            mostrarModalAvisoDb();
+            return;
+        }
+
+        agendamentosEstado = agendamentosEstado.map((ag) =>
+            String(ag.id) === idLimpo ? { ...ag, status: 'Cancelado' } : ag
+        );
+        document.querySelectorAll('.agenda-context-menu').forEach(menu => menu.classList.remove('active'));
+        document.querySelectorAll('.table-row.menu-open').forEach(row => row.classList.remove('menu-open'));
+        showToast("Agendamento cancelado com sucesso!", "success");
+        carregarAgendamentos();
+
+    } catch (err) {
+        console.error(err);
+        showToast("Falha interna ao tentar cancelar.", "error");
+    }
+};
+
+window.handleRemarcar = async function(id = null, novaDataParam = null, novoHorarioParam = null) {
+    try {
+        const user = await exigirUsuarioAutenticado();
+        if (!user) return;
+
+        const agendamentoId = String(id || idAgendamentoAtivo || agendamentoSelecionado?.id || agendamentoRemarcacaoId || '').trim();
+        const dataSelecionada = novaDataParam || novaData || document.getElementById('txt-remarcar-data')?.value;
+        const horarioSelecionado = novoHorarioParam || novoHorario || window.horarioSelecionadoSlot || document.getElementById('txt-remarcar-hora')?.value;
+
+        if (!agendamentoId) {
+            showToast('Nenhum agendamento selecionado.', 'error');
+            return;
+        }
+
+        if (!dataSelecionada) {
+            showToast('Por favor, selecione a nova data.', 'error');
+            return;
+        }
+
+        if (!horarioSelecionado) {
+            showToast('Por favor, selecione um dos horarios disponiveis.', 'error');
+            return;
+        }
+
+        const horarioFormatado = horarioSelecionado.length === 5 ? `${horarioSelecionado}:00` : horarioSelecionado;
+        const camposAtualizacao = {
+            servico_data: dataSelecionada,
+            horario: horarioFormatado,
+            status: 'Aguardando'
+        };
+
+        const { data, error } = await db
+            .from('agendamentos')
+            .update(camposAtualizacao)
+            .eq('id', agendamentoId)
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .select();
+
+        if (error) {
+            showToast(`Erro ao remarcar: ${error.message}`, 'error');
+            return;
+        }
+
+        if (!data || data.length === 0) {
+            console.warn('Remarcacao sem linhas alteradas:', {
+                id: agendamentoId,
+                oficina_id: OFICINA_ATIVA_ID,
+                user_id: user.id,
+                payload: camposAtualizacao
+            });
+            mostrarModalAvisoDb();
+            return;
+        }
+
+        agendamentosEstado = agendamentosEstado.map((ag) =>
+            String(ag.id) === String(agendamentoId)
+                ? { ...ag, ...camposAtualizacao }
+                : ag
+        );
+
+        fecharModalRemarcacao();
+        document.querySelectorAll('.agenda-context-menu').forEach(menu => menu.classList.remove('active'));
+        document.querySelectorAll('.table-row.menu-open').forEach(row => row.classList.remove('menu-open'));
+        showToast("Agendamento remarcado com sucesso!", "success");
+        carregarAgendamentos();
+
+    } catch (err) {
+        console.error(err);
+        showToast("Falha interna ao tentar remarcar.", "error");
+    }
+};
+
+window.fecharModalRemarcar = window.fecharModalRemarcacao;
+window.carregarAgendamentos = function() {
+    return renderizarAgendaExtrato();
 };
 
 window.salvarRemarcacao = async function() {
-    const novaData = document.getElementById('txt-remarcar-data').value;
-    const novoHorario = document.getElementById('txt-remarcar-hora').value;
-
-    if (!agendamentoRemarcacaoId || !novaData || !novoHorario) {
-        showToast("Informe nova data e horário", "error");
-        return;
-    }
-
-    try {
-        const { data: agendamentoAtual, error: errBusca } = await db.from('agendamentos')
-            .select('*')
-            .eq('id', agendamentoRemarcacaoId)
-            .eq('oficina_id', OFICINA_ATIVA_ID)
-            .single();
-        if (errBusca) throw errBusca;
-
-        const { error: errUpdate } = await db.from('agendamentos')
-            .update({ status: 'REMARCADO' })
-            .eq('id', agendamentoRemarcacaoId)
-            .eq('oficina_id', OFICINA_ATIVA_ID);
-        if (errUpdate) throw errUpdate;
-
-        const novoAgendamento = {
-            oficina_id: agendamentoAtual.oficina_id,
-            cliente_id: agendamentoAtual.cliente_id,
-            veiculo_id: agendamentoAtual.veiculo_id,
-            servico_tipo: agendamentoAtual.servico_tipo,
-            servico_data: novaData,
-            horario: novoHorario,
-            status: 'Aguardando',
-            observacoes: agendamentoAtual.observacoes
-        };
-
-        const { error: errInsert } = await db.from('agendamentos').insert([novoAgendamento]);
-        if (errInsert) throw errInsert;
-
-        showToast("Agendamento remarcado", "success");
-        window.fecharModalRemarcacao();
-        renderizarAgendaExtrato();
-    } catch (e) {
-        console.error(e);
-        showToast("Erro ao remarcar agendamento", "error");
-    }
+    return window.handleRemarcar();
 };
 
 window.cancelarAgendamento = async function(id) {
-    if (!confirm("Cancelar este agendamento? O registro será mantido no histórico.")) return;
+    return window.handleCancelar(id);
+};
 
-    try {
-        const { error } = await db.from('agendamentos')
-            .update({ status: 'CANCELADO' })
-            .eq('id', id)
-            .eq('oficina_id', OFICINA_ATIVA_ID);
-        if (error) throw error;
+window.marcarDesistenciaAgendamento = async function(id) {
+    return window.cancelarAgendamento(id);
+};
 
-        showToast("Agendamento cancelado", "success");
-        renderizarAgendaExtrato();
-    } catch (e) {
-        console.error(e);
-        showToast("Erro ao cancelar agendamento", "error");
+window.toggleAgendaMenu = function(id) {
+    document.querySelectorAll('.agenda-context-menu').forEach(menu => {
+        if (menu.id !== 'agenda-menu-' + id) {
+            menu.classList.remove('active');
+            menu.closest('.table-row')?.classList.remove('menu-open');
+        }
+    });
+    const menu = document.getElementById('agenda-menu-' + id);
+    if (menu) {
+        const ativo = menu.classList.toggle('active');
+        menu.closest('.table-row')?.classList.toggle('menu-open', ativo);
     }
 };
 
-// --- 2. LÓGICA DE NEGÓCIO (SUPABASE) ---
-
 async function iniciarOSDiretaFlow(id) {
-    try {
-        await abrirOS(id);
-    } catch (e) { console.error(e); showToast("Erro ao abrir O.S.", "error"); }
+    await abrirOS(id);
+}
+
+async function garantirOrcamentoEOS(id) {
+    const { data: agend, error: errAgend } = await dbLeituraAgenda.from('agendamentos')
+        .select('*')
+        .eq('id', id)
+        .eq('oficina_id', OFICINA_ATIVA_ID)
+        .single();
+    if (errAgend) throw errAgend;
+
+    if (!agend.cliente_id || !agend.veiculo_id) {
+        throw new Error('Este agendamento precisa de cliente e veículo vinculados antes de abrir orçamento/O.S. Faça o check-in primeiro.');
+    }
+
+    let { data: orcamento, error: errOrcBusca } = await db.from('orcamentos')
+        .select('*')
+        .eq('agendamento_id', id)
+        .eq('oficina_id', OFICINA_ATIVA_ID)
+        .maybeSingle();
+    if (errOrcBusca) throw errOrcBusca;
+
+    if (!orcamento) {
+        const { data: novoOrcamento, error: errOrc } = await db.from('orcamentos')
+            .insert([{
+                oficina_id: OFICINA_ATIVA_ID,
+                cliente_id: agend.cliente_id,
+                veiculo_id: agend.veiculo_id,
+                agendamento_id: id,
+                valor_pecas: 0,
+                valor_servicos: 0,
+                valor_total: 0,
+                status: 'Rascunho',
+                observacoes: agend.observacoes || null
+            }])
+            .select('*')
+            .single();
+        if (errOrc) throw errOrc;
+        orcamento = novoOrcamento;
+    }
+
+    let { data: os, error: errOSBusca } = await db.from('ordens_servico')
+        .select('*')
+        .eq('agendamento_id', id)
+        .eq('oficina_id', OFICINA_ATIVA_ID)
+        .maybeSingle();
+    if (errOSBusca) throw errOSBusca;
+
+    if (!os) {
+        const { data: novaOS, error: errOS } = await db.from('ordens_servico')
+            .insert([{
+                oficina_id: OFICINA_ATIVA_ID,
+                cliente_id: agend.cliente_id,
+                veiculo_id: agend.veiculo_id,
+                agendamento_id: id,
+                orcamento_id: orcamento.id,
+                numero_os: 'OS-' + Date.now(),
+                valor_total: 0,
+                status: 'aberta',
+                defeito_relatado: agend.observacoes || null,
+                observacoes: agend.observacoes || null
+            }])
+            .select('*')
+            .single();
+        if (errOS) throw errOS;
+        os = novaOS;
+    } else if (!os.orcamento_id && orcamento.id) {
+        await db.from('ordens_servico')
+            .update({ orcamento_id: orcamento.id })
+            .eq('id', os.id)
+            .eq('oficina_id', OFICINA_ATIVA_ID);
+        os.orcamento_id = orcamento.id;
+    }
+
+    await atualizarAgendamentoSupabase(id, { status: 'Aguardando' });
+
+    return { agendamento: agend, orcamento, os };
 }
 
 async function abrirOS(id) {
     try {
-        const { data: orc, error: errOrc } = await db.from('orcamentos')
-            .select('*, orcamento_itens(*)')
-            .eq('agendamento_id', id)
-            .eq('oficina_id', OFICINA_ATIVA_ID)
-            .maybeSingle();
-        if (errOrc) throw errOrc;
-
-        const orcAprovado = orc && ['aprovado', 'aprovado_manual'].includes((orc.status || '').toLowerCase());
-        const { data: agend, error: errAgend } = await db.from('agendamentos')
-            .select('*')
-            .eq('id', id)
-            .eq('oficina_id', OFICINA_ATIVA_ID)
-            .single();
-        if (errAgend) throw errAgend;
-
-        const osPayload = {
-            oficina_id: OFICINA_ATIVA_ID,
-            cliente_id: orcAprovado ? orc.cliente_id : agend.cliente_id,
-            veiculo_id: orcAprovado ? orc.veiculo_id : agend.veiculo_id,
-            agendamento_id: id,
-            orcamento_id: orcAprovado ? orc.id : null,
-            numero_os: "OS-" + Date.now(),
-            valor_total: orcAprovado ? (orc.valor_total || 0) : 0,
-            status: 'aberta',
-            defeito_relatado: orcAprovado ? (orc.observacoes || null) : (agend.observacoes || null),
-            observacoes: orcAprovado ? orc.observacoes : agend.observacoes
-        };
-
-        const { data: novaOS, error: errOS } = await db.from('ordens_servico').insert([osPayload]).select().single();
-        if (errOS) throw errOS;
-
-        if (orcAprovado && orc.orcamento_itens && orc.orcamento_itens.length > 0) {
-            const itensOS = orc.orcamento_itens.map(i => ({ os_id: novaOS.id, tipo: i.tipo, descricao: i.descricao, quantidade: i.quantidade, valor_unitario: i.valor_unitario, valor_total: i.valor_total }));
-            await db.from('ordem_servico_itens').insert(itensOS);
-        }
-
-        await db.from('agendamentos')
-            .update({ status: 'EM EXECUÇÃO' })
-            .eq('id', id)
-            .eq('oficina_id', OFICINA_ATIVA_ID);
-        showToast("O.S. #" + novaOS.id + " aberta!");
-        
-        // Redireciona para a tela de O.S.
+        showToast('Abrindo O.S...', 'info');
+        const { os } = await garantirOrcamentoEOS(id);
+        showToast('O.S. #' + os.id + ' aberta!', 'success');
         setTimeout(() => {
             window.location.href = `os.html?id=${OFICINA_ATIVA_ID}`;
-        }, 1500);
-    } catch(e) { console.error(e); showToast("Erro ao abrir O.S.", "error"); }
+        }, 900);
+    } catch(e) {
+        console.error(e);
+        showToast(e.message || 'Erro ao abrir O.S.', 'error');
+    }
 }
 
 async function gerarOrcamentoFundo(id) {
     try {
-        showToast("Gerando orçamento...", "info");
-        const { data: orcExistente } = await db.from('orcamentos')
-            .select('id')
-            .eq('agendamento_id', id)
+        showToast('Abrindo orçamento...', 'info');
+        const { orcamento } = await garantirOrcamentoEOS(id);
+        showToast('Orçamento #' + orcamento.id + ' aberto', 'success');
+        setTimeout(() => {
+            window.location.href = `orcamentos.html?id=${OFICINA_ATIVA_ID}`;
+        }, 900);
+    } catch (e) {
+        console.error(e);
+        showToast(e.message || 'Erro ao abrir orçamento', 'error');
+    }
+}
+
+function obterTokenAprovacaoOrcamento() {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+        return crypto.randomUUID();
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function limparModalDocumentoAgendamento() {
+    document.getElementById('doc-agenda-cliente').innerText = 'Selecionando...';
+    document.getElementById('doc-agenda-veiculo').innerText = 'Selecionando...';
+    document.getElementById('doc-agenda-descricao').value = '';
+    document.getElementById('doc-agenda-km').value = '';
+}
+
+async function abrirModalDocumentoAgendamento(tipo, id) {
+    try {
+        const tipoNormalizado = tipo === 'os' ? 'os' : 'orcamento';
+        limparModalDocumentoAgendamento();
+
+        const { data: agend, error } = await dbLeituraAgenda.from('agendamentos')
+            .select('*, clientes(nome, telefone), veiculos(marca, modelo, placa, ano, km_atual)')
+            .eq('id', id)
             .eq('oficina_id', OFICINA_ATIVA_ID)
-            .maybeSingle();
-        
-        if (!orcExistente) {
-            const { data: agend } = await db.from('agendamentos')
-                .select('*')
-                .eq('id', id)
-                .eq('oficina_id', OFICINA_ATIVA_ID)
-                .single();
-            const orcPayload = {
-                oficina_id: OFICINA_ATIVA_ID, cliente_id: agend.cliente_id, veiculo_id: agend.veiculo_id,
-                agendamento_id: id, valor_pecas: 0, valor_servicos: 0, valor_total: 0, status: 'Rascunho',
-                token_aprovacao: 'tk-' + Date.now(), observacoes: agend.observacoes
-            };
-            await db.from('orcamentos').insert([orcPayload]);
+            .single();
+        if (error) throw error;
+
+        if (!agend.cliente_id || !agend.veiculo_id) {
+            throw new Error('Este agendamento precisa de cliente e veiculo vinculados antes de gerar documento.');
         }
 
-        await db.from('agendamentos')
-            .update({ status: 'EM ANÁLISE' })
-            .eq('id', id)
-            .eq('oficina_id', OFICINA_ATIVA_ID);
-        showToast("Orçamento gerado", "success");
-        renderizarAgendaExtrato();
-    } catch (e) { console.error(e); showToast("Erro ao atualizar", "error"); }
+        documentoAgendamentoContexto = { tipo: tipoNormalizado, agendamento: agend };
+        document.getElementById('modal-documento-titulo').innerText = tipoNormalizado === 'os' ? 'Gerar O.S.' : 'Gerar Orcamento';
+        document.getElementById('modal-documento-helper').innerText = 'Preencha os dados iniciais. O documento so sera criado apos a confirmacao.';
+        document.getElementById('doc-agenda-cliente').innerText = agend.clientes?.nome || agend.cliente_nome || 'Cliente nao informado';
+        document.getElementById('doc-agenda-veiculo').innerText = agend.veiculos
+            ? `${agend.veiculos.marca || ''} ${agend.veiculos.modelo || ''} ${agend.veiculos.placa ? '[' + agend.veiculos.placa.toUpperCase() + ']' : ''}`.trim()
+            : 'Veiculo nao informado';
+        document.getElementById('doc-agenda-descricao').value = agend.observacoes || '';
+        document.getElementById('doc-agenda-km').value = agend.veiculos?.km_atual || '';
+        document.getElementById('modal-documento-agendamento').classList.add('active');
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    } catch (e) {
+        console.error(e);
+        showToast(e.message || 'Erro ao carregar dados do agendamento.', 'error');
+    }
 }
+
+function fecharModalDocumentoAgendamento() {
+    document.getElementById('modal-documento-agendamento')?.classList.remove('active');
+    documentoAgendamentoContexto = { tipo: null, agendamento: null };
+}
+
+async function confirmarGeracaoDocumentoAgendamento() {
+    const { tipo, agendamento } = documentoAgendamentoContexto;
+    const descricao = document.getElementById('doc-agenda-descricao')?.value.trim();
+    const kmValor = document.getElementById('doc-agenda-km')?.value;
+    const kmEntrada = kmValor ? Number(kmValor) : null;
+
+    if (!tipo || !agendamento?.id) {
+        showToast('Nenhum agendamento selecionado.', 'error');
+        return;
+    }
+    if (!descricao) {
+        showToast('Informe a descricao inicial para gerar o documento.', 'error');
+        return;
+    }
+    if (kmValor && (!Number.isFinite(kmEntrada) || kmEntrada < 0)) {
+        showToast('Informe uma quilometragem valida.', 'error');
+        return;
+    }
+
+    const botao = document.getElementById('btn-confirmar-documento-agenda');
+    const textoOriginal = botao?.innerHTML;
+    if (botao) {
+        botao.disabled = true;
+        botao.innerHTML = '<i data-lucide="loader-2"></i> Gerando...';
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    }
+
+    try {
+        if (tipo === 'orcamento') {
+            const observacoes = kmEntrada !== null
+                ? `${descricao}\n\nKM atual informado na agenda: ${kmEntrada}`
+                : descricao;
+            const { data: orcamentoExistente, error: errBuscaOrc } = await db.from('orcamentos')
+                .select('id')
+                .eq('agendamento_id', agendamento.id)
+                .eq('oficina_id', OFICINA_ATIVA_ID)
+                .maybeSingle();
+            if (errBuscaOrc) throw errBuscaOrc;
+
+            let orcamento = orcamentoExistente;
+            if (!orcamento) {
+                const { data: novoOrcamento, error: errOrc } = await db.from('orcamentos')
+                    .insert([{
+                        oficina_id: OFICINA_ATIVA_ID,
+                        cliente_id: agendamento.cliente_id,
+                        veiculo_id: agendamento.veiculo_id,
+                        agendamento_id: agendamento.id,
+                        valor_pecas: 0,
+                        valor_servicos: 0,
+                        valor_desconto: 0,
+                        valor_total: 0,
+                        status: 'Rascunho',
+                        observacoes,
+                        token_aprovacao: obterTokenAprovacaoOrcamento()
+                    }])
+                    .select('id')
+                    .single();
+                if (errOrc) throw errOrc;
+                orcamento = novoOrcamento;
+            }
+
+            showToast('Orcamento #' + orcamento.id + ' gerado.', 'success');
+            setTimeout(() => {
+                window.location.href = `orcamentos.html?id=${OFICINA_ATIVA_ID}&orcamento_id=${orcamento.id}`;
+            }, 500);
+            return;
+        }
+
+        const { data: osExistente, error: errBuscaOS } = await db.from('ordens_servico')
+            .select('id')
+            .eq('agendamento_id', agendamento.id)
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .maybeSingle();
+        if (errBuscaOS) throw errBuscaOS;
+
+        let os = osExistente;
+        if (!os) {
+            const { data: novaOS, error: errOS } = await db.from('ordens_servico')
+                .insert([{
+                    oficina_id: OFICINA_ATIVA_ID,
+                    cliente_id: agendamento.cliente_id,
+                    veiculo_id: agendamento.veiculo_id,
+                    agendamento_id: agendamento.id,
+                    numero_os: 'OS-' + Date.now(),
+                    km_entrada: kmEntrada,
+                    valor_total: 0,
+                    status: 'aberta',
+                    defeito_relatado: descricao,
+                    observacoes: descricao
+                }])
+                .select('id')
+                .single();
+            if (errOS) throw errOS;
+            os = novaOS;
+        }
+
+        showToast('O.S. #' + os.id + ' gerada.', 'success');
+        setTimeout(() => {
+            window.location.href = `os.html?id=${OFICINA_ATIVA_ID}&os_id=${os.id}`;
+        }, 500);
+    } catch (e) {
+        console.error(e);
+        showToast(e.message || 'Erro ao gerar documento.', 'error');
+        if (botao) {
+            botao.disabled = false;
+            botao.innerHTML = textoOriginal;
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        }
+    }
+}
+
+iniciarOSDiretaFlow = async function(id) {
+    await abrirModalDocumentoAgendamento('os', id);
+};
+
+abrirOS = async function(id) {
+    await iniciarOSDiretaFlow(id);
+};
+
+gerarOrcamentoFundo = async function(id) {
+    await abrirModalDocumentoAgendamento('orcamento', id);
+};
+
+window.abrirModalDocumentoAgendamento = abrirModalDocumentoAgendamento;
+window.fecharModalDocumentoAgendamento = fecharModalDocumentoAgendamento;
+window.confirmarGeracaoDocumentoAgendamento = confirmarGeracaoDocumentoAgendamento;
 
 // --- 3. RENDERIZAÇÃO E FILTROS ---
 
 function mudarFiltroData(tipo) {
     filtroDataAtual = tipo;
-    document.querySelectorAll('.ribbon-btn').forEach(btn => btn.classList.remove('active'));
-    document.getElementById('btn-filtra-' + tipo).classList.add('active');
+    document.querySelectorAll('.filter-btn[data-period]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.period === tipo);
+    });
     renderizarAgendaExtrato();
 }
 
@@ -597,13 +1790,127 @@ async function carregarVeiculosDoCliente(clienteId) {
     veiculos?.forEach(v => sel.innerHTML += `<option value="${v.id}">${v.marca} ${v.modelo} [${v.placa.toUpperCase()}]</option>`);
 }
 
+async function renderizarSlotsHorario({ dataSelecionada, inputId, gridId, noteId, ignorarAgendamentoId = null, bloquearPassado = true }) {
+    const inputHora = document.getElementById(inputId);
+    const grid = document.getElementById(gridId);
+    const nota = document.getElementById(noteId);
+    if (!inputHora || !grid) return;
+
+    inputHora.value = '';
+    grid.innerHTML = '<button type="button" class="slot-btn" disabled>Carregando...</button>';
+    if (nota) nota.textContent = 'Verificando disponibilidade da agenda.';
+
+    if (!dataSelecionada) {
+        grid.innerHTML = '<button type="button" class="slot-btn" disabled>Selecione a data</button>';
+        if (nota) nota.textContent = 'Escolha uma data para carregar os slots.';
+        return;
+    }
+
+    const hoje = obterDataString(0);
+    if (bloquearPassado && dataSelecionada < hoje) {
+        grid.innerHTML = '<button type="button" class="slot-btn" disabled>Data invalida</button>';
+        if (nota) nota.textContent = 'Escolha hoje ou uma data futura.';
+        return;
+    }
+
+    try {
+        const slots = HORARIOS_FIXOS_AGENDA;
+        const { data: agendamentos, error } = await dbLeituraAgenda.from('agendamentos')
+            .select('id, horario, status')
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .eq('servico_data', dataSelecionada);
+        if (error) throw error;
+
+        const ocupados = new Set((agendamentos || [])
+            .filter(a => String(a.id) !== String(ignorarAgendamentoId || ''))
+            .filter(a => statusOcupaHorario(a.status))
+            .map(a => String(a.horario || '').substring(0, 5))
+            .filter(Boolean));
+
+        const agora = new Date();
+        const minutosAgora = (agora.getHours() * 60) + agora.getMinutes();
+        grid.innerHTML = slots.map(slot => {
+            const [h, m] = slot.split(':').map(Number);
+            const minutosSlot = (h * 60) + m;
+            const passadoHoje = bloquearPassado && dataSelecionada === hoje && minutosSlot <= minutosAgora;
+            const ocupado = ocupados.has(slot);
+            const disabled = ocupado || passadoHoje;
+            const label = ocupado ? slot + ' ocupado' : (passadoHoje ? slot + ' passou' : slot);
+            const selected = inputId === 'txt-remarcar-hora' && novoHorario === slot;
+            const onClick = inputId === 'txt-remarcar-hora'
+                ? 'setNovoHorario(\'' + slot + '\'); selecionarSlotHorario(\'' + inputId + '\', \'' + gridId + '\', \'' + slot + '\')'
+                : 'selecionarSlotHorario(\'' + inputId + '\', \'' + gridId + '\', \'' + slot + '\')';
+            return '<button type="button" class="slot-btn slot-horario ' + (disabled ? 'occupied' : '') + ' ' + (selected ? 'selected' : '') + '" data-slot="' + slot + '" ' + (disabled ? 'disabled' : '') + ' onclick="' + onClick + '">' + label + '</button>';
+        }).join('');
+
+        if (nota) nota.textContent = ocupados.size ? 'Slots ocupados aparecem desabilitados.' : 'Todos os slots estao livres nesta data.';
+    } catch (e) {
+        console.error(e);
+        grid.innerHTML = '<button type="button" class="slot-btn" disabled>Erro</button>';
+        if (nota) nota.textContent = 'Nao foi possivel consultar a disponibilidade agora.';
+    }
+}
+
+window.selecionarSlotHorario = function(inputId, gridId, slot) {
+    const inputHora = document.getElementById(inputId);
+    const grid = document.getElementById(gridId);
+    if (inputHora) inputHora.value = slot;
+    if (inputId === 'txt-remarcar-hora') setNovoHorario(slot);
+    if (grid) {
+        grid.querySelectorAll('.slot-btn').forEach(btn => btn.classList.toggle('selected', btn.dataset.slot === slot));
+    }
+};
+
+window.selecionarSlot = function(elemento, horario) {
+    document.querySelectorAll('.slot-horario').forEach(btn => {
+        btn.classList.remove('selected', 'bg-emerald-600', 'text-white');
+    });
+    elemento?.classList.add('selected', 'bg-emerald-600', 'text-white');
+    window.horarioSelecionadoSlot = horario;
+    setNovoHorario(horario);
+};
+
+window.setNovoHorario = function(slot) {
+    novoHorario = slot;
+    const inputHora = document.getElementById('txt-remarcar-hora');
+    if (inputHora) inputHora.value = slot;
+};
+
+window.setNovaDataRemarcacao = function(valor) {
+    novaData = valor;
+    novoHorario = '';
+    const inputHora = document.getElementById('txt-remarcar-hora');
+    if (inputHora) inputHora.value = '';
+    carregarHorariosDisponiveisRemarcacao(valor);
+};
+
+window.carregarHorariosDisponiveisManual = async function(dataSelecionada) {
+    await renderizarSlotsHorario({
+        dataSelecionada,
+        inputId: 'sel-manual-hora',
+        gridId: 'manual-hora-slots',
+        noteId: 'manual-hora-note'
+    });
+};
+
+window.carregarHorariosDisponiveisRemarcacao = async function(dataSelecionada) {
+    await renderizarSlotsHorario({
+        dataSelecionada,
+        inputId: 'txt-remarcar-hora',
+        gridId: 'remarcar-hora-slots',
+        noteId: 'remarcar-hora-note',
+        ignorarAgendamentoId: agendamentoRemarcacaoId
+    });
+};
+
 async function salvarAgendamentoManual() {
     const cId = document.getElementById('sel-manual-cliente').value;
     const d = document.getElementById('txt-manual-data').value;
-    const h = document.getElementById('txt-manual-hora').value;
+    const h = document.getElementById('sel-manual-hora').value;
     if(!cId || !d || !h) { showToast("Preencha campos obrigatórios", "error"); return; }
+    if (d < obterDataString(0)) { showToast("Data nao pode ser anterior a hoje", "error"); return; }
     try {
-        const payload = { oficina_id: OFICINA_ATIVA_ID, cliente_id: parseInt(cId), veiculo_id: document.getElementById('sel-manual-veiculo').value || null,
+        const payload = { oficina_id: OFICINA_ATIVA_ID, cliente_id: cId, veiculo_id: document.getElementById('sel-manual-veiculo').value || null,
             servico_data: d, horario: h + ':00', servico_tipo: document.getElementById('txt-manual-tipo').value || 'Geral',
             status: 'Aguardando', observacoes: document.getElementById('txt-manual-obs').value || null };
         await db.from('agendamentos').insert([payload]);
@@ -629,31 +1936,55 @@ async function salvarClienteRapido() {
     } catch(e) { showToast("Erro ao salvar cliente", "error"); }
 }
 
-async function renderizarAgendaExtrato() {
+async function renderizarAgendaExtrato(listaOverride = null) {
+    const container = document.getElementById('container-extrato-agenda');
+    const totalRegistros = document.getElementById('lbl-total-registros');
+    const syncStatus = document.getElementById('sync-status-label');
+
     try {
         const hj = obterDataString(0), am = obterDataString(1), st = obterDataString(7);
-        let query = db.from('agendamentos').select('*, clientes(nome), veiculos(marca, modelo, placa, ano), orcamentos(id, status)').eq('oficina_id', OFICINA_ATIVA_ID);
-        if (filtroDataAtual === 'hoje') query = query.eq('servico_data', hj);
-        else if (filtroDataAtual === 'amanha') query = query.eq('servico_data', am);
-        else if (filtroDataAtual === '7dias') query = query.gte('servico_data', hj).lte('servico_data', st);
-        const { data: lista, error: errQuery } = await query.order('servico_data').order('horario');
-        
-        if (errQuery) throw errQuery;
+        let lista = listaOverride;
+        if (!lista) {
+            let query = dbLeituraAgenda.from('agendamentos')
+                .select('*, clientes(nome), veiculos(marca, modelo, placa, ano), orcamentos(id, status)')
+                .eq('oficina_id', OFICINA_ATIVA_ID);
+            if (filtroDataAtual === 'hoje') query = query.eq('servico_data', hj);
+            else if (filtroDataAtual === 'semana') query = query.gte('servico_data', hj).lte('servico_data', st);
+            const { data, error: errQuery } = await query.order('servico_data').order('horario');
+            if (errQuery) {
+                console.warn('Erro na query completa da agenda, tentando fallback simples:', errQuery);
+                let fallbackQuery = dbLeituraAgenda.from('agendamentos')
+                    .select('*')
+                    .eq('oficina_id', OFICINA_ATIVA_ID);
+                if (filtroDataAtual === 'hoje') fallbackQuery = fallbackQuery.eq('servico_data', hj);
+                else if (filtroDataAtual === 'semana') fallbackQuery = fallbackQuery.gte('servico_data', hj).lte('servico_data', st);
+                const { data: fallbackData, error: fallbackError } = await fallbackQuery.order('servico_data').order('horario');
+                if (fallbackError) throw fallbackError;
+                lista = fallbackData || [];
+            } else {
+                lista = data || [];
+            }
+            agendamentosEstado = lista;
+        }
 
-        const container = document.getElementById('container-extrato-agenda');
         container.innerHTML = '';
-        document.getElementById('lbl-total-registros').innerText = `${lista?.length || 0} registro(s)`;
+        if (totalRegistros) totalRegistros.innerText = `${lista?.length || 0} registro(s)`;
 
         // Atualiza status de sincronização
-        const syncStatus = document.getElementById('sync-status-label');
         if (syncStatus) {
-            syncStatus.innerText = "Sincronizado agora";
+            syncStatus.innerText = `Sincronizado agora - oficina ${OFICINA_ATIVA_ID}`;
             syncStatus.parentElement.style.color = "var(--brand-green)";
         }
 
-        if (!lista?.length) { container.innerHTML = '<p style="text-align:center; padding:40px;">Nada agendado.</p>'; return; }
+        if (!lista?.length) {
+            const mensagemVazia = filtroDataAtual === 'hoje'
+                ? 'Sem agendamentos para hoje'
+                : (filtroDataAtual === 'semana' ? 'Sem agendamentos para esta semana' : 'Sem agendamentos');
+            container.innerHTML = `<p style="text-align:center; padding:40px;">${mensagemVazia}</p>`;
+            return;
+        }
 
-        const grupos = {};
+const grupos = {};
         lista.forEach(i => { const d = i.servico_data; if(!grupos[d]) grupos[d] = []; grupos[d].push(i); });
 
         const agora = new Date();
@@ -663,62 +1994,97 @@ async function renderizarAgendaExtrato() {
             let label = formatarDataBR(dKey);
             if(dKey === hj) label = "Hoje"; else if(dKey === am) label = "Amanhã";
             container.innerHTML += `<div class="extrato-group-header"><span>${label}</span><div class="divisoria-linha"></div></div>`;
-            let bloco = `<div class="agenda-table-card"><div class="table-header-row"><div>Hora/Data</div><div>Serviço</div><div>Cliente/Veículo</div><div>Status</div><div>Obs</div><div style="text-align:right;">Ação</div></div>`;
+            let bloco = `<div class="agenda-table-card"><div class="table-header-row"><div>Hora/Data</div><div>Serviço</div><div>Cliente/Veículo</div><div>Status</div><div style="text-align:right;">Ações</div></div>`;
 
             grupos[dKey].forEach(item => {
                 const sL = String(item.status || '').toLowerCase();
                 const isAg = sL.includes('aguard');
+                const isCancelado = sL.includes('cancel');
                 const orc = item.orcamentos?.[0];
                 const oS = orc?.status?.toLowerCase();
                 
                 // Lógica de Horário Crítico (Somente para hoje e status aguardando)
                 let classeCritica = "";
+                let classeStatusPrazo = "";
                 if (isAg && dKey === hj && item.horario) {
                     const [h, m] = item.horario.split(':').map(Number);
                     const horaAgendadaMinutos = (h * 60) + m;
-                    // Se o horário já passou ou faltam menos de 15 minutos
-                    if (horaAgendadaMinutos <= (horaAtualMinutos + 15)) {
-                        classeCritica = "critical-time";
+                    if (horaAgendadaMinutos < horaAtualMinutos) {
+                        classeCritica = "expired-time";
+                        classeStatusPrazo = " status-expired-time";
+                    } else if (horaAgendadaMinutos <= (horaAtualMinutos + 15)) {
+                        classeCritica = "due-soon";
+                        classeStatusPrazo = " status-due-soon";
                     }
-                }
-
-                // Lógica de Observações Vazias
-                let obsText = item.observacoes;
-                let obsClass = "";
-                if (!obsText || obsText.trim() === "" || obsText.trim() === "---") {
-                    obsText = '<span class="empty-obs">Sem observações</span>';
-                }
-
-                const agendamentoIdSeguro = JSON.stringify(item.id);
-                let btn = `
-                    <button class="btn-row-action start" onclick="window.abrirModalAtendimento(${agendamentoIdSeguro})"><i data-lucide="play-circle"></i> Iniciar atendimento</button>
-                    <button class="btn-row-action reschedule" onclick="window.abrirModalRemarcacao(${agendamentoIdSeguro})"><i data-lucide="calendar-clock"></i> Remarcar</button>
-                    <button class="btn-row-action cancel" onclick="window.cancelarAgendamento(${agendamentoIdSeguro})"><i data-lucide="x-circle"></i> Cancelar</button>
-                `;
-                if (sL.includes('execução') || sL.includes('pátio') || sL.includes('aberta')) {
-                    btn = `<button class="btn-row-action os" onclick="window.location.href='os.html?id=${OFICINA_ATIVA_ID}'"><i data-lucide="wrench"></i> Ver O.S.</button>`;
-                } else if (sL.includes('cancel') || sL.includes('remarc') || sL.includes('faltou') || sL.includes('conclu') || sL.includes('entreg')) {
-                    btn = `<span class="btn-row-action done"><i data-lucide="history"></i> Registrado</span>`;
                 }
 
                 // Pendência: Agendamentos vencidos há mais de 1 hora sem orçamento, O.S., remarcação ou cancelamento devem virar FALTOU automaticamente via automação futura.
 
-                const badge = oS === 'enviado' ? '<span class="badge-waiting-accept">Aguardando Aceite</span>' : '';
+                const badge = oS === 'enviado' ? '<span class="status-badge status-info">Aguardando Aceite</span>' : '';
+                const classeLinha = isCancelado ? ' is-cancelled' : '';
+                const acoesPrincipais = isCancelado
+                    ? `<button type="button" class="agenda-action-btn budget disabled" disabled><i data-lucide="calculator"></i> Abrir Orçamento</button>
+                        <button type="button" class="agenda-action-btn os disabled" disabled><i data-lucide="wrench"></i> Abrir O.S.</button>`
+                    : `<button type="button" class="agenda-action-btn budget" onclick="gerarOrcamentoFundo('${item.id}')"><i data-lucide="calculator"></i> Abrir Orçamento</button>
+                        <button type="button" class="agenda-action-btn os" onclick="iniciarOSDiretaFlow('${item.id}')"><i data-lucide="wrench"></i> Abrir O.S.</button>`;
 
-                bloco += `<div class="table-row">
+                bloco += `<div class="table-row${classeLinha}">
                     <div class="col-time ${classeCritica}"><span class="clock">${item.horario?.substring(0,5)}</span><span class="date">${formatarDataBR(item.servico_data)}</span></div>
-                    <div class="col-type">${item.servico_tipo}</div>
-                    <div class="col-vinc"><span class="client">${item.clientes?.nome || item.cliente_nome}</span><div class="car-info-row">${item.veiculos ? item.veiculos.marca + ' ' + item.veiculos.modelo : '---'}</div></div>
-                    <div class="col-status"><span class="status-badge ${isAg?'aguardando':''}">${item.status}</span></div>
-                    <div class="col-obs" title="${item.observacoes||''}"><i>${obsText}</i></div>
-                    <div class="col-actions">${badge}${btn}</div>
+                    <div class="col-type">${item.servico_tipo || 'Geral'}</div>
+                    <div class="col-vinc"><span class="client">${item.clientes?.nome || item.cliente_nome || 'Cliente não informado'}</span><div class="car-info-row">${item.veiculos ? item.veiculos.marca + ' ' + item.veiculos.modelo : 'Check-in pendente'}</div></div>
+                    <div class="col-status">${badge}<span class="status-badge ${statusSistemaClasse(item.status)}${classeStatusPrazo}">${item.status}</span></div>
+                    <div class="col-actions relative">
+                        ${acoesPrincipais}
+                        <div class="agenda-menu-wrap">
+                            <button type="button" class="agenda-action-btn agenda-menu-button" onclick="toggleAgendaMenu('${item.id}')" aria-label="Ações secundárias"><i data-lucide="more-horizontal"></i></button>
+                            <div class="agenda-context-menu absolute right-0 mt-2 z-50 w-44 rounded-md shadow-lg bg-slate-800 ring-1 ring-black ring-opacity-5" id="agenda-menu-${item.id}">
+                                <button type="button" onclick="abrirModalRemarcacao('${item.id}')"><i data-lucide="calendar-clock"></i> Remarcar</button>
+                                <button type="button" class="danger" onclick="handleCancelar('${item.id}')"><i data-lucide="ban"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>`;
             });
             container.innerHTML += bloco + `</div>`;
         }
         lucide.createIcons();
-    } catch (e) { console.error(e); }
+    } catch (e) {
+        console.error('Erro ao renderizar agenda:', e);
+        if (container) {
+            container.innerHTML = `<p style="text-align:center; padding:40px; color:#fca5a5;">Erro ao carregar a agenda: ${e.message || 'falha desconhecida'}.</p>`;
+        }
+        if (totalRegistros) totalRegistros.innerText = 'Erro';
+        if (syncStatus) {
+            syncStatus.innerText = 'Falha ao sincronizar';
+            syncStatus.parentElement.style.color = '#fca5a5';
+        }
+        if (typeof showToast === 'function') showToast('Erro ao carregar a agenda. Veja o console.', 'error');
+    }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    atualizarPreviewLinkAgendamento();
+
+    const campoWhatsApp = document.getElementById('txt-link-whatsapp');
+    if (campoWhatsApp) {
+        campoWhatsApp.addEventListener('input', () => {
+            campoWhatsApp.value = formatarTelefoneWhatsApp(campoWhatsApp.value);
+            atualizarPreviewLinkAgendamento();
+        });
+    }
+
+    const campoClienteWhatsApp = document.getElementById('txt-novo-cli-telefone');
+    if (campoClienteWhatsApp) {
+        campoClienteWhatsApp.addEventListener('input', () => {
+            campoClienteWhatsApp.value = formatarTelefoneWhatsApp(campoClienteWhatsApp.value);
+        });
+    }
+
+    const campoDataManual = document.getElementById('txt-manual-data');
+    if (campoDataManual) {
+        campoDataManual.min = obterDataString(0);
+    }
+});
 
 window.onload = () => renderizarAgendaExtrato();
 
@@ -726,6 +2092,14 @@ window.onload = () => renderizarAgendaExtrato();
 window.fecharModalManual = () => document.getElementById('modal-novo-manual').classList.remove('active');
 window.fecharModalRapidoCliente = () => document.getElementById('modal-rapido-cliente').classList.remove('active');
 window.fecharModalLink = () => document.getElementById('modal-enviar-link').classList.remove('active');
+
+document.addEventListener('click', (event) => {
+    const clicouDisparador = event.target.closest('.btn-acoes, .btn-dropdown-toggle, .agenda-menu-button, .agenda-action-btn.agenda-menu-button');
+    const clicouMenu = event.target.closest('.dropdown-menu, .dropdown-actions, .agenda-context-menu');
+    if (clicouDisparador || clicouMenu) return;
+    document.querySelectorAll('.dropdown-menu, .dropdown-actions, .agenda-context-menu').forEach(menu => menu.classList.remove('active', 'show'));
+    document.querySelectorAll('.table-row.menu-open').forEach(row => row.classList.remove('menu-open'));
+});
 
 </script>
 

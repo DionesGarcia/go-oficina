@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>GO Oficina — Checklists</title>
-  <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
-
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
@@ -17,6 +16,7 @@
   <script src="js/components.js"></script>
 
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/design-system.css">
 
   <style>
     .main-content {
@@ -526,9 +526,25 @@
 
         <div class="form-group">
           <label>Veículo *</label>
-          <select id="chk-veiculo" class="input">
+          <select id="chk-veiculo" class="input" onchange="preencherDadosVeiculoChecklist(this.value)">
             <option value="">Selecione um cliente primeiro</option>
           </select>
+        </div>
+        <div class="section-title">Dados do Veiculo</div>
+
+        <div class="form-group">
+          <label>Carro *</label>
+          <input type="text" id="chk-carro" class="input" placeholder="Ex: Honda Civic">
+        </div>
+
+        <div class="form-group">
+          <label>Placa *</label>
+          <input type="text" id="chk-placa" class="input" placeholder="Ex: ABC1D23" style="text-transform:uppercase;">
+        </div>
+
+        <div class="form-group">
+          <label>Possivel Defeito / Relato</label>
+          <textarea id="chk-observacoes" class="input" rows="4" placeholder="Ex: Cliente relata barulho na suspensao dianteira..."></textarea>
         </div>
 
         <div class="section-title">Dados Conferidos</div>
@@ -536,11 +552,6 @@
         <div class="form-group">
           <label>KM Atual *</label>
           <input type="number" id="chk-km" class="input" placeholder="Ex: 85000">
-        </div>
-
-        <div class="form-group">
-          <label>Placa Conferida</label>
-          <input type="text" id="chk-placa" class="input" placeholder="Ex: ABC1D23" style="text-transform:uppercase;">
         </div>
 
         <div class="form-group">
@@ -569,11 +580,6 @@
           <label class="check-option"><input type="checkbox" id="chk-objetos"> Objetos internos</label>
           <label class="check-option"><input type="checkbox" id="chk-estepe"> Estepe</label>
           <label class="check-option"><input type="checkbox" id="chk-chave"> Chave reserva</label>
-        </div>
-
-        <div class="form-group" style="margin-top:14px;">
-          <label>Observações</label>
-          <textarea id="chk-observacoes" class="input" rows="4" placeholder="Ex: Para-choque dianteiro já estava riscado..."></textarea>
         </div>
       </div>
 
@@ -623,11 +629,12 @@
   </div>
 </div>
 
-<script>
+  <script>
 'use strict';
 
 let cacheChecklists = [];
 let checklistSelecionado = null;
+let cacheVeiculosChecklist = [];
 
 window.onload = async () => {
   await carregarChecklists();
@@ -719,7 +726,8 @@ async function abrirModalChecklist() {
     if (error) throw error;
 
     const sel = document.getElementById('chk-cliente');
-    sel.innerHTML = '<option value="">Selecione um cliente</option>';
+    cacheVeiculosChecklist = data || [];
+    sel.innerHTML = '<option value="">Novo veiculo / informar no check-in</option>';
 
     data.forEach(c => {
       sel.innerHTML += `<option value="${c.id}">${c.nome} — ${c.telefone || ''}</option>`;
@@ -738,6 +746,8 @@ function fecharModalChecklist() {
 function limparModalChecklist() {
   document.getElementById('chk-cliente').innerHTML = '<option value="">Carregando clientes...</option>';
   document.getElementById('chk-veiculo').innerHTML = '<option value="">Selecione um cliente primeiro</option>';
+  cacheVeiculosChecklist = [];
+  document.getElementById('chk-carro').value = '';
   document.getElementById('chk-km').value = '';
   document.getElementById('chk-placa').value = '';
   document.getElementById('chk-cor').value = '';
@@ -789,15 +799,63 @@ async function carregarVeiculosClienteChecklist(clienteId) {
   }
 }
 
+function preencherDadosVeiculoChecklist(veiculoId) {
+  const veiculo = cacheVeiculosChecklist.find(v => String(v.id) === String(veiculoId));
+  if (!veiculo) return;
+
+  document.getElementById('chk-carro').value = [veiculo.marca, veiculo.modelo].filter(Boolean).join(' ');
+  document.getElementById('chk-placa').value = veiculo.placa || '';
+  document.getElementById('chk-cor').value = veiculo.cor || '';
+}
+
+function dividirCarroChecklist(carro) {
+  const partes = carro.trim().split(/\s+/);
+  return {
+    marca: partes.shift() || 'Veiculo',
+    modelo: partes.join(' ') || 'Nao informado'
+  };
+}
+
+async function garantirVeiculoChecklist(clienteId, veiculoId, carro, placa, cor) {
+  const dadosCarro = dividirCarroChecklist(carro);
+
+  if (veiculoId) {
+    await atualizarVeiculoDepoisChecklist(veiculoId, null, placa, cor, dadosCarro);
+    return veiculoId;
+  }
+
+  const { data, error } = await db
+    .from('veiculos')
+    .insert([{
+      oficina_id: OFICINA_ATIVA_ID,
+      cliente_id: clienteId,
+      marca: dadosCarro.marca,
+      modelo: dadosCarro.modelo,
+      placa,
+      cor: cor || null
+    }])
+    .select('id')
+    .single();
+
+  if (error) throw error;
+  return data.id;
+}
+
 async function salvarChecklist() {
   const clienteId = document.getElementById('chk-cliente').value;
-  const veiculoId = document.getElementById('chk-veiculo').value;
+  const veiculoSelecionadoId = document.getElementById('chk-veiculo').value;
+  const carro = document.getElementById('chk-carro').value.trim();
   const km = document.getElementById('chk-km').value;
   const placa = document.getElementById('chk-placa').value.trim().toUpperCase();
   const cor = document.getElementById('chk-cor').value.trim();
 
-  if (!clienteId || !veiculoId) {
-    showToast('Selecione cliente e veículo.', 'error');
+  if (!clienteId) {
+    showToast('Selecione o cliente.', 'error');
+    return;
+  }
+
+  if (!carro || placa.length < 7) {
+    showToast('Informe carro e placa para vincular o historico do veiculo.', 'error');
     return;
   }
 
@@ -808,6 +866,8 @@ async function salvarChecklist() {
 
   try {
     showToast('Salvando checklist...', 'info');
+
+    const veiculoId = await garantirVeiculoChecklist(clienteId, veiculoSelecionadoId, carro, placa, cor);
 
     const payloadChecklist = {
       oficina_id: OFICINA_ATIVA_ID,
@@ -834,7 +894,7 @@ async function salvarChecklist() {
 
     if (errChecklist) throw errChecklist;
 
-    await atualizarVeiculoDepoisChecklist(veiculoId, km, placa, cor);
+    await atualizarVeiculoDepoisChecklist(veiculoId, km, placa, cor, dividirCarroChecklist(carro));
     await salvarFotosChecklist(checklist.id);
 
     showToast('Checklist salvo com sucesso!');
@@ -847,13 +907,14 @@ async function salvarChecklist() {
   }
 }
 
-async function atualizarVeiculoDepoisChecklist(veiculoId, km, placa, cor) {
-  const payload = {
-    km_atual: parseInt(km)
-  };
+async function atualizarVeiculoDepoisChecklist(veiculoId, km, placa, cor, dadosCarro = null) {
+  const payload = {};
 
+  if (km) payload.km_atual = parseInt(km);
   if (placa) payload.placa = placa;
   if (cor) payload.cor = cor;
+  if (dadosCarro?.marca) payload.marca = dadosCarro.marca;
+  if (dadosCarro?.modelo) payload.modelo = dadosCarro.modelo;
 
   const { error } = await db
     .from('veiculos')

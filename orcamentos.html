@@ -1,12 +1,10 @@
-2026<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>GO Oficina — Orçamentos</title>
-
-  <link rel="icon" type="image/svg+xml" href="favicon-go.svg">
-
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -20,45 +18,75 @@
   <script src="js/orcamento.js"></script>
 
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/design-system.css">
 
   <style>
-    /* ================= CONTEÚDO PRINCIPAL ================= */
-    .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; }
+    /* ================= CONTEUDO PRINCIPAL ================= */
+    .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100%; background: #f8fafc; }
 
-    .topbar { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; border-bottom: 1px solid var(--border-color); background: #070a0f; }
-    .topbar-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-    .topbar-titles h2 { font-size: 21px; font-weight: 700; color: var(--text-bright); letter-spacing: -0.02em; }
-    
+    .topbar { padding: 18px 24px; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; border-bottom: 1px solid #e5e7eb; background: #ffffff; }
+    .topbar-header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; gap: 18px; }
+    .topbar-titles h2 { font-size: 21px; font-weight: 800; color: #0f172a; letter-spacing: 0; }
+    .topbar-actions { display: flex; align-items: center; gap: 10px; padding-top: 2px; }
+
     /* FILTROS POR STATUS */
-    .status-filters { display: flex; gap: 8px; align-items: center; margin-top: 8px; flex-wrap: wrap; }
-    .filter-btn { background: #121824; border: 1px solid var(--border-color); color: var(--text-main); font-size: 13px; font-weight: 600; padding: 6px 16px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
-    .filter-btn:hover { background: #1a2334; color: #fff; border-color: #475569; }
-    .filter-btn.active { background: rgba(255, 90, 0, 0.12); border-color: var(--brand-orange); color: var(--brand-orange); font-weight: 700; }
+    .status-filters { display: flex; gap: 12px; align-items: center; margin-top: 14px; flex-wrap: wrap; }
+    .filter-btn { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #ffffff; border: 1px solid #dbe3ee; color: #475569; font-size: 13px; font-weight: 750; padding: 0 17px; border-radius: 999px; cursor: pointer; transition: all 0.18s ease; box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04); }
+    .filter-btn i { width: 15px; height: 15px; color: #94a3b8; stroke-width: 2.2; }
+    .filter-btn:hover { background: #f8fafc; color: #0f172a; border-color: #b7c4d6; transform: translateY(-1px); box-shadow: 0 12px 24px rgba(15, 23, 42, 0.07); }
+    .filter-btn.active { background: #dcfce7; border-color: #86efac; color: #047857; font-weight: 850; box-shadow: 0 12px 24px rgba(22, 163, 74, 0.12), inset 0 0 0 1px rgba(255,255,255,0.45); }
+    .filter-btn.active i { color: #16a34a; }
+
+    .btn-top-action { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 0 18px; border-radius: 8px; border: 1px solid #00c853; background: #00a94f; color: #ffffff; font-size: 13px; font-weight: 850; cursor: pointer; box-shadow: 0 14px 28px rgba(0, 169, 79, 0.24); transition: all 0.18s ease; white-space: nowrap; }
+    .btn-top-action i { width: 18px; height: 18px; stroke-width: 2.4; }
+    .btn-top-action:hover { background: #00c853; color: #ffffff; transform: translateY(-1px); box-shadow: 0 18px 34px rgba(0, 169, 79, 0.3); }
 
     /* CONTAINER DA LISTA */
-    .content-body { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+    .content-body { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 20px; background: #f8fafc; }
 
     /* CARD DA TABELA */
-    .orcamento-table-card { background: #0b0e14; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
-    
-    .table-row { display: grid; grid-template-columns: 100px 1.5fr 1.5fr 120px 120px 150px; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--border-color); transition: background 0.15s; font-size: 14px; }
-    .table-row:last-child { border-bottom: none; }
-    .table-row:hover { background: rgba(255,255,255,0.01); }
+    .orcamento-table-card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.07); }
 
-    .table-header-row { display: grid; grid-template-columns: 100px 1.5fr 1.5fr 120px 120px 150px; align-items: center; padding: 14px 16px; background: #0e121b; border-bottom: 1px solid var(--border-color); font-size: 12px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.03em; }
+    .table-row { display: grid; grid-template-columns: 96px minmax(180px, 1.25fr) minmax(160px, 1fr) 126px 118px minmax(300px, 340px); align-items: center; gap: 14px; min-height: 74px; padding: 12px 16px; border-bottom: 1px solid #edf0f5; transition: background 0.15s ease, box-shadow 0.15s ease; font-size: 14px; }
+    .table-row:last-child { border-bottom: none; }
+    .table-row:hover { background: #f8fafc; box-shadow: inset 3px 0 0 rgba(22, 163, 74, 0.55); }
+
+    .table-header-row { display: grid; grid-template-columns: 96px minmax(180px, 1.25fr) minmax(160px, 1fr) 126px 118px minmax(300px, 340px); align-items: center; gap: 14px; padding: 13px 16px; background: #f1f5f9; border-bottom: 1px solid #e5e7eb; font-size: 11px; font-weight: 850; text-transform: uppercase; color: #64748b; letter-spacing: 0.04em; }
+    .table-header-row > div:nth-child(4) { text-align: right; }
+
+    .budget-id { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+    .budget-id-number { display: none; }
+    .budget-date { color: #fb923c; font-size: 12px; font-weight: 850; line-height: 1.15; }
+    .budget-client { color: #0f172a; font-size: 14px; font-weight: 850; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .budget-vehicle { display: flex; flex-direction: column; gap: 2px; min-width: 0; color: #334155; }
+    .budget-vehicle-main { font-size: 13px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .budget-plate { color: #94a3b8; font-size: 11px; font-weight: 750; text-transform: uppercase; letter-spacing: 0.04em; }
+    .budget-value { color: #334155; font-size: 14px; font-weight: 850; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .budget-value.aprovado { color: #047857; }
+    .budget-value.cancelado { color: #b91c1c; }
 
     .col-status-badge { display: flex; justify-content: flex-start; }
-    .status-badge { font-size: 11px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; border: 1px solid var(--border-color); }
-    .status-badge.rascunho { color: #94a3b8; background: rgba(148, 163, 184, 0.1); border-color: rgba(148, 163, 184, 0.2); }
-    .status-badge.enviado { color: var(--brand-blue); background: rgba(0, 176, 255, 0.1); border-color: rgba(0, 176, 255, 0.2); }
-    .status-badge.aprovado { color: var(--brand-green); background: rgba(0, 230, 118, 0.1); border-color: rgba(0, 230, 118, 0.2); }
-    .status-badge.aprovado_manual { color: var(--brand-whatsapp); background: rgba(37, 211, 102, 0.1); border-color: rgba(37, 211, 102, 0.2); }
-    .status-badge.cancelado { color: #ef4444; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.2); }
 
-    .col-actions { display: flex; gap: 6px; justify-content: flex-end; }
-    .btn-action-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background: #1a2233; border: 1px solid var(--border-color); color: var(--text-bright); border-radius: 6px; cursor: pointer; transition: all 0.2s; }
-    .btn-action-icon:hover { background: #24304a; color: var(--brand-orange); border-color: var(--brand-orange); }
-    .btn-action-icon.manual-approve:hover { color: var(--brand-green); border-color: var(--brand-green); }
+    .col-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; justify-content: stretch; align-items: center; min-width: 0; }
+    .btn-action-icon { width: 100% !important; min-width: 0 !important; height: 34px; padding: 0 9px !important; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #ffffff; border: 1px solid #cbd5e1; color: #334155; border-radius: 7px; cursor: pointer; transition: all 0.18s ease; box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06); font-size: 11px; font-weight: 850; line-height: 1; text-decoration: none; white-space: nowrap; }
+    .btn-action-icon i { width: 14px; height: 14px; stroke-width: 2.45; flex: 0 0 auto; }
+    .btn-action-icon span { display: inline; overflow: hidden; text-overflow: ellipsis; }
+    .btn-action-icon:hover { background: #f8fafc; color: #047857; border-color: #86efac; transform: translateY(-1px); box-shadow: 0 10px 20px rgba(15, 23, 42, 0.07); }
+    .btn-action-icon.view { color: #0f766e; border-color: rgba(15, 118, 110, 0.38); background: rgba(20, 184, 166, 0.08); }
+    .btn-action-icon.print { color: #1d4ed8; border-color: rgba(29, 78, 216, 0.32); background: rgba(59, 130, 246, 0.08); }
+    .btn-action-icon.edit { color: #c2410c; border-color: rgba(194, 65, 12, 0.34); background: rgba(249, 115, 22, 0.08); }
+    .btn-action-icon.send { color: #047857; border-color: rgba(4, 120, 87, 0.34); background: rgba(16, 185, 129, 0.08); }
+    .btn-action-icon.manual-approve { color: #166534; border-color: rgba(22, 101, 52, 0.36); background: rgba(34, 197, 94, 0.1); }
+    .btn-action-icon.generate-os { color: #0369a1; border-color: rgba(3, 105, 161, 0.34); background: rgba(14, 165, 233, 0.08); }
+    .btn-action-icon.view:hover { color: #ffffff; border-color: #14b8a6; background: #0f766e; }
+    .btn-action-icon.print:hover { color: #ffffff; border-color: #60a5fa; background: #1d4ed8; }
+    .btn-action-icon.edit:hover { color: #ffffff; border-color: #fb923c; background: #c2410c; }
+    .btn-action-icon.send:hover { color: #ffffff; border-color: #34d399; background: #047857; }
+    .btn-action-icon.manual-approve:hover { color: #ffffff; border-color: #4ade80; background: #15803d; }
+    .btn-action-icon.generate-os:hover { color: #ffffff; border-color: #38bdf8; background: #0369a1; }
+    .orcamento-context-card { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; gap: 12px; align-items: end; background: #0e121b; border: 1px solid var(--border-color); border-radius: 8px; padding: 14px; }
+    .orcamento-context-card .btn-inline-add { height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 12px; border-radius: 7px; border: 1px solid rgba(96, 165, 250, 0.35); background: rgba(96, 165, 250, 0.1); color: #bfdbfe; font-weight: 800; font-size: 12px; text-decoration: none; white-space: nowrap; }
+    .orcamento-context-card .btn-inline-add:hover { background: rgba(96, 165, 250, 0.18); color: #ffffff; }
 
     /* ESTILOS DO MODAL DE NOVO ORÇAMENTO (ADAPTADO DO DRAWER) */
     .modal-orcamento { max-width: 800px; width: 95%; }
@@ -73,7 +101,7 @@
     .secao-titulo { font-size: 12px; font-weight: 700; color: var(--brand-orange); text-transform: uppercase; }
 
     .form-item-add { display: grid; grid-template-columns: 100px 1fr 80px 120px 40px; gap: 10px; align-items: flex-end; }
-    .btn-add-item { height: 38px; width: 40px; background: var(--brand-green); border: none; color: #000; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-add-item { height: 38px; width: 40px; background: #00a94f; border: none; color: #ffffff; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     
     .tabela-itens { width: 100%; border-collapse: collapse; margin-top: 10px; }
     .tabela-itens th { text-align: left; font-size: 11px; color: var(--text-muted); text-transform: uppercase; padding: 8px; border-bottom: 1px solid var(--border-color); }
@@ -81,7 +109,7 @@
     
     .badge-tipo { font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
     .badge-tipo.peça { background: rgba(0, 176, 255, 0.15); color: var(--brand-blue); }
-    .badge-tipo.serviço { background: rgba(255, 214, 0, 0.15); color: var(--brand-yellow); }
+    .badge-tipo.serviço { background: #eef2ff; color: #3730a3; }
 
     .resumo-financeiro { background: #0e121b; border-top: 1px solid var(--border-color); padding: 20px; display: flex; flex-direction: column; gap: 10px; }
     .fin-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--text-muted); }
@@ -91,6 +119,69 @@
     .btn-save-orcamento:hover { background: #e04f00; }
 
     .btn-remove-item { background: none; border: none; color: #ef4444; cursor: pointer; }
+
+    body.theme-dark .main-content { background: var(--bg-main); }
+    body.theme-dark .topbar { background: #070a0f; border-bottom-color: var(--border-color); }
+    body.theme-dark .topbar-titles h2 { color: var(--text-bright); }
+    body.theme-dark .content-body { background: var(--bg-main); }
+    body.theme-dark .filter-btn { background: #121824; border-color: var(--border-color); color: var(--text-main); box-shadow: none; }
+    body.theme-dark .filter-btn:hover { background: #1a2334; color: #fff; border-color: #475569; }
+    body.theme-dark .filter-btn.active { background: rgba(0, 230, 118, 0.12); border-color: rgba(0, 230, 118, 0.36); color: var(--brand-green); }
+    body.theme-dark .orcamento-table-card { background: #101827; border-color: #1f2a3d; box-shadow: none; }
+    body.theme-dark .table-header-row { background: #111c2b; border-bottom-color: #1f2a3d; color: #94a3b8; }
+    body.theme-dark .table-row { border-bottom-color: #1f2a3d; }
+    body.theme-dark .table-row:hover { background: rgba(15, 23, 42, 0.7); }
+    body.theme-dark .budget-client { color: #f8fafc; }
+    body.theme-dark .budget-vehicle { color: #cbd5e1; }
+    body.theme-dark .budget-value { color: #e5edf7; }
+    body.theme-dark .btn-action-icon { background: #172033; border-color: #3f4f68; color: #e5edf7; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); }
+    body.theme-dark .btn-action-icon i { color: inherit; stroke: currentColor; }
+    body.theme-dark .btn-action-icon.view { color: #99f6e4; border-color: rgba(45, 212, 191, 0.34); background: rgba(20, 184, 166, 0.12); }
+    body.theme-dark .btn-action-icon.print { color: #bfdbfe; border-color: rgba(96, 165, 250, 0.34); background: rgba(59, 130, 246, 0.12); }
+    body.theme-dark .btn-action-icon.edit { color: #fed7aa; border-color: rgba(251, 146, 60, 0.34); background: rgba(249, 115, 22, 0.13); }
+    body.theme-dark .btn-action-icon.send { color: #bbf7d0; border-color: rgba(52, 211, 153, 0.34); background: rgba(16, 185, 129, 0.12); }
+    body.theme-dark .btn-action-icon.manual-approve { color: #bbf7d0; border-color: rgba(74, 222, 128, 0.36); background: rgba(34, 197, 94, 0.13); }
+    body.theme-dark .btn-action-icon.generate-os { color: #bae6fd; border-color: rgba(56, 189, 248, 0.34); background: rgba(14, 165, 233, 0.13); }
+    body.theme-dark .btn-action-icon:hover { color: #ffffff; box-shadow: 0 10px 22px rgba(0,0,0,0.26); }
+
+    body.theme-light .modal-card { background: #ffffff; border-color: #e5e7eb; box-shadow: 0 24px 70px rgba(15, 23, 42, 0.18); }
+    body.theme-light .modal-header,
+    body.theme-light .modal-footer { background: #ffffff; border-color: #e5e7eb; }
+    body.theme-light .modal-header h3 { color: #0f172a; }
+    body.theme-light .resumo-card { background: #f8fafc; border-color: #e5e7eb; }
+    body.theme-light .resumo-label,
+    body.theme-light .fin-row { color: #64748b; }
+    body.theme-light .resumo-value,
+    body.theme-light .tabela-itens td { color: #0f172a; }
+    body.theme-light .secao-titulo { color: #047857; }
+    body.theme-light .tabela-itens th { color: #64748b; border-bottom-color: #e5e7eb; }
+    body.theme-light .tabela-itens td { border-bottom-color: #edf0f5; }
+    body.theme-light .resumo-financeiro { background: #f8fafc; border-top-color: #e5e7eb; }
+    body.theme-light .fin-row.total { color: #047857; border-top-color: #e5e7eb; }
+    body.theme-light .btn-save-orcamento { background: #00a94f; color: #ffffff; box-shadow: 0 12px 26px rgba(0, 169, 79, 0.24); }
+    body.theme-light .btn-save-orcamento:hover { background: #00c853; }
+    body.theme-light .btn-add-item { color: #ffffff; box-shadow: 0 10px 20px rgba(0, 169, 79, 0.18); }
+
+    @media (max-width: 1160px) {
+      .orcamento-table-card { overflow-x: auto; }
+      .table-header-row,
+      .table-row { min-width: 1120px; grid-template-columns: 90px minmax(180px, 1.25fr) minmax(170px, 1fr) 124px 116px 320px; }
+    }
+
+    @media (max-width: 768px) {
+      .topbar-header { flex-direction: column; align-items: stretch; }
+      .topbar-actions { width: 100%; }
+      .btn-top-action { width: 100%; }
+      .status-filters { gap: 8px; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+      .filter-btn { flex: 0 0 auto; }
+      .content-body { padding: 16px; }
+      .table-header-row { display: none; }
+      .table-row { min-width: 0; grid-template-columns: 1fr; gap: 8px; align-items: start; padding: 14px; }
+      .budget-value { text-align: left; }
+      .col-actions { width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); justify-content: stretch; }
+      .form-item-add { grid-template-columns: 1fr; }
+      .resumo-card { grid-template-columns: 1fr; }
+    }
 
     /* ================= ESTILOS DE IMPRESSÃO ================= */
     @media print {
@@ -155,15 +246,15 @@
         <div class="topbar-titles">
           <h2>Gestão de Orçamentos</h2>
           <div class="status-filters">
-            <button class="filter-btn active" onclick="filtrarStatus('Todos')">Todos</button>
-            <button class="filter-btn" onclick="filtrarStatus('Rascunho')">Rascunho</button>
-            <button class="filter-btn" onclick="filtrarStatus('Enviado')">Enviado</button>
-            <button class="filter-btn" onclick="filtrarStatus('Aprovado')">Aprovado</button>
-            <button class="filter-btn" onclick="filtrarStatus('Cancelado')">Cancelado</button>
+            <button class="filter-btn active" data-status="Todos" onclick="filtrarStatus('Todos')"><i data-lucide="list-filter"></i> Todos</button>
+            <button class="filter-btn" data-status="Rascunho" onclick="filtrarStatus('Rascunho')"><i data-lucide="file-text"></i> Rascunho</button>
+            <button class="filter-btn" data-status="Enviado" onclick="filtrarStatus('Enviado')"><i data-lucide="send"></i> Enviado</button>
+            <button class="filter-btn" data-status="Aprovado" onclick="filtrarStatus('Aprovado')"><i data-lucide="check-circle-2"></i> Aprovado</button>
+            <button class="filter-btn" data-status="Cancelado" onclick="filtrarStatus('Cancelado')"><i data-lucide="x-circle"></i> Cancelado</button>
           </div>
         </div>
         <div class="topbar-actions">
-          <button class="btn-top-action primary" onclick="abrirModalNovoOrcamento()"><i data-lucide="plus-circle"></i> Novo Orçamento</button>
+          <button class="btn-top-action primary" onclick="abrirModalNovoOrcamento()"><i data-lucide="plus"></i> Novo Orçamento</button>
         </div>
       </div>
     </header>
@@ -171,7 +262,7 @@
     <div class="content-body" id="container-orcamentos">
       <div class="orcamento-table-card">
         <div class="table-header-row">
-          <div>ID / Data</div>
+          <div>Data</div>
           <div>Cliente</div>
           <div>Veículo</div>
           <div>Valor Total</div>
@@ -209,6 +300,24 @@
             <span class="resumo-label">Veículo</span>
             <span class="resumo-value" id="orc-resumo-veiculo">Selecionando...</span>
           </div>
+        </div>
+
+        <div class="orcamento-context-card" id="orc-contexto-avulso">
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Cliente</label>
+            <select id="sel-orc-cliente" class="form-control" onchange="carregarVeiculosOrcamentoRapido(this.value)">
+              <option value="">Carregando clientes...</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom:0;">
+            <label>Veiculo</label>
+            <select id="sel-orc-veiculo" class="form-control" onchange="atualizarResumoOrcamentoRapido()">
+              <option value="">Selecione um cliente primeiro</option>
+            </select>
+          </div>
+          <a class="btn-inline-add" id="btn-novo-cliente-orc" href="clientes.html?id=1" target="_blank" rel="noopener">
+            <i data-lucide="user-plus"></i> Novo cliente
+          </a>
         </div>
 
         <div class="secao-itens">
@@ -311,12 +420,12 @@
       </div>
       <div class="modal-footer">
         <button class="btn-modal-cancel" onclick="fecharModalAceiteManual()">Cancelar</button>
-        <button class="btn-top-action" style="height:34px; background: var(--brand-green); color: #000;" onclick="confirmarAceiteManual()">Confirmar Aceite</button>
+        <button class="btn-top-action" onclick="confirmarAceiteManual()">Confirmar Aceite</button>
       </div>
     </div>
   </div>
 
-<script>
+  <script>
 'use strict';
 
 let filtroStatusAtual = 'Todos';
@@ -340,16 +449,50 @@ async function carregarOrcamentos() {
 function filtrarStatus(status) {
     filtroStatusAtual = status;
     document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.innerText === status);
+        btn.classList.toggle('active', btn.dataset.status === status);
     });
     renderizarListaOrcamentos();
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+}
+
+function statusOrcamentoClasse(status) {
+    const normalizado = String(status || 'rascunho').toLowerCase().trim();
+    if (normalizado === 'aprovado_manual') return 'aprovado_manual';
+    if (normalizado.includes('aprov')) return 'aprovado';
+    if (normalizado.includes('enviado')) return 'enviado';
+    if (normalizado.includes('cancel')) return 'cancelado';
+    return 'rascunho';
+}
+
+function statusOrcamentoLabel(status) {
+    const classe = statusOrcamentoClasse(status);
+    const labels = {
+        rascunho: 'Rascunho',
+        enviado: 'Enviado',
+        aprovado: 'Aprovado',
+        aprovado_manual: 'Aprovado',
+        cancelado: 'Cancelado'
+    };
+    return labels[classe] || 'Rascunho';
+}
+
+function valorOrcamentoClasse(status) {
+    const classe = statusOrcamentoClasse(status);
+    if (classe === 'aprovado' || classe === 'aprovado_manual') return 'aprovado';
+    if (classe === 'cancelado') return 'cancelado';
+    return 'neutro';
 }
 
 function renderizarListaOrcamentos() {
     const container = document.getElementById('tbody-orcamentos-lista');
-    const filtrados = filtroStatusAtual === 'Todos' 
-        ? cacheOrcamentos 
-        : cacheOrcamentos.filter(o => (o.status || '').toLowerCase() === filtroStatusAtual.toLowerCase());
+    const filtroClasse = filtroStatusAtual === 'Todos' ? 'todos' : statusOrcamentoClasse(filtroStatusAtual);
+    const filtrados = filtroClasse === 'todos'
+        ? cacheOrcamentos
+        : cacheOrcamentos.filter(o => {
+            const classe = statusOrcamentoClasse(o.status);
+            if (filtroClasse === 'aprovado') return classe === 'aprovado' || classe === 'aprovado_manual';
+            return classe === filtroClasse;
+        });
 
     document.getElementById('lbl-total-orcamentos').innerText = `${filtrados.length} orçamento(s) listado(s)`;
     container.innerHTML = '';
@@ -361,47 +504,40 @@ function renderizarListaOrcamentos() {
 
     filtrados.forEach(orc => {
         const dataFormatada = new Date(orc.created_at).toLocaleDateString('pt-BR');
-        const statusClass = (orc.status || 'rascunho').toLowerCase();
+        const statusClass = statusOrcamentoClasse(orc.status);
+        const statusLabel = statusOrcamentoLabel(orc.status);
+        const valorClass = valorOrcamentoClasse(orc.status);
+        const clienteNome = orc.clientes?.nome || 'Cliente não identificado';
+        const veiculoTexto = orc.veiculos ? `${orc.veiculos.marca || ''} ${orc.veiculos.modelo || ''}`.trim() : 'Não informado';
+        const placaTexto = orc.veiculos?.placa ? orc.veiculos.placa.toUpperCase() : '';
         
         // Só mostra botão de aceite manual se não estiver aprovado ou cancelado
         const podeAceitarManual = !['aprovado', 'aprovado_manual', 'cancelado'].includes(statusClass);
         const btnManualAceite = podeAceitarManual 
-            ? `<button class="btn-action-icon manual-approve" title="Aceite Manual (Presencial/Tel)" onclick="abrirModalAceiteManual(${orc.id})"><i data-lucide="check-square"></i></button>`
+            ? `<button class="button secondary small btn-action-icon manual-approve" title="Aceite Manual (Presencial/Tel)" aria-label="Aceite Manual" onclick="abrirModalAceiteManual(${orc.id})"><i data-lucide="check-square"></i><span>Aprovar</span></button>`
             : '';
 
         container.innerHTML += `
             <div class="table-row">
-                <div>
-                    <div style="font-weight:700; color:var(--text-bright);">#${orc.id}</div>
-                    <div style="font-size:12px; color:var(--text-muted);">${dataFormatada}</div>
+                <div class="budget-id">
+                    <div class="budget-date">${dataFormatada}</div>
                 </div>
-                <div style="font-weight:600; color:var(--text-bright);">${orc.clientes?.nome || 'Cliente não identificado'}</div>
-                <div>
-                    <div style="font-weight:500;">${orc.veiculos ? `${orc.veiculos.marca} ${orc.veiculos.modelo}` : 'Não informado'}</div>
-                    <div style="font-size:12px; color:var(--text-muted);">${orc.veiculos?.placa ? orc.veiculos.placa.toUpperCase() : ''}</div>
+                <div class="budget-client" title="${clienteNome}">${clienteNome}</div>
+                <div class="budget-vehicle">
+                    <div class="budget-vehicle-main" title="${veiculoTexto}">${veiculoTexto}</div>
+                    <div class="budget-plate">${placaTexto}</div>
                 </div>
-                <div style="font-weight:700; color:var(--brand-yellow);">${formatarMoeda(orc.valor_total)}</div>
+                <div class="budget-value ${valorClass}">${formatarMoeda(orc.valor_total)}</div>
                 <div class="col-status-badge">
-                    <span class="status-badge ${statusClass}">${orc.status || 'Rascunho'}</span>
+                    <span class="status-badge ${statusClass} ${statusSistemaClasse(statusLabel)}">${statusLabel}</span>
                 </div>
                 <div class="col-actions">
-                  ${btnManualAceite}
-
-<button class="btn-action-icon" title="Gerar O.S." onclick="gerarOSDoOrcamento(${orc.id})">
-    <i data-lucide="file-plus"></i>
-</button>
-
-<button class="btn-action-icon" title="Imprimir" onclick="imprimirOrcamento(${orc.id})">
-    <i data-lucide="printer"></i>
-</button>
-
-<button class="btn-action-icon" title="Editar" onclick="editarOrcamento(${orc.id})">
-    <i data-lucide="edit-3"></i>
-</button>
-
-<button class="btn-action-icon" title="Enviar WhatsApp" onclick="enviarOrcamentoZap(${orc.id})">
-    <i data-lucide="send"></i>
-</button>
+                    ${btnManualAceite}
+                    <button class="button secondary small btn-action-icon generate-os" title="Gerar O.S." aria-label="Gerar O.S." onclick="gerarOSDoOrcamento(${orc.id})"><i data-lucide="file-plus"></i><span>O.S.</span></button>
+                    <button class="button secondary small btn-action-icon view" title="Visualizar" aria-label="Visualizar" onclick="visualizarOrcamento(${orc.id})"><i data-lucide="eye"></i><span>Ver</span></button>
+                    <button class="button secondary small btn-action-icon print" title="Imprimir" aria-label="Imprimir" onclick="imprimirOrcamento(${orc.id})"><i data-lucide="printer"></i><span>Imprimir</span></button>
+                    <button class="button secondary small btn-action-icon edit" title="Editar" aria-label="Editar" onclick="editarOrcamento(${orc.id})"><i data-lucide="edit-3"></i><span>Editar</span></button>
+                    <button class="button secondary small btn-action-icon send" title="Enviar WhatsApp" aria-label="Enviar WhatsApp" onclick="enviarOrcamentoZap(${orc.id})"><i data-lucide="send"></i><span>Enviar</span></button>
                 </div>
             </div>
         `;
@@ -462,8 +598,9 @@ async function confirmarAceiteManual() {
         // 3. Atualiza status do agendamento vinculado se houver
         if (orc.agendamento_id) {
             await db.from('agendamentos')
-                .update({ status: 'Orçamento Aprovado' })
-                .eq('id', orc.agendamento_id);
+                .update({ status: 'Aguardando' })
+                .eq('id', orc.agendamento_id)
+                .eq('oficina_id', OFICINA_ATIVA_ID);
         }
 
         showToast("Orçamento aprovado manualmente!");
@@ -479,10 +616,97 @@ async function confirmarAceiteManual() {
     }
 }
 
+async function carregarClientesOrcamentoRapido(selecionarId = '') {
+    const selCliente = document.getElementById('sel-orc-cliente');
+    if (!selCliente) return;
+    try {
+        const { data: clientes, error } = await db.from('clientes')
+            .select('id, nome, telefone')
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .order('nome');
+        if (error) throw error;
+        selCliente.innerHTML = '<option value="">Selecione um cliente</option>';
+        (clientes || []).forEach((cliente) => {
+            const opt = document.createElement('option');
+            opt.value = cliente.id;
+            opt.textContent = cliente.telefone ? `${cliente.nome} - ${cliente.telefone}` : cliente.nome;
+            opt.selected = String(cliente.id) === String(selecionarId);
+            selCliente.appendChild(opt);
+        });
+        if (selecionarId) await carregarVeiculosOrcamentoRapido(selecionarId);
+    } catch (e) {
+        console.error(e);
+        selCliente.innerHTML = '<option value="">Erro ao carregar clientes</option>';
+        showToast('Erro ao carregar clientes.', 'error');
+    }
+}
+
+async function carregarVeiculosOrcamentoRapido(clienteId, selecionarId = '') {
+    const selVeiculo = document.getElementById('sel-orc-veiculo');
+    if (!selVeiculo) return;
+    agendamentoSelecionado = null;
+    if (!clienteId) {
+        selVeiculo.innerHTML = '<option value="">Selecione um cliente primeiro</option>';
+        atualizarResumoOrcamentoRapido();
+        return;
+    }
+    try {
+        const { data: veiculos, error } = await db.from('veiculos')
+            .select('id, marca, modelo, placa, ano')
+            .eq('cliente_id', clienteId)
+            .eq('oficina_id', OFICINA_ATIVA_ID)
+            .order('modelo');
+        if (error) throw error;
+        selVeiculo.innerHTML = veiculos?.length
+            ? '<option value="">Selecione um veiculo</option>'
+            : '<option value="">Nenhum veiculo cadastrado</option>';
+        (veiculos || []).forEach((veiculo) => {
+            const opt = document.createElement('option');
+            opt.value = veiculo.id;
+            opt.textContent = `${veiculo.marca || ''} ${veiculo.modelo || ''} ${veiculo.placa ? '[' + veiculo.placa.toUpperCase() + ']' : ''}`.trim();
+            opt.selected = String(veiculo.id) === String(selecionarId);
+            selVeiculo.appendChild(opt);
+        });
+        atualizarResumoOrcamentoRapido();
+    } catch (e) {
+        console.error(e);
+        selVeiculo.innerHTML = '<option value="">Erro ao carregar veiculos</option>';
+        showToast('Erro ao carregar veiculos.', 'error');
+    }
+}
+
+function atualizarResumoOrcamentoRapido() {
+    const selCliente = document.getElementById('sel-orc-cliente');
+    const selVeiculo = document.getElementById('sel-orc-veiculo');
+    const clienteNome = selCliente?.selectedOptions?.[0]?.textContent || 'Selecionando...';
+    const veiculoNome = selVeiculo?.selectedOptions?.[0]?.textContent || 'Selecionando...';
+    document.getElementById('orc-resumo-cliente').innerText = selCliente?.value ? clienteNome : 'Selecionando...';
+    document.getElementById('orc-resumo-veiculo').innerText = selVeiculo?.value ? veiculoNome : 'Selecionando...';
+    if (selCliente?.value && selVeiculo?.value) {
+        agendamentoSelecionado = { id: null, cliente_id: selCliente.value, veiculo_id: selVeiculo.value };
+    }
+}
+
+function configurarContextoOrcamentoAvulso() {
+    const contexto = document.getElementById('orc-contexto-avulso');
+    const btnNovoCliente = document.getElementById('btn-novo-cliente-orc');
+    if (btnNovoCliente) btnNovoCliente.href = `clientes.html?id=${OFICINA_ATIVA_ID}`;
+    if (!contexto) return;
+    const avulso = !agendamentoSelecionado || !agendamentoSelecionado.cliente_id;
+    contexto.style.display = avulso ? 'grid' : 'none';
+    if (avulso) {
+        carregarClientesOrcamentoRapido();
+        atualizarResumoOrcamentoRapido();
+    }
+}
+
 function abrirModalNovoOrcamento() {
     document.querySelector('.modal-header h3').innerText = 'Novo Orçamento';
-    document.querySelector('.btn-save-orcamento').innerHTML = '<i data-lucide="save"></i> Salvar Orçamento';
+    const saveBtn = document.querySelector('.btn-save-orcamento');
+    saveBtn.innerHTML = '<i data-lucide="save"></i> Salvar Orçamento';
+    saveBtn.style.display = 'flex';
     orcamentoEmEdicaoId = null;
+    configurarContextoOrcamentoAvulso();
     document.getElementById('modal-novo-orcamento').classList.add('active');
     if (typeof lucide !== 'undefined') lucide.createIcons();
 }
@@ -531,13 +755,15 @@ async function salvarOrcamentoLocal() {
 window.fecharDrawerOrcamento = fecharModalNovoOrcamento;
 window.renderizarAgendaExtrato = carregarOrcamentos;
 
-window.onload = function() {
-    carregarOrcamentos();
+window.onload = async function() {
+    await carregarOrcamentos();
     
-    // Verifica agendamento_id na URL
     const urlParams = new URLSearchParams(window.location.search);
+    const orcamentoId = urlParams.get('orcamento_id') || urlParams.get('orcamento');
     const agendamentoId = urlParams.get('agendamento_id');
-    if (agendamentoId) {
+    if (orcamentoId) {
+        await editarOrcamento(orcamentoId);
+    } else if (agendamentoId) {
         abrirOrcamentoDeAgendamento(agendamentoId);
     }
 };
@@ -586,7 +812,9 @@ async function editarOrcamento(id) {
         document.getElementById('orc-obs').value = orc.observacoes || '';
 
         document.querySelector('.modal-header h3').innerText = `Editando Orçamento #${id}`;
-        document.querySelector('.btn-save-orcamento').innerHTML = '<i data-lucide="save"></i> Atualizar Orçamento';
+        const saveBtn = document.querySelector('.btn-save-orcamento');
+        saveBtn.innerHTML = '<i data-lucide="save"></i> Atualizar Orçamento';
+        saveBtn.style.display = 'flex';
         
         document.getElementById('modal-novo-orcamento').classList.add('active');
         renderizarItensOrcamento();
@@ -596,6 +824,12 @@ async function editarOrcamento(id) {
         console.error(e);
         showToast("Erro ao editar", "error");
     }
+}
+
+async function visualizarOrcamento(id) {
+    await editarOrcamento(id);
+    document.querySelector('.modal-header h3').innerText = `Orçamento #${id}`;
+    document.querySelector('.btn-save-orcamento').style.display = 'none';
 }
 
 async function enviarOrcamentoZap(id) {
@@ -724,8 +958,9 @@ async function gerarOSDoOrcamento(orcamentoId) {
         if (orc.agendamento_id) {
             await db
                 .from('agendamentos')
-                .update({ status: 'OS Aberta' })
-                .eq('id', orc.agendamento_id);
+                .update({ status: 'Aguardando' })
+                .eq('id', orc.agendamento_id)
+                .eq('oficina_id', OFICINA_ATIVA_ID);
         }
 
         showToast("O.S. gerada com sucesso!");
